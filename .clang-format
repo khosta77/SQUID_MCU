@@ -1,56 +1,98 @@
-BasedOnStyle: LLVM
-
-IndentWidth: 4
-UseTab: Never
-TabWidth: 4
-
-# Стиль переноса скобок:
-# Настройки переноса фигурных скобок
-BraceWrapping:
-  AfterCaseLabel: false        # Не переносить скобку после case
-  AfterClass: true             # Переносить скобку после класса
-  AfterControlStatement: Always  # Всегда переносить скобку после управляющих конструкций
-  AfterEnum: true              # Переносить скобку после enum
-  AfterFunction: true          # Переносить скобку после функции
-  AfterNamespace: true         # Переносить скобку после namespace
-  AfterObjCDeclaration: true   # Переносить скобку после ObjC-объявления
-  AfterStruct: true            # Переносить скобку после struct
-  AfterUnion: true             # Переносить скобку после union
-  BeforeCatch: true            # Переносить скобку перед catch
-  BeforeElse: true             # Переносить скобку перед else
-  IndentBraces: false          # Не делать отступ для скобок
-  SplitEmptyFunction: false    # Не разделять пустые функции
-  SplitEmptyRecord: false      # Не разделять пустые структуры/классы
-  SplitEmptyNamespace: false   # Не разделять пустые пространства имён
-IndentCaseLabels: true
+# my code style
+BasedOnStyle: Mozilla
 AccessModifierOffset: -4
-AllowShortIfStatementsOnASingleLine: false
-AllowShortLoopsOnASingleLine: true          # while(some());
-AllowShortBlocksOnASingleLine: false        # while(some()) {} - переноситься
-BreakBeforeBraces: Allman                   # скобка на новой строке
-IndentExternBlock: NoIndent                 # чтобы отсутпа не было в блоке extern "C"
-
-# Пробелы вокруг операторов:
-SpaceBeforeAssignmentOperators: true  # int x = 5;
-SpacesInParentheses: true             # true `f( a, b )`, false `f(a, b)`
-SpacesInSquareBrackets: false         # Не `a[ 5 ]`, а `a[5]`
-SpacesInAngles: false                 # Не `vector< int >`, а `vector<int>`
-SpaceBeforeParens: ControlStatements  # if() → if (), но функции: foo()
-SpaceAfterCStyleCast: true            # (int) x → (int)x
-
-ColumnLimit: 110      # Максимальная длина строки
-MaxEmptyLinesToKeep: 1  # Максимум 1 пустая строка подряд
-KeepEmptyLinesAtTheStartOfBlocks: true  # Удалять пустые строки в начале блоков
-
-# Перенос длинных строк:
-BreakBeforeBinaryOperators: None  # Переносить после оператора (по умолчанию)
-BinPackArguments: true   # Разрешить "упаковку" аргументов функции в одну строку
-BinPackParameters: true  # Аналогично для параметров
-
-# Пробелы перед/после спецификаторов:
-SpaceBeforeCpp11BracedList: true  # `vector<int>{1, 2}` → `vector<int> {1, 2}`
-SpaceBeforeInheritanceColon: true # `class A : B` → `class A: B` (если false)
-SpaceBeforeRangeBasedForLoopColon: true  # `for (auto x : xs)` → `for (auto x: xs)`
-
-PointerAlignment: Right    # `int* x` (если Right — `int *x`)
-SortIncludes: true        # Сортировка #include
+AlignAfterOpenBracket: AlwaysBreak
+AlignConsecutiveAssignments: None
+AlignConsecutiveBitFields: None
+AlignConsecutiveDeclarations: None
+AlignConsecutiveMacros: true
+AlignOperands: DontAlign
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortLambdasOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowAllConstructorInitializersOnNextLine: false
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+PenaltyReturnTypeOnItsOwnLine: 1000000
+AllowAllParametersOfDeclarationOnNextLine: false
+BinPackParameters: false
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+  BeforeLambdaBody: false
+BreakBeforeBraces: Custom
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: false
+ColumnLimit: 140
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerIndentWidth: 4
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
+DerivePointerAlignment: true
+DisableFormat: false
+FixNamespaceComments: true
+IndentExternBlock: NoIndent
+IndentGotoLabels: false
+IndentWidth: 4
+KeepEmptyLinesAtTheStartOfBlocks: false
+LambdaBodyIndentation: Signature
+BreakInheritanceList: BeforeColon
+Language: Cpp
+MacroBlockBegin: >
+  EKA_INTERFACE_MAP_BEGIN|
+  EKA_LEGACY_SERIALIZABLE_BEGIN_GENERIC|
+  EKA_METAINFO_DESCRIPTORS_MAP_BEGIN_EX|
+  EKA_OBJECT_FACTORY_BEGIN|
+  EKA_PROXY_STUB_FACTORIES_MAP_BEGIN_EX|
+  EKA_SERIALIZABLE_BEGIN_NS|
+  mEXTERNAL_TABLE_BEGIN|
+  mINTERNAL_TABLE_BEGIN|
+  mpPROPERTY_TABLE\(
+MacroBlockEnd: >
+  EKA_INTERFACE_MAP_END|
+  EKA_METAINFO_DESCRIPTORS_MAP_END|
+  EKA_OBJECT_FACTORY_END|
+  EKA_PROXY_STUB_FACTORIES_MAP_END|
+  EKA_SERIALIZABLE_END|
+  mEXTERNAL_TABLE_END|
+  mINTERNAL_TABLE_END|
+  mpPROPERTY_TABLE_END
+MaxEmptyLinesToKeep: 2
+PPIndentWidth: 4
+ReferenceAlignment: Left
+SortIncludes: false
+SortUsingDeclarations: false
+SpaceAfterTemplateKeyword: true
+SpaceBeforeInheritanceColon: true
+SpacesInContainerLiterals: false
+SpacesInLineCommentPrefix:
+  Minimum: 1
+  Maximum: 1
+Standard: Latest
+StatementMacros: [
+    "__drv_maxIRQL",
+    "__drv_sameIRQL",
+    'EXTERN_C',
+  ]
+TabWidth: 4
+UseTab: Never
+BinPackArguments: false
+AllowAllArgumentsOnNextLine: false
+BreakBeforeBinaryOperators: NonAssignment
+NamespaceIndentation: None
+CompactNamespaces: false
