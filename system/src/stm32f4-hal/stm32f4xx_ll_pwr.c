@@ -16,7 +16,7 @@
  *
  ******************************************************************************
  */
-#if defined( USE_FULL_LL_DRIVER )
+#if defined(USE_FULL_LL_DRIVER)
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_ll_pwr.h"
@@ -26,7 +26,7 @@
  * @{
  */
 
-#if defined( PWR )
+#if defined(PWR)
 
 /** @defgroup PWR_LL PWR
  * @{
@@ -53,13 +53,13 @@
  *          - SUCCESS: PWR registers are de-initialized
  *          - ERROR: not applicable
  */
-ErrorStatus LL_PWR_DeInit( void )
+ErrorStatus LL_PWR_DeInit(void)
 {
     /* Force reset of PWR clock */
-    LL_APB1_GRP1_ForceReset( LL_APB1_GRP1_PERIPH_PWR );
+    LL_APB1_GRP1_ForceReset(LL_APB1_GRP1_PERIPH_PWR);
 
     /* Release reset of PWR clock */
-    LL_APB1_GRP1_ReleaseReset( LL_APB1_GRP1_PERIPH_PWR );
+    LL_APB1_GRP1_ReleaseReset(LL_APB1_GRP1_PERIPH_PWR);
 
     return SUCCESS;
 }

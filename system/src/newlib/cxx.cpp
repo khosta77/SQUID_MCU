@@ -38,13 +38,12 @@
 
 // ----------------------------------------------------------------------------
 
-namespace __gnu_cxx
-{
-void __attribute__( ( noreturn ) ) __verbose_terminate_handler();
+namespace __gnu_cxx {
+void __attribute__((noreturn)) __verbose_terminate_handler();
 
 void __verbose_terminate_handler()
 {
-    trace_puts( __func__ );
+    trace_puts(__func__);
     abort();
 }
 } // namespace __gnu_cxx
@@ -53,11 +52,11 @@ void __verbose_terminate_handler()
 
 extern "C"
 {
-void __attribute__( ( noreturn ) ) __cxa_pure_virtual();
+void __attribute__((noreturn)) __cxa_pure_virtual();
 
 void __cxa_pure_virtual()
 {
-    trace_puts( __func__ );
+    trace_puts(__func__);
     abort();
 }
 }

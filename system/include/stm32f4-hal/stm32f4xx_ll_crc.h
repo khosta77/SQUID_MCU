@@ -33,7 +33,7 @@ extern "C"
  * @{
  */
 
-#if defined( CRC )
+#if defined(CRC)
 
 /** @defgroup CRC_LL CRC
  * @{
@@ -70,7 +70,7 @@ extern "C"
  * @param  __VALUE__ Value to be written in the register
  * @retval None
  */
-#define LL_CRC_WriteReg( __INSTANCE__, __REG__, __VALUE__ ) WRITE_REG( __INSTANCE__->__REG__, __VALUE__ )
+#define LL_CRC_WriteReg(__INSTANCE__, __REG__, __VALUE__) WRITE_REG(__INSTANCE__->__REG__, __VALUE__)
 
 /**
  * @brief  Read a value in CRC register
@@ -78,7 +78,7 @@ extern "C"
  * @param  __REG__ Register to be read
  * @retval Register value
  */
-#define LL_CRC_ReadReg( __INSTANCE__, __REG__ ) READ_REG( __INSTANCE__->__REG__ )
+#define LL_CRC_ReadReg(__INSTANCE__, __REG__) READ_REG(__INSTANCE__->__REG__)
 /**
  * @}
  */
@@ -105,9 +105,9 @@ extern "C"
  * @param  CRCx CRC Instance
  * @retval None
  */
-__STATIC_INLINE void LL_CRC_ResetCRCCalculationUnit( CRC_TypeDef *CRCx )
+__STATIC_INLINE void LL_CRC_ResetCRCCalculationUnit(CRC_TypeDef *CRCx)
 {
-    SET_BIT( CRCx->CR, CRC_CR_RESET );
+    SET_BIT(CRCx->CR, CRC_CR_RESET);
 }
 
 /**
@@ -125,9 +125,9 @@ __STATIC_INLINE void LL_CRC_ResetCRCCalculationUnit( CRC_TypeDef *CRCx )
  * @param  InData value to be provided to CRC calculator between between Min_Data=0 and Max_Data=0xFFFFFFFF
  * @retval None
  */
-__STATIC_INLINE void LL_CRC_FeedData32( CRC_TypeDef *CRCx, uint32_t InData )
+__STATIC_INLINE void LL_CRC_FeedData32(CRC_TypeDef *CRCx, uint32_t InData)
 {
-    WRITE_REG( CRCx->DR, InData );
+    WRITE_REG(CRCx->DR, InData);
 }
 
 /**
@@ -136,9 +136,9 @@ __STATIC_INLINE void LL_CRC_FeedData32( CRC_TypeDef *CRCx, uint32_t InData )
  * @param  CRCx CRC Instance
  * @retval Current CRC calculation result as stored in CRC_DR register (32 bits).
  */
-__STATIC_INLINE uint32_t LL_CRC_ReadData32( CRC_TypeDef *CRCx )
+__STATIC_INLINE uint32_t LL_CRC_ReadData32(CRC_TypeDef *CRCx)
 {
-    return (uint32_t) ( READ_REG( CRCx->DR ) );
+    return (uint32_t)(READ_REG(CRCx->DR));
 }
 
 /**
@@ -148,7 +148,10 @@ __STATIC_INLINE uint32_t LL_CRC_ReadData32( CRC_TypeDef *CRCx )
  * @param  CRCx CRC Instance
  * @retval Value stored in CRC_IDR register (General-purpose 8-bit data register).
  */
-__STATIC_INLINE uint32_t LL_CRC_Read_IDR( CRC_TypeDef *CRCx ) { return (uint32_t) ( READ_REG( CRCx->IDR ) ); }
+__STATIC_INLINE uint32_t LL_CRC_Read_IDR(CRC_TypeDef *CRCx)
+{
+    return (uint32_t)(READ_REG(CRCx->IDR));
+}
 
 /**
  * @brief  Store data in the Independent Data(IDR) register.
@@ -158,20 +161,20 @@ __STATIC_INLINE uint32_t LL_CRC_Read_IDR( CRC_TypeDef *CRCx ) { return (uint32_t
  * @param  InData value to be stored in CRC_IDR register (8-bit) between Min_Data=0 and Max_Data=0xFF
  * @retval None
  */
-__STATIC_INLINE void LL_CRC_Write_IDR( CRC_TypeDef *CRCx, uint32_t InData )
+__STATIC_INLINE void LL_CRC_Write_IDR(CRC_TypeDef *CRCx, uint32_t InData)
 {
-    *( (uint8_t __IO *) ( &CRCx->IDR ) ) = (uint8_t) InData;
+    *((uint8_t __IO *)(&CRCx->IDR)) = (uint8_t)InData;
 }
 /**
  * @}
  */
 
-#if defined( USE_FULL_LL_DRIVER )
+#if defined(USE_FULL_LL_DRIVER)
 /** @defgroup CRC_LL_EF_Init Initialization and de-initialization functions
  * @{
  */
 
-ErrorStatus LL_CRC_DeInit( CRC_TypeDef *CRCx );
+ErrorStatus LL_CRC_DeInit(CRC_TypeDef *CRCx);
 
 /**
  * @}

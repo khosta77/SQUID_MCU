@@ -45,7 +45,7 @@ extern "C"
  * @{
  */
 
-#if defined( FLASH ) || defined( SYSCFG ) || defined( DBGMCU )
+#if defined(FLASH) || defined(SYSCFG) || defined(DBGMCU)
 
 /** @defgroup SYSTEM_LL SYSTEM
  * @{
@@ -74,49 +74,43 @@ extern "C"
 /** @defgroup SYSTEM_LL_EC_REMAP SYSCFG REMAP
  * @{
  */
-#define LL_SYSCFG_REMAP_FLASH                                                                                \
-    (uint32_t) 0x00000000 /*!< Main Flash memory mapped at 0x00000000              */
-#define LL_SYSCFG_REMAP_SYSTEMFLASH                                                                          \
-    SYSCFG_MEMRMP_MEM_MODE_0 /*!< System Flash memory mapped at 0x00000000            */
-#if defined( FSMC_Bank1 )
-#define LL_SYSCFG_REMAP_FSMC                                                                                 \
-    SYSCFG_MEMRMP_MEM_MODE_1 /*!< FSMC(NOR/PSRAM 1 and 2) mapped at 0x00000000        */
-#endif                       /* FSMC_Bank1 */
-#if defined( FMC_Bank1 )
-#define LL_SYSCFG_REMAP_FMC                                                                                  \
-    SYSCFG_MEMRMP_MEM_MODE_1 /*!< FMC(NOR/PSRAM 1 and 2) mapped at 0x00000000         */
-#define LL_SYSCFG_REMAP_SDRAM                                                                                \
-    SYSCFG_MEMRMP_MEM_MODE_2 /*!< FMC/SDRAM mapped at 0x00000000                      */
-#endif                       /* FMC_Bank1 */
-#define LL_SYSCFG_REMAP_SRAM                                                                                 \
-    ( SYSCFG_MEMRMP_MEM_MODE_1 | SYSCFG_MEMRMP_MEM_MODE_0 ) /*!< SRAM1 mapped at 0x00000000 */
+#define LL_SYSCFG_REMAP_FLASH       (uint32_t)0x00000000     /*!< Main Flash memory mapped at 0x00000000              */
+#define LL_SYSCFG_REMAP_SYSTEMFLASH SYSCFG_MEMRMP_MEM_MODE_0 /*!< System Flash memory mapped at 0x00000000            */
+#if defined(FSMC_Bank1)
+#define LL_SYSCFG_REMAP_FSMC SYSCFG_MEMRMP_MEM_MODE_1 /*!< FSMC(NOR/PSRAM 1 and 2) mapped at 0x00000000        */
+#endif                                                /* FSMC_Bank1 */
+#if defined(FMC_Bank1)
+#define LL_SYSCFG_REMAP_FMC   SYSCFG_MEMRMP_MEM_MODE_1 /*!< FMC(NOR/PSRAM 1 and 2) mapped at 0x00000000         */
+#define LL_SYSCFG_REMAP_SDRAM SYSCFG_MEMRMP_MEM_MODE_2 /*!< FMC/SDRAM mapped at 0x00000000                      */
+#endif                                                 /* FMC_Bank1 */
+#define LL_SYSCFG_REMAP_SRAM (SYSCFG_MEMRMP_MEM_MODE_1 | SYSCFG_MEMRMP_MEM_MODE_0) /*!< SRAM1 mapped at 0x00000000 */
 
 /**
  * @}
  */
 
-#if defined( SYSCFG_PMC_MII_RMII_SEL )
+#if defined(SYSCFG_PMC_MII_RMII_SEL)
 /** @defgroup SYSTEM_LL_EC_PMC SYSCFG PMC
  * @{
  */
-#define LL_SYSCFG_PMC_ETHMII (uint32_t) 0x00000000               /*!< ETH Media MII interface */
-#define LL_SYSCFG_PMC_ETHRMII (uint32_t) SYSCFG_PMC_MII_RMII_SEL /*!< ETH Media RMII interface */
+#define LL_SYSCFG_PMC_ETHMII  (uint32_t)0x00000000              /*!< ETH Media MII interface */
+#define LL_SYSCFG_PMC_ETHRMII (uint32_t)SYSCFG_PMC_MII_RMII_SEL /*!< ETH Media RMII interface */
 
 /**
  * @}
  */
 #endif /* SYSCFG_PMC_MII_RMII_SEL */
 
-#if defined( SYSCFG_MEMRMP_UFB_MODE )
+#if defined(SYSCFG_MEMRMP_UFB_MODE)
 /** @defgroup SYSTEM_LL_EC_BANKMODE SYSCFG BANK MODE
  * @{
  */
-#define LL_SYSCFG_BANKMODE_BANK1                                                                             \
-    (uint32_t) 0x00000000 /*!< Flash Bank 1 base address mapped at 0x0800 0000 (AXI) and 0x0020 0000 (TCM)   \
-                           and Flash Bank 2 base address mapped at 0x0810 0000 (AXI) and 0x0030 0000 (TCM)*/
-#define LL_SYSCFG_BANKMODE_BANK2                                                                             \
-    SYSCFG_MEMRMP_UFB_MODE /*!< Flash Bank 2 base address mapped at 0x0800 0000 (AXI) and 0x0020 0000(TCM)   \
-                            and Flash Bank 1 base address mapped at 0x0810 0000 (AXI) and 0x0030 0000(TCM)   \
+#define LL_SYSCFG_BANKMODE_BANK1                                                                                                           \
+    (uint32_t)0x00000000 /*!< Flash Bank 1 base address mapped at 0x0800 0000 (AXI) and 0x0020 0000 (TCM)                                  \
+                          and Flash Bank 2 base address mapped at 0x0810 0000 (AXI) and 0x0030 0000 (TCM)*/
+#define LL_SYSCFG_BANKMODE_BANK2                                                                                                           \
+    SYSCFG_MEMRMP_UFB_MODE /*!< Flash Bank 2 base address mapped at 0x0800 0000 (AXI) and 0x0020 0000(TCM)                                 \
+                            and Flash Bank 1 base address mapped at 0x0810 0000 (AXI) and 0x0030 0000(TCM)                                 \
                           */
 /**
  * @}
@@ -125,12 +119,12 @@ extern "C"
 /** @defgroup SYSTEM_LL_EC_I2C_FASTMODEPLUS SYSCFG I2C FASTMODEPLUS
  * @{
  */
-#if defined( SYSCFG_CFGR_FMPI2C1_SCL )
-#define LL_SYSCFG_I2C_FASTMODEPLUS_SCL                                                                       \
-    SYSCFG_CFGR_FMPI2C1_SCL /*!< Enable Fast Mode Plus on FMPI2C_SCL pin                                     \
+#if defined(SYSCFG_CFGR_FMPI2C1_SCL)
+#define LL_SYSCFG_I2C_FASTMODEPLUS_SCL                                                                                                     \
+    SYSCFG_CFGR_FMPI2C1_SCL /*!< Enable Fast Mode Plus on FMPI2C_SCL pin                                                                   \
                              */
-#define LL_SYSCFG_I2C_FASTMODEPLUS_SDA                                                                       \
-    SYSCFG_CFGR_FMPI2C1_SDA /*!< Enable Fast Mode Plus on FMPI2C_SDA                                         \
+#define LL_SYSCFG_I2C_FASTMODEPLUS_SDA                                                                                                     \
+    SYSCFG_CFGR_FMPI2C1_SDA /*!< Enable Fast Mode Plus on FMPI2C_SDA                                                                       \
                                pin*/
 #endif                      /* SYSCFG_CFGR_FMPI2C1_SCL */
 /**
@@ -140,27 +134,27 @@ extern "C"
 /** @defgroup SYSTEM_LL_EC_EXTI_PORT SYSCFG EXTI PORT
  * @{
  */
-#define LL_SYSCFG_EXTI_PORTA (uint32_t) 0 /*!< EXTI PORT A                        */
-#define LL_SYSCFG_EXTI_PORTB (uint32_t) 1 /*!< EXTI PORT B                        */
-#define LL_SYSCFG_EXTI_PORTC (uint32_t) 2 /*!< EXTI PORT C                        */
-#define LL_SYSCFG_EXTI_PORTD (uint32_t) 3 /*!< EXTI PORT D                        */
-#define LL_SYSCFG_EXTI_PORTE (uint32_t) 4 /*!< EXTI PORT E                        */
-#if defined( GPIOF )
-#define LL_SYSCFG_EXTI_PORTF (uint32_t) 5 /*!< EXTI PORT F                        */
-#endif                                    /* GPIOF */
-#if defined( GPIOG )
-#define LL_SYSCFG_EXTI_PORTG (uint32_t) 6 /*!< EXTI PORT G                        */
-#endif                                    /* GPIOG */
-#define LL_SYSCFG_EXTI_PORTH (uint32_t) 7 /*!< EXTI PORT H                        */
-#if defined( GPIOI )
-#define LL_SYSCFG_EXTI_PORTI (uint32_t) 8 /*!< EXTI PORT I                        */
-#endif                                    /* GPIOI */
-#if defined( GPIOJ )
-#define LL_SYSCFG_EXTI_PORTJ (uint32_t) 9 /*!< EXTI PORT J                        */
-#endif                                    /* GPIOJ */
-#if defined( GPIOK )
-#define LL_SYSCFG_EXTI_PORTK (uint32_t) 10 /*!< EXTI PORT k                        */
-#endif                                     /* GPIOK */
+#define LL_SYSCFG_EXTI_PORTA (uint32_t)0 /*!< EXTI PORT A                        */
+#define LL_SYSCFG_EXTI_PORTB (uint32_t)1 /*!< EXTI PORT B                        */
+#define LL_SYSCFG_EXTI_PORTC (uint32_t)2 /*!< EXTI PORT C                        */
+#define LL_SYSCFG_EXTI_PORTD (uint32_t)3 /*!< EXTI PORT D                        */
+#define LL_SYSCFG_EXTI_PORTE (uint32_t)4 /*!< EXTI PORT E                        */
+#if defined(GPIOF)
+#define LL_SYSCFG_EXTI_PORTF (uint32_t)5 /*!< EXTI PORT F                        */
+#endif                                   /* GPIOF */
+#if defined(GPIOG)
+#define LL_SYSCFG_EXTI_PORTG (uint32_t)6 /*!< EXTI PORT G                        */
+#endif                                   /* GPIOG */
+#define LL_SYSCFG_EXTI_PORTH (uint32_t)7 /*!< EXTI PORT H                        */
+#if defined(GPIOI)
+#define LL_SYSCFG_EXTI_PORTI (uint32_t)8 /*!< EXTI PORT I                        */
+#endif                                   /* GPIOI */
+#if defined(GPIOJ)
+#define LL_SYSCFG_EXTI_PORTJ (uint32_t)9 /*!< EXTI PORT J                        */
+#endif                                   /* GPIOJ */
+#if defined(GPIOK)
+#define LL_SYSCFG_EXTI_PORTK (uint32_t)10 /*!< EXTI PORT k                        */
+#endif                                    /* GPIOK */
 /**
  * @}
  */
@@ -168,22 +162,22 @@ extern "C"
 /** @defgroup SYSTEM_LL_EC_EXTI_LINE SYSCFG EXTI LINE
  * @{
  */
-#define LL_SYSCFG_EXTI_LINE0 (uint32_t) ( 0x000FU << 16 | 0 )  /*!< EXTI_POSITION_0  | EXTICR[0] */
-#define LL_SYSCFG_EXTI_LINE1 (uint32_t) ( 0x00F0U << 16 | 0 )  /*!< EXTI_POSITION_4  | EXTICR[0] */
-#define LL_SYSCFG_EXTI_LINE2 (uint32_t) ( 0x0F00U << 16 | 0 )  /*!< EXTI_POSITION_8  | EXTICR[0] */
-#define LL_SYSCFG_EXTI_LINE3 (uint32_t) ( 0xF000U << 16 | 0 )  /*!< EXTI_POSITION_12 | EXTICR[0] */
-#define LL_SYSCFG_EXTI_LINE4 (uint32_t) ( 0x000FU << 16 | 1 )  /*!< EXTI_POSITION_0  | EXTICR[1] */
-#define LL_SYSCFG_EXTI_LINE5 (uint32_t) ( 0x00F0U << 16 | 1 )  /*!< EXTI_POSITION_4  | EXTICR[1] */
-#define LL_SYSCFG_EXTI_LINE6 (uint32_t) ( 0x0F00U << 16 | 1 )  /*!< EXTI_POSITION_8  | EXTICR[1] */
-#define LL_SYSCFG_EXTI_LINE7 (uint32_t) ( 0xF000U << 16 | 1 )  /*!< EXTI_POSITION_12 | EXTICR[1] */
-#define LL_SYSCFG_EXTI_LINE8 (uint32_t) ( 0x000FU << 16 | 2 )  /*!< EXTI_POSITION_0  | EXTICR[2] */
-#define LL_SYSCFG_EXTI_LINE9 (uint32_t) ( 0x00F0U << 16 | 2 )  /*!< EXTI_POSITION_4  | EXTICR[2] */
-#define LL_SYSCFG_EXTI_LINE10 (uint32_t) ( 0x0F00U << 16 | 2 ) /*!< EXTI_POSITION_8  | EXTICR[2] */
-#define LL_SYSCFG_EXTI_LINE11 (uint32_t) ( 0xF000U << 16 | 2 ) /*!< EXTI_POSITION_12 | EXTICR[2] */
-#define LL_SYSCFG_EXTI_LINE12 (uint32_t) ( 0x000FU << 16 | 3 ) /*!< EXTI_POSITION_0  | EXTICR[3] */
-#define LL_SYSCFG_EXTI_LINE13 (uint32_t) ( 0x00F0U << 16 | 3 ) /*!< EXTI_POSITION_4  | EXTICR[3] */
-#define LL_SYSCFG_EXTI_LINE14 (uint32_t) ( 0x0F00U << 16 | 3 ) /*!< EXTI_POSITION_8  | EXTICR[3] */
-#define LL_SYSCFG_EXTI_LINE15 (uint32_t) ( 0xF000U << 16 | 3 ) /*!< EXTI_POSITION_12 | EXTICR[3] */
+#define LL_SYSCFG_EXTI_LINE0  (uint32_t)(0x000FU << 16 | 0) /*!< EXTI_POSITION_0  | EXTICR[0] */
+#define LL_SYSCFG_EXTI_LINE1  (uint32_t)(0x00F0U << 16 | 0) /*!< EXTI_POSITION_4  | EXTICR[0] */
+#define LL_SYSCFG_EXTI_LINE2  (uint32_t)(0x0F00U << 16 | 0) /*!< EXTI_POSITION_8  | EXTICR[0] */
+#define LL_SYSCFG_EXTI_LINE3  (uint32_t)(0xF000U << 16 | 0) /*!< EXTI_POSITION_12 | EXTICR[0] */
+#define LL_SYSCFG_EXTI_LINE4  (uint32_t)(0x000FU << 16 | 1) /*!< EXTI_POSITION_0  | EXTICR[1] */
+#define LL_SYSCFG_EXTI_LINE5  (uint32_t)(0x00F0U << 16 | 1) /*!< EXTI_POSITION_4  | EXTICR[1] */
+#define LL_SYSCFG_EXTI_LINE6  (uint32_t)(0x0F00U << 16 | 1) /*!< EXTI_POSITION_8  | EXTICR[1] */
+#define LL_SYSCFG_EXTI_LINE7  (uint32_t)(0xF000U << 16 | 1) /*!< EXTI_POSITION_12 | EXTICR[1] */
+#define LL_SYSCFG_EXTI_LINE8  (uint32_t)(0x000FU << 16 | 2) /*!< EXTI_POSITION_0  | EXTICR[2] */
+#define LL_SYSCFG_EXTI_LINE9  (uint32_t)(0x00F0U << 16 | 2) /*!< EXTI_POSITION_4  | EXTICR[2] */
+#define LL_SYSCFG_EXTI_LINE10 (uint32_t)(0x0F00U << 16 | 2) /*!< EXTI_POSITION_8  | EXTICR[2] */
+#define LL_SYSCFG_EXTI_LINE11 (uint32_t)(0xF000U << 16 | 2) /*!< EXTI_POSITION_12 | EXTICR[2] */
+#define LL_SYSCFG_EXTI_LINE12 (uint32_t)(0x000FU << 16 | 3) /*!< EXTI_POSITION_0  | EXTICR[3] */
+#define LL_SYSCFG_EXTI_LINE13 (uint32_t)(0x00F0U << 16 | 3) /*!< EXTI_POSITION_4  | EXTICR[3] */
+#define LL_SYSCFG_EXTI_LINE14 (uint32_t)(0x0F00U << 16 | 3) /*!< EXTI_POSITION_8  | EXTICR[3] */
+#define LL_SYSCFG_EXTI_LINE15 (uint32_t)(0xF000U << 16 | 3) /*!< EXTI_POSITION_12 | EXTICR[3] */
 /**
  * @}
  */
@@ -191,24 +185,24 @@ extern "C"
 /** @defgroup SYSTEM_LL_EC_TIMBREAK SYSCFG TIMER BREAK
  * @{
  */
-#if defined( SYSCFG_CFGR2_LOCKUP_LOCK )
-#define LL_SYSCFG_TIMBREAK_LOCKUP                                                                            \
-    SYSCFG_CFGR2_LOCKUP_LOCK /*!< Enables and locks the LOCKUP output of CortexM4                            \
+#if defined(SYSCFG_CFGR2_LOCKUP_LOCK)
+#define LL_SYSCFG_TIMBREAK_LOCKUP                                                                                                          \
+    SYSCFG_CFGR2_LOCKUP_LOCK /*!< Enables and locks the LOCKUP output of CortexM4                                                          \
                              with Break Input of TIM1/8                                    */
-#define LL_SYSCFG_TIMBREAK_PVD                                                                               \
-    SYSCFG_CFGR2_PVD_LOCK /*!< Enables and locks the PVD connection with TIM1/8 Break Input                  \
+#define LL_SYSCFG_TIMBREAK_PVD                                                                                                             \
+    SYSCFG_CFGR2_PVD_LOCK /*!< Enables and locks the PVD connection with TIM1/8 Break Input                                                \
                           and also the PVDE and PLS bits of the Power Control Interface  */
 #endif                    /* SYSCFG_CFGR2_CLL */
 /**
  * @}
  */
 
-#if defined( SYSCFG_MCHDLYCR_BSCKSEL )
+#if defined(SYSCFG_MCHDLYCR_BSCKSEL)
 /** @defgroup SYSTEM_LL_DFSDM_BitStream_ClockSource SYSCFG MCHDLY BCKKSEL
  * @{
  */
-#define LL_SYSCFG_BITSTREAM_CLOCK_TIM2OC1 (uint32_t) 0x00000000
-#define LL_SYSCFG_BITSTREAM_CLOCK_DFSDM2 SYSCFG_MCHDLYCR_BSCKSEL
+#define LL_SYSCFG_BITSTREAM_CLOCK_TIM2OC1 (uint32_t)0x00000000
+#define LL_SYSCFG_BITSTREAM_CLOCK_DFSDM2  SYSCFG_MCHDLYCR_BSCKSEL
 /**
  * @}
  */
@@ -226,12 +220,10 @@ extern "C"
 #define LL_SYSCFG_DFSDM1_DataIn0 SYSCFG_MCHDLYCR_DFSDM1D0SEL
 #define LL_SYSCFG_DFSDM2_DataIn0 SYSCFG_MCHDLYCR_DFSDM2D0SEL
 
-#define LL_SYSCFG_DFSDM1_DataIn0_PAD (uint32_t) ( ( SYSCFG_MCHDLYCR_DFSDM1D0SEL << 16 ) | 0x00000000 )
-#define LL_SYSCFG_DFSDM1_DataIn0_DM                                                                          \
-    (uint32_t) ( ( SYSCFG_MCHDLYCR_DFSDM1D0SEL << 16 ) | SYSCFG_MCHDLYCR_DFSDM1D0SEL )
-#define LL_SYSCFG_DFSDM2_DataIn0_PAD (uint32_t) ( ( SYSCFG_MCHDLYCR_DFSDM2D0SEL << 16 ) | 0x00000000 )
-#define LL_SYSCFG_DFSDM2_DataIn0_DM                                                                          \
-    (uint32_t) ( ( SYSCFG_MCHDLYCR_DFSDM2D0SEL << 16 ) | SYSCFG_MCHDLYCR_DFSDM2D0SEL )
+#define LL_SYSCFG_DFSDM1_DataIn0_PAD (uint32_t)((SYSCFG_MCHDLYCR_DFSDM1D0SEL << 16) | 0x00000000)
+#define LL_SYSCFG_DFSDM1_DataIn0_DM  (uint32_t)((SYSCFG_MCHDLYCR_DFSDM1D0SEL << 16) | SYSCFG_MCHDLYCR_DFSDM1D0SEL)
+#define LL_SYSCFG_DFSDM2_DataIn0_PAD (uint32_t)((SYSCFG_MCHDLYCR_DFSDM2D0SEL << 16) | 0x00000000)
+#define LL_SYSCFG_DFSDM2_DataIn0_DM  (uint32_t)((SYSCFG_MCHDLYCR_DFSDM2D0SEL << 16) | SYSCFG_MCHDLYCR_DFSDM2D0SEL)
 /**
  * @}
  */
@@ -241,19 +233,17 @@ extern "C"
 #define LL_SYSCFG_DFSDM1_DataIn2 SYSCFG_MCHDLYCR_DFSDM1D2SEL
 #define LL_SYSCFG_DFSDM2_DataIn2 SYSCFG_MCHDLYCR_DFSDM2D2SEL
 
-#define LL_SYSCFG_DFSDM1_DataIn2_PAD (uint32_t) ( ( SYSCFG_MCHDLYCR_DFSDM1D2SEL << 16 ) | 0x00000000 )
-#define LL_SYSCFG_DFSDM1_DataIn2_DM                                                                          \
-    (uint32_t) ( ( SYSCFG_MCHDLYCR_DFSDM1D2SEL << 16 ) | SYSCFG_MCHDLYCR_DFSDM1D2SEL )
-#define LL_SYSCFG_DFSDM2_DataIn2_PAD (uint32_t) ( ( SYSCFG_MCHDLYCR_DFSDM2D2SEL << 16 ) | 0x00000000 )
-#define LL_SYSCFG_DFSDM2_DataIn2_DM                                                                          \
-    (uint32_t) ( ( SYSCFG_MCHDLYCR_DFSDM2D2SEL << 16 ) | SYSCFG_MCHDLYCR_DFSDM2D2SEL )
+#define LL_SYSCFG_DFSDM1_DataIn2_PAD (uint32_t)((SYSCFG_MCHDLYCR_DFSDM1D2SEL << 16) | 0x00000000)
+#define LL_SYSCFG_DFSDM1_DataIn2_DM  (uint32_t)((SYSCFG_MCHDLYCR_DFSDM1D2SEL << 16) | SYSCFG_MCHDLYCR_DFSDM1D2SEL)
+#define LL_SYSCFG_DFSDM2_DataIn2_PAD (uint32_t)((SYSCFG_MCHDLYCR_DFSDM2D2SEL << 16) | 0x00000000)
+#define LL_SYSCFG_DFSDM2_DataIn2_DM  (uint32_t)((SYSCFG_MCHDLYCR_DFSDM2D2SEL << 16) | SYSCFG_MCHDLYCR_DFSDM2D2SEL)
 /**
  * @}
  */
 /** @defgroup SYSTEM_LL_DFSDM1_TIM4OC2_BitstreamDistribution  SYSCFG MCHDLY DFSDM1CK02SEL
  * @{
  */
-#define LL_SYSCFG_DFSDM1_TIM4OC2_CLKIN0 (uint32_t) 0x00000000
+#define LL_SYSCFG_DFSDM1_TIM4OC2_CLKIN0 (uint32_t)0x00000000
 #define LL_SYSCFG_DFSDM1_TIM4OC2_CLKIN2 SYSCFG_MCHDLYCR_DFSDM1CK02SEL
 /**
  * @}
@@ -261,7 +251,7 @@ extern "C"
 /** @defgroup SYSTEM_LL_DFSDM1_TIM4OC1_BitstreamDistribution  SYSCFG MCHDLY DFSDM1CK13SEL
  * @{
  */
-#define LL_SYSCFG_DFSDM1_TIM4OC1_CLKIN1 (uint32_t) 0x00000000
+#define LL_SYSCFG_DFSDM1_TIM4OC1_CLKIN1 (uint32_t)0x00000000
 #define LL_SYSCFG_DFSDM1_TIM4OC1_CLKIN3 SYSCFG_MCHDLYCR_DFSDM1CK13SEL
 /**
  * @}
@@ -269,15 +259,15 @@ extern "C"
 /** @defgroup SYSTEM_LL_DFSDM1_CLKIN_SourceSelection SYSCFG MCHDLY DFSDMCFG
  * @{
  */
-#define LL_SYSCFG_DFSDM1_CKIN_PAD (uint32_t) 0x00000000
-#define LL_SYSCFG_DFSDM1_CKIN_DM SYSCFG_MCHDLYCR_DFSDM1CFG
+#define LL_SYSCFG_DFSDM1_CKIN_PAD (uint32_t)0x00000000
+#define LL_SYSCFG_DFSDM1_CKIN_DM  SYSCFG_MCHDLYCR_DFSDM1CFG
 /**
  * @}
  */
 /** @defgroup SYSTEM_LL_DFSDM1_CLKOUT_SourceSelection SYSCFG MCHDLY DFSDM1CKOSEL
  * @{
  */
-#define LL_SYSCFG_DFSDM1_CKOUT (uint32_t) 0x00000000
+#define LL_SYSCFG_DFSDM1_CKOUT     (uint32_t)0x00000000
 #define LL_SYSCFG_DFSDM1_CKOUT_M27 SYSCFG_MCHDLYCR_DFSDM1CKOSEL
 /**
  * @}
@@ -286,23 +276,23 @@ extern "C"
 /** @defgroup SYSTEM_LL_DFSDM2_DataIn4_SourceSelection SYSCFG MCHDLY DFSDM2D4SEL
  * @{
  */
-#define LL_SYSCFG_DFSDM2_DataIn4_PAD (uint32_t) 0x00000000
-#define LL_SYSCFG_DFSDM2_DataIn4_DM SYSCFG_MCHDLYCR_DFSDM2D4SEL
+#define LL_SYSCFG_DFSDM2_DataIn4_PAD (uint32_t)0x00000000
+#define LL_SYSCFG_DFSDM2_DataIn4_DM  SYSCFG_MCHDLYCR_DFSDM2D4SEL
 /**
  * @}
  */
 /** @defgroup SYSTEM_LL_DFSDM2_DataIn6_SourceSelection SYSCFG MCHDLY DFSDM2D6SEL
  * @{
  */
-#define LL_SYSCFG_DFSDM2_DataIn6_PAD (uint32_t) 0x00000000
-#define LL_SYSCFG_DFSDM2_DataIn6_DM SYSCFG_MCHDLYCR_DFSDM2D6SEL
+#define LL_SYSCFG_DFSDM2_DataIn6_PAD (uint32_t)0x00000000
+#define LL_SYSCFG_DFSDM2_DataIn6_DM  SYSCFG_MCHDLYCR_DFSDM2D6SEL
 /**
  * @}
  */
 /** @defgroup SYSTEM_LL_DFSDM2_TIM3OC4_BitstreamDistribution  SYSCFG MCHDLY DFSDM2CK04SEL
  * @{
  */
-#define LL_SYSCFG_DFSDM2_TIM3OC4_CLKIN0 (uint32_t) 0x00000000
+#define LL_SYSCFG_DFSDM2_TIM3OC4_CLKIN0 (uint32_t)0x00000000
 #define LL_SYSCFG_DFSDM2_TIM3OC4_CLKIN4 SYSCFG_MCHDLYCR_DFSDM2CK04SEL
 /**
  * @}
@@ -310,7 +300,7 @@ extern "C"
 /** @defgroup SYSTEM_LL_DFSDM2_TIM3OC3_BitstreamDistribution  SYSCFG MCHDLY DFSDM2CK15SEL
  * @{
  */
-#define LL_SYSCFG_DFSDM2_TIM3OC3_CLKIN1 (uint32_t) 0x00000000
+#define LL_SYSCFG_DFSDM2_TIM3OC3_CLKIN1 (uint32_t)0x00000000
 #define LL_SYSCFG_DFSDM2_TIM3OC3_CLKIN5 SYSCFG_MCHDLYCR_DFSDM2CK15SEL
 /**
  * @}
@@ -318,7 +308,7 @@ extern "C"
 /** @defgroup SYSTEM_LL_DFSDM2_TIM3OC2_BitstreamDistribution  SYSCFG MCHDLY DFSDM2CK26SEL
  * @{
  */
-#define LL_SYSCFG_DFSDM2_TIM3OC2_CLKIN2 (uint32_t) 0x00000000
+#define LL_SYSCFG_DFSDM2_TIM3OC2_CLKIN2 (uint32_t)0x00000000
 #define LL_SYSCFG_DFSDM2_TIM3OC2_CLKIN6 SYSCFG_MCHDLYCR_DFSDM2CK26SEL
 /**
  * @}
@@ -326,7 +316,7 @@ extern "C"
 /** @defgroup SYSTEM_LL_DFSDM2_TIM3OC1_BitstreamDistribution  SYSCFG MCHDLY DFSDM2CK37SEL
  * @{
  */
-#define LL_SYSCFG_DFSDM2_TIM3OC1_CLKIN3 (uint32_t) 0x00000000
+#define LL_SYSCFG_DFSDM2_TIM3OC1_CLKIN3 (uint32_t)0x00000000
 #define LL_SYSCFG_DFSDM2_TIM3OC1_CLKIN7 SYSCFG_MCHDLYCR_DFSDM2CK37SEL
 /**
  * @}
@@ -334,15 +324,15 @@ extern "C"
 /** @defgroup SYSTEM_LL_DFSDM2_CLKIN_SourceSelection SYSCFG MCHDLY DFSDM2CFG
  * @{
  */
-#define LL_SYSCFG_DFSDM2_CKIN_PAD (uint32_t) 0x00000000
-#define LL_SYSCFG_DFSDM2_CKIN_DM SYSCFG_MCHDLYCR_DFSDM2CFG
+#define LL_SYSCFG_DFSDM2_CKIN_PAD (uint32_t)0x00000000
+#define LL_SYSCFG_DFSDM2_CKIN_DM  SYSCFG_MCHDLYCR_DFSDM2CFG
 /**
  * @}
  */
 /** @defgroup SYSTEM_LL_DFSDM2_CLKOUT_SourceSelection SYSCFG MCHDLY DFSDM2CKOSEL
  * @{
  */
-#define LL_SYSCFG_DFSDM2_CKOUT (uint32_t) 0x00000000
+#define LL_SYSCFG_DFSDM2_CKOUT     (uint32_t)0x00000000
 #define LL_SYSCFG_DFSDM2_CKOUT_M27 SYSCFG_MCHDLYCR_DFSDM2CKOSEL
 /**
  * @}
@@ -352,17 +342,14 @@ extern "C"
 /** @defgroup SYSTEM_LL_EC_TRACE DBGMCU TRACE Pin Assignment
  * @{
  */
-#define LL_DBGMCU_TRACE_NONE 0x00000000U            /*!< TRACE pins not assigned (default state) */
+#define LL_DBGMCU_TRACE_NONE   0x00000000U          /*!< TRACE pins not assigned (default state) */
 #define LL_DBGMCU_TRACE_ASYNCH DBGMCU_CR_TRACE_IOEN /*!< TRACE pin assignment for Asynchronous Mode */
-#define LL_DBGMCU_TRACE_SYNCH_SIZE1                                                                          \
-    ( DBGMCU_CR_TRACE_IOEN |                                                                                 \
-      DBGMCU_CR_TRACE_MODE_0 ) /*!< TRACE pin assignment for Synchronous Mode with a TRACEDATA size of 1 */
-#define LL_DBGMCU_TRACE_SYNCH_SIZE2                                                                          \
-    ( DBGMCU_CR_TRACE_IOEN |                                                                                 \
-      DBGMCU_CR_TRACE_MODE_1 ) /*!< TRACE pin assignment for Synchronous Mode with a TRACEDATA size of 2 */
-#define LL_DBGMCU_TRACE_SYNCH_SIZE4                                                                          \
-    ( DBGMCU_CR_TRACE_IOEN |                                                                                 \
-      DBGMCU_CR_TRACE_MODE ) /*!< TRACE pin assignment for Synchronous Mode with a TRACEDATA size of 4 */
+#define LL_DBGMCU_TRACE_SYNCH_SIZE1                                                                                                        \
+    (DBGMCU_CR_TRACE_IOEN | DBGMCU_CR_TRACE_MODE_0) /*!< TRACE pin assignment for Synchronous Mode with a TRACEDATA size of 1 */
+#define LL_DBGMCU_TRACE_SYNCH_SIZE2                                                                                                        \
+    (DBGMCU_CR_TRACE_IOEN | DBGMCU_CR_TRACE_MODE_1) /*!< TRACE pin assignment for Synchronous Mode with a TRACEDATA size of 2 */
+#define LL_DBGMCU_TRACE_SYNCH_SIZE4                                                                                                        \
+    (DBGMCU_CR_TRACE_IOEN | DBGMCU_CR_TRACE_MODE) /*!< TRACE pin assignment for Synchronous Mode with a TRACEDATA size of 4 */
 /**
  * @}
  */
@@ -370,74 +357,54 @@ extern "C"
 /** @defgroup SYSTEM_LL_EC_APB1_GRP1_STOP_IP DBGMCU APB1 GRP1 STOP IP
  * @{
  */
-#if defined( DBGMCU_APB1_FZ_DBG_TIM2_STOP )
-#define LL_DBGMCU_APB1_GRP1_TIM2_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_TIM2_STOP /*!< TIM2 counter stopped when core is halted */
-#endif                           /* DBGMCU_APB1_FZ_DBG_TIM2_STOP */
-#if defined( DBGMCU_APB1_FZ_DBG_TIM3_STOP )
-#define LL_DBGMCU_APB1_GRP1_TIM3_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_TIM3_STOP /*!< TIM3 counter stopped when core is halted */
-#endif                           /* DBGMCU_APB1_FZ_DBG_TIM3_STOP */
-#if defined( DBGMCU_APB1_FZ_DBG_TIM4_STOP )
-#define LL_DBGMCU_APB1_GRP1_TIM4_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_TIM4_STOP /*!< TIM4 counter stopped when core is halted */
-#endif                           /* DBGMCU_APB1_FZ_DBG_TIM4_STOP */
-#define LL_DBGMCU_APB1_GRP1_TIM5_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_TIM5_STOP /*!< TIM5 counter stopped when core is halted */
-#if defined( DBGMCU_APB1_FZ_DBG_TIM6_STOP )
-#define LL_DBGMCU_APB1_GRP1_TIM6_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_TIM6_STOP /*!< TIM6 counter stopped when core is halted */
-#endif                           /* DBGMCU_APB1_FZ_DBG_TIM6_STOP */
-#if defined( DBGMCU_APB1_FZ_DBG_TIM7_STOP )
-#define LL_DBGMCU_APB1_GRP1_TIM7_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_TIM7_STOP /*!< TIM7 counter stopped when core is halted */
-#endif                           /* DBGMCU_APB1_FZ_DBG_TIM7_STOP */
-#if defined( DBGMCU_APB1_FZ_DBG_TIM12_STOP )
-#define LL_DBGMCU_APB1_GRP1_TIM12_STOP                                                                       \
-    DBGMCU_APB1_FZ_DBG_TIM12_STOP /*!< TIM12 counter stopped when core is halted */
-#endif                            /* DBGMCU_APB1_FZ_DBG_TIM12_STOP */
-#if defined( DBGMCU_APB1_FZ_DBG_TIM13_STOP )
-#define LL_DBGMCU_APB1_GRP1_TIM13_STOP                                                                       \
-    DBGMCU_APB1_FZ_DBG_TIM13_STOP /*!< TIM13 counter stopped when core is halted */
-#endif                            /* DBGMCU_APB1_FZ_DBG_TIM13_STOP */
-#if defined( DBGMCU_APB1_FZ_DBG_TIM14_STOP )
-#define LL_DBGMCU_APB1_GRP1_TIM14_STOP                                                                       \
-    DBGMCU_APB1_FZ_DBG_TIM14_STOP /*!< TIM14 counter stopped when core is halted */
-#endif                            /* DBGMCU_APB1_FZ_DBG_TIM14_STOP */
-#if defined( DBGMCU_APB1_FZ_DBG_LPTIM_STOP )
-#define LL_DBGMCU_APB1_GRP1_LPTIM_STOP                                                                       \
-    DBGMCU_APB1_FZ_DBG_LPTIM_STOP /*!< LPTIM counter stopped when core is halted */
-#endif                            /* DBGMCU_APB1_FZ_DBG_LPTIM_STOP */
-#define LL_DBGMCU_APB1_GRP1_RTC_STOP                                                                         \
-    DBGMCU_APB1_FZ_DBG_RTC_STOP /*!< RTC counter stopped when core is halted */
-#define LL_DBGMCU_APB1_GRP1_WWDG_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_WWDG_STOP /*!< Debug Window Watchdog stopped when Core is halted */
-#define LL_DBGMCU_APB1_GRP1_IWDG_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_IWDG_STOP /*!< Debug Independent Watchdog stopped when Core is halted */
-#define LL_DBGMCU_APB1_GRP1_I2C1_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_I2C1_SMBUS_TIMEOUT /*!< I2C1 SMBUS timeout mode stopped when Core is halted */
-#define LL_DBGMCU_APB1_GRP1_I2C2_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_I2C2_SMBUS_TIMEOUT /*!< I2C2 SMBUS timeout mode stopped when Core is halted */
-#if defined( DBGMCU_APB1_FZ_DBG_I2C3_SMBUS_TIMEOUT )
-#define LL_DBGMCU_APB1_GRP1_I2C3_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_I2C3_SMBUS_TIMEOUT /*!< I2C3 SMBUS timeout mode stopped when Core is halted */
-#endif                                    /* DBGMCU_APB1_FZ_DBG_I2C3_SMBUS_TIMEOUT */
-#if defined( DBGMCU_APB1_FZ_DBG_I2C4_SMBUS_TIMEOUT )
-#define LL_DBGMCU_APB1_GRP1_I2C4_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_I2C4_SMBUS_TIMEOUT /*!< I2C4 SMBUS timeout mode stopped when Core is halted */
-#endif                                    /* DBGMCU_APB1_FZ_DBG_I2C4_SMBUS_TIMEOUT */
-#if defined( DBGMCU_APB1_FZ_DBG_CAN1_STOP )
-#define LL_DBGMCU_APB1_GRP1_CAN1_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_CAN1_STOP /*!< CAN1 debug stopped when Core is halted  */
-#endif                           /* DBGMCU_APB1_FZ_DBG_CAN1_STOP */
-#if defined( DBGMCU_APB1_FZ_DBG_CAN2_STOP )
-#define LL_DBGMCU_APB1_GRP1_CAN2_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_CAN2_STOP /*!< CAN2 debug stopped when Core is halted  */
-#endif                           /* DBGMCU_APB1_FZ_DBG_CAN2_STOP */
-#if defined( DBGMCU_APB1_FZ_DBG_CAN3_STOP )
-#define LL_DBGMCU_APB1_GRP1_CAN3_STOP                                                                        \
-    DBGMCU_APB1_FZ_DBG_CAN3_STOP /*!< CAN3 debug stopped when Core is halted  */
-#endif                           /* DBGMCU_APB1_FZ_DBG_CAN3_STOP */
+#if defined(DBGMCU_APB1_FZ_DBG_TIM2_STOP)
+#define LL_DBGMCU_APB1_GRP1_TIM2_STOP DBGMCU_APB1_FZ_DBG_TIM2_STOP /*!< TIM2 counter stopped when core is halted */
+#endif                                                             /* DBGMCU_APB1_FZ_DBG_TIM2_STOP */
+#if defined(DBGMCU_APB1_FZ_DBG_TIM3_STOP)
+#define LL_DBGMCU_APB1_GRP1_TIM3_STOP DBGMCU_APB1_FZ_DBG_TIM3_STOP /*!< TIM3 counter stopped when core is halted */
+#endif                                                             /* DBGMCU_APB1_FZ_DBG_TIM3_STOP */
+#if defined(DBGMCU_APB1_FZ_DBG_TIM4_STOP)
+#define LL_DBGMCU_APB1_GRP1_TIM4_STOP DBGMCU_APB1_FZ_DBG_TIM4_STOP /*!< TIM4 counter stopped when core is halted */
+#endif                                                             /* DBGMCU_APB1_FZ_DBG_TIM4_STOP */
+#define LL_DBGMCU_APB1_GRP1_TIM5_STOP DBGMCU_APB1_FZ_DBG_TIM5_STOP /*!< TIM5 counter stopped when core is halted */
+#if defined(DBGMCU_APB1_FZ_DBG_TIM6_STOP)
+#define LL_DBGMCU_APB1_GRP1_TIM6_STOP DBGMCU_APB1_FZ_DBG_TIM6_STOP /*!< TIM6 counter stopped when core is halted */
+#endif                                                             /* DBGMCU_APB1_FZ_DBG_TIM6_STOP */
+#if defined(DBGMCU_APB1_FZ_DBG_TIM7_STOP)
+#define LL_DBGMCU_APB1_GRP1_TIM7_STOP DBGMCU_APB1_FZ_DBG_TIM7_STOP /*!< TIM7 counter stopped when core is halted */
+#endif                                                             /* DBGMCU_APB1_FZ_DBG_TIM7_STOP */
+#if defined(DBGMCU_APB1_FZ_DBG_TIM12_STOP)
+#define LL_DBGMCU_APB1_GRP1_TIM12_STOP DBGMCU_APB1_FZ_DBG_TIM12_STOP /*!< TIM12 counter stopped when core is halted */
+#endif                                                               /* DBGMCU_APB1_FZ_DBG_TIM12_STOP */
+#if defined(DBGMCU_APB1_FZ_DBG_TIM13_STOP)
+#define LL_DBGMCU_APB1_GRP1_TIM13_STOP DBGMCU_APB1_FZ_DBG_TIM13_STOP /*!< TIM13 counter stopped when core is halted */
+#endif                                                               /* DBGMCU_APB1_FZ_DBG_TIM13_STOP */
+#if defined(DBGMCU_APB1_FZ_DBG_TIM14_STOP)
+#define LL_DBGMCU_APB1_GRP1_TIM14_STOP DBGMCU_APB1_FZ_DBG_TIM14_STOP /*!< TIM14 counter stopped when core is halted */
+#endif                                                               /* DBGMCU_APB1_FZ_DBG_TIM14_STOP */
+#if defined(DBGMCU_APB1_FZ_DBG_LPTIM_STOP)
+#define LL_DBGMCU_APB1_GRP1_LPTIM_STOP DBGMCU_APB1_FZ_DBG_LPTIM_STOP        /*!< LPTIM counter stopped when core is halted */
+#endif                                                                      /* DBGMCU_APB1_FZ_DBG_LPTIM_STOP */
+#define LL_DBGMCU_APB1_GRP1_RTC_STOP  DBGMCU_APB1_FZ_DBG_RTC_STOP           /*!< RTC counter stopped when core is halted */
+#define LL_DBGMCU_APB1_GRP1_WWDG_STOP DBGMCU_APB1_FZ_DBG_WWDG_STOP          /*!< Debug Window Watchdog stopped when Core is halted */
+#define LL_DBGMCU_APB1_GRP1_IWDG_STOP DBGMCU_APB1_FZ_DBG_IWDG_STOP          /*!< Debug Independent Watchdog stopped when Core is halted */
+#define LL_DBGMCU_APB1_GRP1_I2C1_STOP DBGMCU_APB1_FZ_DBG_I2C1_SMBUS_TIMEOUT /*!< I2C1 SMBUS timeout mode stopped when Core is halted */
+#define LL_DBGMCU_APB1_GRP1_I2C2_STOP DBGMCU_APB1_FZ_DBG_I2C2_SMBUS_TIMEOUT /*!< I2C2 SMBUS timeout mode stopped when Core is halted */
+#if defined(DBGMCU_APB1_FZ_DBG_I2C3_SMBUS_TIMEOUT)
+#define LL_DBGMCU_APB1_GRP1_I2C3_STOP DBGMCU_APB1_FZ_DBG_I2C3_SMBUS_TIMEOUT /*!< I2C3 SMBUS timeout mode stopped when Core is halted */
+#endif                                                                      /* DBGMCU_APB1_FZ_DBG_I2C3_SMBUS_TIMEOUT */
+#if defined(DBGMCU_APB1_FZ_DBG_I2C4_SMBUS_TIMEOUT)
+#define LL_DBGMCU_APB1_GRP1_I2C4_STOP DBGMCU_APB1_FZ_DBG_I2C4_SMBUS_TIMEOUT /*!< I2C4 SMBUS timeout mode stopped when Core is halted */
+#endif                                                                      /* DBGMCU_APB1_FZ_DBG_I2C4_SMBUS_TIMEOUT */
+#if defined(DBGMCU_APB1_FZ_DBG_CAN1_STOP)
+#define LL_DBGMCU_APB1_GRP1_CAN1_STOP DBGMCU_APB1_FZ_DBG_CAN1_STOP /*!< CAN1 debug stopped when Core is halted  */
+#endif                                                             /* DBGMCU_APB1_FZ_DBG_CAN1_STOP */
+#if defined(DBGMCU_APB1_FZ_DBG_CAN2_STOP)
+#define LL_DBGMCU_APB1_GRP1_CAN2_STOP DBGMCU_APB1_FZ_DBG_CAN2_STOP /*!< CAN2 debug stopped when Core is halted  */
+#endif                                                             /* DBGMCU_APB1_FZ_DBG_CAN2_STOP */
+#if defined(DBGMCU_APB1_FZ_DBG_CAN3_STOP)
+#define LL_DBGMCU_APB1_GRP1_CAN3_STOP DBGMCU_APB1_FZ_DBG_CAN3_STOP /*!< CAN3 debug stopped when Core is halted  */
+#endif                                                             /* DBGMCU_APB1_FZ_DBG_CAN3_STOP */
 /**
  * @}
  */
@@ -445,20 +412,15 @@ extern "C"
 /** @defgroup SYSTEM_LL_EC_APB2_GRP1_STOP_IP DBGMCU APB2 GRP1 STOP IP
  * @{
  */
-#define LL_DBGMCU_APB2_GRP1_TIM1_STOP                                                                        \
-    DBGMCU_APB2_FZ_DBG_TIM1_STOP /*!< TIM1 counter stopped when core is halted */
-#if defined( DBGMCU_APB2_FZ_DBG_TIM8_STOP )
-#define LL_DBGMCU_APB2_GRP1_TIM8_STOP                                                                        \
-    DBGMCU_APB2_FZ_DBG_TIM8_STOP /*!< TIM8 counter stopped when core is halted */
-#endif                           /* DBGMCU_APB2_FZ_DBG_TIM8_STOP */
-#define LL_DBGMCU_APB2_GRP1_TIM9_STOP                                                                        \
-    DBGMCU_APB2_FZ_DBG_TIM9_STOP /*!< TIM9 counter stopped when core is halted */
-#if defined( DBGMCU_APB2_FZ_DBG_TIM10_STOP )
-#define LL_DBGMCU_APB2_GRP1_TIM10_STOP                                                                       \
-    DBGMCU_APB2_FZ_DBG_TIM10_STOP /*!< TIM10 counter stopped when core is halted */
-#endif                            /* DBGMCU_APB2_FZ_DBG_TIM10_STOP */
-#define LL_DBGMCU_APB2_GRP1_TIM11_STOP                                                                       \
-    DBGMCU_APB2_FZ_DBG_TIM11_STOP /*!< TIM11 counter stopped when core is halted */
+#define LL_DBGMCU_APB2_GRP1_TIM1_STOP DBGMCU_APB2_FZ_DBG_TIM1_STOP /*!< TIM1 counter stopped when core is halted */
+#if defined(DBGMCU_APB2_FZ_DBG_TIM8_STOP)
+#define LL_DBGMCU_APB2_GRP1_TIM8_STOP DBGMCU_APB2_FZ_DBG_TIM8_STOP /*!< TIM8 counter stopped when core is halted */
+#endif                                                             /* DBGMCU_APB2_FZ_DBG_TIM8_STOP */
+#define LL_DBGMCU_APB2_GRP1_TIM9_STOP DBGMCU_APB2_FZ_DBG_TIM9_STOP /*!< TIM9 counter stopped when core is halted */
+#if defined(DBGMCU_APB2_FZ_DBG_TIM10_STOP)
+#define LL_DBGMCU_APB2_GRP1_TIM10_STOP DBGMCU_APB2_FZ_DBG_TIM10_STOP /*!< TIM10 counter stopped when core is halted */
+#endif                                                               /* DBGMCU_APB2_FZ_DBG_TIM10_STOP */
+#define LL_DBGMCU_APB2_GRP1_TIM11_STOP DBGMCU_APB2_FZ_DBG_TIM11_STOP /*!< TIM11 counter stopped when core is halted */
 /**
  * @}
  */
@@ -466,16 +428,16 @@ extern "C"
 /** @defgroup SYSTEM_LL_EC_LATENCY FLASH LATENCY
  * @{
  */
-#define LL_FLASH_LATENCY_0 FLASH_ACR_LATENCY_0WS   /*!< FLASH Zero wait state */
-#define LL_FLASH_LATENCY_1 FLASH_ACR_LATENCY_1WS   /*!< FLASH One wait state */
-#define LL_FLASH_LATENCY_2 FLASH_ACR_LATENCY_2WS   /*!< FLASH Two wait states */
-#define LL_FLASH_LATENCY_3 FLASH_ACR_LATENCY_3WS   /*!< FLASH Three wait states */
-#define LL_FLASH_LATENCY_4 FLASH_ACR_LATENCY_4WS   /*!< FLASH Four wait states */
-#define LL_FLASH_LATENCY_5 FLASH_ACR_LATENCY_5WS   /*!< FLASH five wait state */
-#define LL_FLASH_LATENCY_6 FLASH_ACR_LATENCY_6WS   /*!< FLASH six wait state */
-#define LL_FLASH_LATENCY_7 FLASH_ACR_LATENCY_7WS   /*!< FLASH seven wait states */
-#define LL_FLASH_LATENCY_8 FLASH_ACR_LATENCY_8WS   /*!< FLASH eight wait states */
-#define LL_FLASH_LATENCY_9 FLASH_ACR_LATENCY_9WS   /*!< FLASH nine wait states */
+#define LL_FLASH_LATENCY_0  FLASH_ACR_LATENCY_0WS  /*!< FLASH Zero wait state */
+#define LL_FLASH_LATENCY_1  FLASH_ACR_LATENCY_1WS  /*!< FLASH One wait state */
+#define LL_FLASH_LATENCY_2  FLASH_ACR_LATENCY_2WS  /*!< FLASH Two wait states */
+#define LL_FLASH_LATENCY_3  FLASH_ACR_LATENCY_3WS  /*!< FLASH Three wait states */
+#define LL_FLASH_LATENCY_4  FLASH_ACR_LATENCY_4WS  /*!< FLASH Four wait states */
+#define LL_FLASH_LATENCY_5  FLASH_ACR_LATENCY_5WS  /*!< FLASH five wait state */
+#define LL_FLASH_LATENCY_6  FLASH_ACR_LATENCY_6WS  /*!< FLASH six wait state */
+#define LL_FLASH_LATENCY_7  FLASH_ACR_LATENCY_7WS  /*!< FLASH seven wait states */
+#define LL_FLASH_LATENCY_8  FLASH_ACR_LATENCY_8WS  /*!< FLASH eight wait states */
+#define LL_FLASH_LATENCY_9  FLASH_ACR_LATENCY_9WS  /*!< FLASH nine wait states */
 #define LL_FLASH_LATENCY_10 FLASH_ACR_LATENCY_10WS /*!< FLASH ten wait states */
 #define LL_FLASH_LATENCY_11 FLASH_ACR_LATENCY_11WS /*!< FLASH eleven wait states */
 #define LL_FLASH_LATENCY_12 FLASH_ACR_LATENCY_12WS /*!< FLASH twelve wait states */
@@ -511,9 +473,9 @@ extern "C"
  *         @arg @ref LL_SYSCFG_REMAP_FMC (*)
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_SetRemapMemory( uint32_t Memory )
+__STATIC_INLINE void LL_SYSCFG_SetRemapMemory(uint32_t Memory)
 {
-    MODIFY_REG( SYSCFG->MEMRMP, SYSCFG_MEMRMP_MEM_MODE, Memory );
+    MODIFY_REG(SYSCFG->MEMRMP, SYSCFG_MEMRMP_MEM_MODE, Memory);
 }
 
 /**
@@ -526,12 +488,12 @@ __STATIC_INLINE void LL_SYSCFG_SetRemapMemory( uint32_t Memory )
  *         @arg @ref LL_SYSCFG_REMAP_FSMC (*)
  *         @arg @ref LL_SYSCFG_REMAP_FMC (*)
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_GetRemapMemory( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_GetRemapMemory(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MEMRMP, SYSCFG_MEMRMP_MEM_MODE ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MEMRMP, SYSCFG_MEMRMP_MEM_MODE));
 }
 
-#if defined( SYSCFG_MEMRMP_SWP_FMC )
+#if defined(SYSCFG_MEMRMP_SWP_FMC)
 /**
  * @brief  Enables the FMC Memory Mapping Swapping
  * @rmtoll SYSCFG_MEMRMP SWP_FMC      LL_SYSCFG_EnableFMCMemorySwapping
@@ -539,9 +501,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetRemapMemory( void )
  *         is accessible at 0xC0000000
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_EnableFMCMemorySwapping( void )
+__STATIC_INLINE void LL_SYSCFG_EnableFMCMemorySwapping(void)
 {
-    SET_BIT( SYSCFG->MEMRMP, SYSCFG_MEMRMP_SWP_FMC_0 );
+    SET_BIT(SYSCFG->MEMRMP, SYSCFG_MEMRMP_SWP_FMC_0);
 }
 
 /**
@@ -551,9 +513,9 @@ __STATIC_INLINE void LL_SYSCFG_EnableFMCMemorySwapping( void )
  *         and NOR/RAM is accessible at 0x60000000 (default mapping)
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DisableFMCMemorySwapping( void )
+__STATIC_INLINE void LL_SYSCFG_DisableFMCMemorySwapping(void)
 {
-    CLEAR_BIT( SYSCFG->MEMRMP, SYSCFG_MEMRMP_SWP_FMC );
+    CLEAR_BIT(SYSCFG->MEMRMP, SYSCFG_MEMRMP_SWP_FMC);
 }
 
 #endif /* SYSCFG_MEMRMP_SWP_FMC */
@@ -564,9 +526,9 @@ __STATIC_INLINE void LL_SYSCFG_DisableFMCMemorySwapping( void )
  *         voltage ranges from 2.4 to 3.6 V
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_EnableCompensationCell( void )
+__STATIC_INLINE void LL_SYSCFG_EnableCompensationCell(void)
 {
-    SET_BIT( SYSCFG->CMPCR, SYSCFG_CMPCR_CMP_PD );
+    SET_BIT(SYSCFG->CMPCR, SYSCFG_CMPCR_CMP_PD);
 }
 
 /**
@@ -576,9 +538,9 @@ __STATIC_INLINE void LL_SYSCFG_EnableCompensationCell( void )
  *         voltage ranges from 2.4 to 3.6 V
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DisableCompensationCell( void )
+__STATIC_INLINE void LL_SYSCFG_DisableCompensationCell(void)
 {
-    CLEAR_BIT( SYSCFG->CMPCR, SYSCFG_CMPCR_CMP_PD );
+    CLEAR_BIT(SYSCFG->CMPCR, SYSCFG_CMPCR_CMP_PD);
 }
 
 /**
@@ -586,12 +548,12 @@ __STATIC_INLINE void LL_SYSCFG_DisableCompensationCell( void )
  * @rmtoll SYSCFG_CMPCR READY  LL_SYSCFG_IsActiveFlag_CMPCR
  * @retval State of bit (1 or 0).
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_IsActiveFlag_CMPCR( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_IsActiveFlag_CMPCR(void)
 {
-    return ( READ_BIT( SYSCFG->CMPCR, SYSCFG_CMPCR_READY ) == ( SYSCFG_CMPCR_READY ) );
+    return (READ_BIT(SYSCFG->CMPCR, SYSCFG_CMPCR_READY) == (SYSCFG_CMPCR_READY));
 }
 
-#if defined( SYSCFG_PMC_MII_RMII_SEL )
+#if defined(SYSCFG_PMC_MII_RMII_SEL)
 /**
  * @brief  Select Ethernet PHY interface
  * @rmtoll SYSCFG_PMC MII_RMII_SEL       LL_SYSCFG_SetPHYInterface
@@ -600,9 +562,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_IsActiveFlag_CMPCR( void )
  *         @arg @ref LL_SYSCFG_PMC_ETHRMII
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_SetPHYInterface( uint32_t Interface )
+__STATIC_INLINE void LL_SYSCFG_SetPHYInterface(uint32_t Interface)
 {
-    MODIFY_REG( SYSCFG->PMC, SYSCFG_PMC_MII_RMII_SEL, Interface );
+    MODIFY_REG(SYSCFG->PMC, SYSCFG_PMC_MII_RMII_SEL, Interface);
 }
 
 /**
@@ -613,13 +575,13 @@ __STATIC_INLINE void LL_SYSCFG_SetPHYInterface( uint32_t Interface )
  *         @arg @ref LL_SYSCFG_PMC_ETHRMII
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_GetPHYInterface( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_GetPHYInterface(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->PMC, SYSCFG_PMC_MII_RMII_SEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->PMC, SYSCFG_PMC_MII_RMII_SEL));
 }
 #endif /* SYSCFG_PMC_MII_RMII_SEL */
 
-#if defined( SYSCFG_MEMRMP_UFB_MODE )
+#if defined(SYSCFG_MEMRMP_UFB_MODE)
 /**
  * @brief  Select Flash bank mode (Bank flashed at 0x08000000)
  * @rmtoll SYSCFG_MEMRMP UFB_MODE       LL_SYSCFG_SetFlashBankMode
@@ -628,9 +590,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetPHYInterface( void )
  *         @arg @ref LL_SYSCFG_BANKMODE_BANK2
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_SetFlashBankMode( uint32_t Bank )
+__STATIC_INLINE void LL_SYSCFG_SetFlashBankMode(uint32_t Bank)
 {
-    MODIFY_REG( SYSCFG->MEMRMP, SYSCFG_MEMRMP_UFB_MODE, Bank );
+    MODIFY_REG(SYSCFG->MEMRMP, SYSCFG_MEMRMP_UFB_MODE, Bank);
 }
 
 /**
@@ -640,13 +602,13 @@ __STATIC_INLINE void LL_SYSCFG_SetFlashBankMode( uint32_t Bank )
  *         @arg @ref LL_SYSCFG_BANKMODE_BANK1
  *         @arg @ref LL_SYSCFG_BANKMODE_BANK2
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_GetFlashBankMode( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_GetFlashBankMode(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MEMRMP, SYSCFG_MEMRMP_UFB_MODE ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MEMRMP, SYSCFG_MEMRMP_UFB_MODE));
 }
 #endif /* SYSCFG_MEMRMP_UFB_MODE */
 
-#if defined( SYSCFG_CFGR_FMPI2C1_SCL )
+#if defined(SYSCFG_CFGR_FMPI2C1_SCL)
 /**
  * @brief  Enable the I2C fast mode plus driving capability.
  * @rmtoll SYSCFG_CFGR FMPI2C1_SCL   LL_SYSCFG_EnableFastModePlus\n
@@ -657,9 +619,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetFlashBankMode( void )
  *         (*) value not defined in all devices
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_EnableFastModePlus( uint32_t ConfigFastModePlus )
+__STATIC_INLINE void LL_SYSCFG_EnableFastModePlus(uint32_t ConfigFastModePlus)
 {
-    SET_BIT( SYSCFG->CFGR, ConfigFastModePlus );
+    SET_BIT(SYSCFG->CFGR, ConfigFastModePlus);
 }
 
 /**
@@ -672,9 +634,9 @@ __STATIC_INLINE void LL_SYSCFG_EnableFastModePlus( uint32_t ConfigFastModePlus )
  *         (*) value not defined in all devices
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DisableFastModePlus( uint32_t ConfigFastModePlus )
+__STATIC_INLINE void LL_SYSCFG_DisableFastModePlus(uint32_t ConfigFastModePlus)
 {
-    CLEAR_BIT( SYSCFG->CFGR, ConfigFastModePlus );
+    CLEAR_BIT(SYSCFG->CFGR, ConfigFastModePlus);
 }
 #endif /* SYSCFG_CFGR_FMPI2C1_SCL */
 
@@ -714,9 +676,9 @@ __STATIC_INLINE void LL_SYSCFG_DisableFastModePlus( uint32_t ConfigFastModePlus 
  *         @arg @ref LL_SYSCFG_EXTI_LINE15
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_SetEXTISource( uint32_t Port, uint32_t Line )
+__STATIC_INLINE void LL_SYSCFG_SetEXTISource(uint32_t Port, uint32_t Line)
 {
-    MODIFY_REG( SYSCFG->EXTICR[Line & 0xFF], ( Line >> 16 ), Port << POSITION_VAL( ( Line >> 16 ) ) );
+    MODIFY_REG(SYSCFG->EXTICR[Line & 0xFF], (Line >> 16), Port << POSITION_VAL((Line >> 16)));
 }
 
 /**
@@ -753,13 +715,12 @@ __STATIC_INLINE void LL_SYSCFG_SetEXTISource( uint32_t Port, uint32_t Line )
  *         @arg @ref LL_SYSCFG_EXTI_PORTH
  *         (*) value not defined in all devices
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_GetEXTISource( uint32_t Line )
+__STATIC_INLINE uint32_t LL_SYSCFG_GetEXTISource(uint32_t Line)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->EXTICR[Line & 0xFF], ( Line >> 16 ) ) >>
-                        POSITION_VAL( Line >> 16 ) );
+    return (uint32_t)(READ_BIT(SYSCFG->EXTICR[Line & 0xFF], (Line >> 16)) >> POSITION_VAL(Line >> 16));
 }
 
-#if defined( SYSCFG_CFGR2_LOCKUP_LOCK )
+#if defined(SYSCFG_CFGR2_LOCKUP_LOCK)
 /**
  * @brief  Set connections to TIM1/8 break inputs
  * @rmtoll SYSCFG_CFGR2 LockUp Lock           LL_SYSCFG_SetTIMBreakInputs \n
@@ -769,9 +730,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetEXTISource( uint32_t Line )
  *         @arg @ref LL_SYSCFG_TIMBREAK_PVD
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_SetTIMBreakInputs( uint32_t Break )
+__STATIC_INLINE void LL_SYSCFG_SetTIMBreakInputs(uint32_t Break)
 {
-    MODIFY_REG( SYSCFG->CFGR2, SYSCFG_CFGR2_LOCKUP_LOCK | SYSCFG_CFGR2_PVD_LOCK, Break );
+    MODIFY_REG(SYSCFG->CFGR2, SYSCFG_CFGR2_LOCKUP_LOCK | SYSCFG_CFGR2_PVD_LOCK, Break);
 }
 
 /**
@@ -782,12 +743,12 @@ __STATIC_INLINE void LL_SYSCFG_SetTIMBreakInputs( uint32_t Break )
  *         @arg @ref LL_SYSCFG_TIMBREAK_LOCKUP
  *         @arg @ref LL_SYSCFG_TIMBREAK_PVD
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_GetTIMBreakInputs( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_GetTIMBreakInputs(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->CFGR2, SYSCFG_CFGR2_LOCKUP_LOCK | SYSCFG_CFGR2_PVD_LOCK ) );
+    return (uint32_t)(READ_BIT(SYSCFG->CFGR2, SYSCFG_CFGR2_LOCKUP_LOCK | SYSCFG_CFGR2_PVD_LOCK));
 }
 #endif /* SYSCFG_CFGR2_LOCKUP_LOCK */
-#if defined( SYSCFG_MCHDLYCR_BSCKSEL )
+#if defined(SYSCFG_MCHDLYCR_BSCKSEL)
 /**
  * @brief  Select the DFSDM2 or TIM2_OC1 as clock source for the bitstream clock.
  * @rmtoll SYSCFG_MCHDLYCR BSCKSEL        LL_SYSCFG_DFSDM_SetBitstreamClockSourceSelection
@@ -796,9 +757,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetTIMBreakInputs( void )
  *         @arg @ref LL_SYSCFG_BITSTREAM_CLOCK_TIM2OC1
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM_SetBitstreamClockSourceSelection( uint32_t ClockSource )
+__STATIC_INLINE void LL_SYSCFG_DFSDM_SetBitstreamClockSourceSelection(uint32_t ClockSource)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_BSCKSEL, ClockSource );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_BSCKSEL, ClockSource);
 }
 /**
  * @brief  Get the DFSDM2 or TIM2_OC1 as clock source for the bitstream clock.
@@ -808,9 +769,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM_SetBitstreamClockSourceSelection( uint32_t 
  *         @arg @ref LL_SYSCFG_BITSTREAM_CLOCK_TIM2OC1
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM_GetBitstreamClockSourceSelection( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM_GetBitstreamClockSourceSelection(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_BSCKSEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_BSCKSEL));
 }
 /**
  * @brief  Enables the DFSDM1 or DFSDM2 Delay clock
@@ -820,9 +781,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM_GetBitstreamClockSourceSelection( void 
  *         @arg @ref LL_SYSCFG_DFSDM2_MCHDLYEN
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM_EnableDelayClock( uint32_t MCHDLY )
+__STATIC_INLINE void LL_SYSCFG_DFSDM_EnableDelayClock(uint32_t MCHDLY)
 {
-    SET_BIT( SYSCFG->MCHDLYCR, MCHDLY );
+    SET_BIT(SYSCFG->MCHDLYCR, MCHDLY);
 }
 
 /**
@@ -833,9 +794,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM_EnableDelayClock( uint32_t MCHDLY )
  *         @arg @ref LL_SYSCFG_DFSDM2_MCHDLYEN
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM_DisableDelayClock( uint32_t MCHDLY )
+__STATIC_INLINE void LL_SYSCFG_DFSDM_DisableDelayClock(uint32_t MCHDLY)
 {
-    CLEAR_BIT( SYSCFG->MCHDLYCR, MCHDLY );
+    CLEAR_BIT(SYSCFG->MCHDLYCR, MCHDLY);
 }
 
 /**
@@ -848,9 +809,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM_DisableDelayClock( uint32_t MCHDLY )
  *         @arg @ref LL_SYSCFG_DFSDM2_DataIn0_DM
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM_SetDataIn0Source( uint32_t Source )
+__STATIC_INLINE void LL_SYSCFG_DFSDM_SetDataIn0Source(uint32_t Source)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, ( Source >> 16 ), ( Source & 0x0000FFFF ) );
+    MODIFY_REG(SYSCFG->MCHDLYCR, (Source >> 16), (Source & 0x0000FFFF));
 }
 /**
  * @brief  Get the source for DFSDM1 or DFSDM2 DatIn0.
@@ -865,9 +826,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM_SetDataIn0Source( uint32_t Source )
  *         @arg @ref LL_SYSCFG_DFSDM2_DataIn0_DM
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM_GetDataIn0Source( uint32_t Source )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM_GetDataIn0Source(uint32_t Source)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, Source ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, Source));
 }
 /**
  * @brief  Select the source for DFSDM1 or DFSDM2 DatIn2
@@ -879,9 +840,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM_GetDataIn0Source( uint32_t Source )
  *         @arg @ref LL_SYSCFG_DFSDM2_DataIn2_DM
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM_SetDataIn2Source( uint32_t Source )
+__STATIC_INLINE void LL_SYSCFG_DFSDM_SetDataIn2Source(uint32_t Source)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, ( Source >> 16 ), ( Source & 0x0000FFFF ) );
+    MODIFY_REG(SYSCFG->MCHDLYCR, (Source >> 16), (Source & 0x0000FFFF));
 }
 /**
  * @brief  Get the source for DFSDM1 or DFSDM2 DatIn2.
@@ -896,9 +857,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM_SetDataIn2Source( uint32_t Source )
  *         @arg @ref LL_SYSCFG_DFSDM2_DataIn2_DM
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM_GetDataIn2Source( uint32_t Source )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM_GetDataIn2Source(uint32_t Source)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, Source ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, Source));
 }
 
 /**
@@ -909,9 +870,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM_GetDataIn2Source( uint32_t Source )
  *         @arg @ref LL_SYSCFG_DFSDM1_TIM4OC2_CLKIN2
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM1_SetTIM4OC2BitStreamDistribution( uint32_t Source )
+__STATIC_INLINE void LL_SYSCFG_DFSDM1_SetTIM4OC2BitStreamDistribution(uint32_t Source)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CK02SEL, Source );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CK02SEL, Source);
 }
 /**
  * @brief  Get the distribution of the bitsream lock gated by TIM4 OC2
@@ -921,9 +882,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM1_SetTIM4OC2BitStreamDistribution( uint32_t 
  *         @arg @ref LL_SYSCFG_DFSDM1_TIM4OC2_CLKIN2
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM1_GetTIM4OC2BitStreamDistribution( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM1_GetTIM4OC2BitStreamDistribution(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CK02SEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CK02SEL));
 }
 
 /**
@@ -934,9 +895,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM1_GetTIM4OC2BitStreamDistribution( void 
  *         @arg @ref LL_SYSCFG_DFSDM1_TIM4OC1_CLKIN3
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM1_SetTIM4OC1BitStreamDistribution( uint32_t Source )
+__STATIC_INLINE void LL_SYSCFG_DFSDM1_SetTIM4OC1BitStreamDistribution(uint32_t Source)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CK13SEL, Source );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CK13SEL, Source);
 }
 /**
  * @brief  Get the distribution of the bitsream lock gated by TIM4 OC1
@@ -946,9 +907,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM1_SetTIM4OC1BitStreamDistribution( uint32_t 
  *         @arg @ref LL_SYSCFG_DFSDM1_TIM4OC1_CLKIN3
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM1_GetTIM4OC1BitStreamDistribution( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM1_GetTIM4OC1BitStreamDistribution(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CK13SEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CK13SEL));
 }
 
 /**
@@ -959,9 +920,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM1_GetTIM4OC1BitStreamDistribution( void 
  *         @arg @ref LL_SYSCFG_DFSDM1_CKIN_DM
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM1_SetClockInSourceSelection( uint32_t ClockSource )
+__STATIC_INLINE void LL_SYSCFG_DFSDM1_SetClockInSourceSelection(uint32_t ClockSource)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CFG, ClockSource );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CFG, ClockSource);
 }
 /**
  * @brief  GET the DFSDM1 Clock In
@@ -971,9 +932,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM1_SetClockInSourceSelection( uint32_t ClockS
  *         @arg @ref LL_SYSCFG_DFSDM1_CKIN_DM
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM1_GetClockInSourceSelection( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM1_GetClockInSourceSelection(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CFG ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CFG));
 }
 
 /**
@@ -984,9 +945,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM1_GetClockInSourceSelection( void )
  *         @arg @ref LL_SYSCFG_DFSDM1_CKOUT_M27
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM1_SetClockOutSourceSelection( uint32_t ClockSource )
+__STATIC_INLINE void LL_SYSCFG_DFSDM1_SetClockOutSourceSelection(uint32_t ClockSource)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CKOSEL, ClockSource );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CKOSEL, ClockSource);
 }
 /**
  * @brief  GET the DFSDM1 Clock Out
@@ -996,9 +957,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM1_SetClockOutSourceSelection( uint32_t Clock
  *         @arg @ref LL_SYSCFG_DFSDM1_CKOUT_M27
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM1_GetClockOutSourceSelection( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM1_GetClockOutSourceSelection(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CKOSEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM1CKOSEL));
 }
 
 /**
@@ -1006,9 +967,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM1_GetClockOutSourceSelection( void )
  * @rmtoll SYSCFG_MCHDLYCR MCHDLY2EN      LL_SYSCFG_DFSDM2_EnableDelayClock
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM2_EnableDelayClock( void )
+__STATIC_INLINE void LL_SYSCFG_DFSDM2_EnableDelayClock(void)
 {
-    SET_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_MCHDLY2EN );
+    SET_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_MCHDLY2EN);
 }
 
 /**
@@ -1016,9 +977,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM2_EnableDelayClock( void )
  * @rmtoll SYSCFG_MCHDLYCR MCHDLY2EN      LL_SYSCFG_DFSDM2_DisableDelayClock
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM2_DisableDelayClock( void )
+__STATIC_INLINE void LL_SYSCFG_DFSDM2_DisableDelayClock(void)
 {
-    CLEAR_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_MCHDLY2EN );
+    CLEAR_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_MCHDLY2EN);
 }
 /**
  * @brief  Select the source for DFSDM2 DatIn0
@@ -1028,9 +989,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM2_DisableDelayClock( void )
  *         @arg @ref LL_SYSCFG_DFSDM2_DataIn0_DM
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetDataIn0Source( uint32_t Source )
+__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetDataIn0Source(uint32_t Source)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D0SEL, Source );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D0SEL, Source);
 }
 /**
  * @brief  Get the source for DFSDM2 DatIn0.
@@ -1040,9 +1001,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM2_SetDataIn0Source( uint32_t Source )
  *         @arg @ref LL_SYSCFG_DFSDM2_DataIn0_DM
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetDataIn0Source( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetDataIn0Source(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D0SEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D0SEL));
 }
 
 /**
@@ -1053,9 +1014,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetDataIn0Source( void )
  *         @arg @ref LL_SYSCFG_DFSDM2_DataIn2_DM
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetDataIn2Source( uint32_t Source )
+__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetDataIn2Source(uint32_t Source)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D2SEL, Source );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D2SEL, Source);
 }
 /**
  * @brief  Get the source for DFSDM2 DatIn2.
@@ -1065,9 +1026,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM2_SetDataIn2Source( uint32_t Source )
  *         @arg @ref LL_SYSCFG_DFSDM2_DataIn2_DM
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetDataIn2Source( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetDataIn2Source(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D2SEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D2SEL));
 }
 
 /**
@@ -1078,9 +1039,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetDataIn2Source( void )
  *         @arg @ref LL_SYSCFG_DFSDM2_DataIn4_DM
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetDataIn4Source( uint32_t Source )
+__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetDataIn4Source(uint32_t Source)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D4SEL, Source );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D4SEL, Source);
 }
 /**
  * @brief  Get the source for DFSDM2 DatIn4.
@@ -1090,9 +1051,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM2_SetDataIn4Source( uint32_t Source )
  *         @arg @ref LL_SYSCFG_DFSDM2_DataIn4_DM
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetDataIn4Source( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetDataIn4Source(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D4SEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D4SEL));
 }
 
 /**
@@ -1103,9 +1064,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetDataIn4Source( void )
  *         @arg @ref LL_SYSCFG_DFSDM2_DataIn6_DM
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetDataIn6Source( uint32_t Source )
+__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetDataIn6Source(uint32_t Source)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D6SEL, Source );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D6SEL, Source);
 }
 /**
  * @brief  Get the source for DFSDM2 DatIn6.
@@ -1115,9 +1076,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM2_SetDataIn6Source( uint32_t Source )
  *         @arg @ref LL_SYSCFG_DFSDM2_DataIn6_DM
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetDataIn6Source( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetDataIn6Source(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D6SEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2D6SEL));
 }
 
 /**
@@ -1128,9 +1089,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetDataIn6Source( void )
  *         @arg @ref LL_SYSCFG_DFSDM2_TIM3OC4_CLKIN4
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetTIM3OC4BitStreamDistribution( uint32_t Source )
+__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetTIM3OC4BitStreamDistribution(uint32_t Source)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK04SEL, Source );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK04SEL, Source);
 }
 /**
  * @brief  Get the distribution of the bitsream lock gated by TIM3 OC4
@@ -1140,9 +1101,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM2_SetTIM3OC4BitStreamDistribution( uint32_t 
  *         @arg @ref LL_SYSCFG_DFSDM2_TIM3OC4_CLKIN4
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetTIM3OC4BitStreamDistribution( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetTIM3OC4BitStreamDistribution(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK04SEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK04SEL));
 }
 
 /**
@@ -1153,9 +1114,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetTIM3OC4BitStreamDistribution( void 
  *         @arg @ref LL_SYSCFG_DFSDM2_TIM3OC3_CLKIN5
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetTIM3OC3BitStreamDistribution( uint32_t Source )
+__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetTIM3OC3BitStreamDistribution(uint32_t Source)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK15SEL, Source );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK15SEL, Source);
 }
 /**
  * @brief  Get the distribution of the bitsream lock gated by TIM3 OC4
@@ -1165,9 +1126,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM2_SetTIM3OC3BitStreamDistribution( uint32_t 
  *         @arg @ref LL_SYSCFG_DFSDM2_TIM3OC3_CLKIN5
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetTIM3OC3BitStreamDistribution( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetTIM3OC3BitStreamDistribution(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK15SEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK15SEL));
 }
 
 /**
@@ -1178,9 +1139,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetTIM3OC3BitStreamDistribution( void 
  *         @arg @ref LL_SYSCFG_DFSDM2_TIM3OC2_CLKIN6
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetTIM3OC2BitStreamDistribution( uint32_t Source )
+__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetTIM3OC2BitStreamDistribution(uint32_t Source)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK26SEL, Source );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK26SEL, Source);
 }
 /**
  * @brief  Get the distribution of the bitsream lock gated by TIM3 OC2
@@ -1190,9 +1151,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM2_SetTIM3OC2BitStreamDistribution( uint32_t 
  *         @arg @ref LL_SYSCFG_DFSDM2_TIM3OC2_CLKIN6
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetTIM3OC2BitStreamDistribution( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetTIM3OC2BitStreamDistribution(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK26SEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK26SEL));
 }
 
 /**
@@ -1203,9 +1164,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetTIM3OC2BitStreamDistribution( void 
  *         @arg @ref LL_SYSCFG_DFSDM2_TIM3OC1_CLKIN7
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetTIM3OC1BitStreamDistribution( uint32_t Source )
+__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetTIM3OC1BitStreamDistribution(uint32_t Source)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK37SEL, Source );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK37SEL, Source);
 }
 /**
  * @brief  Get the distribution of the bitsream lock gated by TIM3 OC1
@@ -1215,9 +1176,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM2_SetTIM3OC1BitStreamDistribution( uint32_t 
  *         @arg @ref LL_SYSCFG_DFSDM2_TIM3OC1_CLKIN7
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetTIM3OC1BitStreamDistribution( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetTIM3OC1BitStreamDistribution(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK37SEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CK37SEL));
 }
 
 /**
@@ -1228,9 +1189,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetTIM3OC1BitStreamDistribution( void 
  *         @arg @ref LL_SYSCFG_DFSDM2_CKIN_DM
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetClockInSourceSelection( uint32_t ClockSource )
+__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetClockInSourceSelection(uint32_t ClockSource)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CFG, ClockSource );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CFG, ClockSource);
 }
 /**
  * @brief  GET the DFSDM2 Clock In
@@ -1240,9 +1201,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM2_SetClockInSourceSelection( uint32_t ClockS
  *         @arg @ref LL_SYSCFG_DFSDM2_CKIN_DM
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetClockInSourceSelection( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetClockInSourceSelection(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CFG ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CFG));
 }
 
 /**
@@ -1253,9 +1214,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetClockInSourceSelection( void )
  *         @arg @ref LL_SYSCFG_DFSDM2_CKOUT_M27
  * @retval None
  */
-__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetClockOutSourceSelection( uint32_t ClockSource )
+__STATIC_INLINE void LL_SYSCFG_DFSDM2_SetClockOutSourceSelection(uint32_t ClockSource)
 {
-    MODIFY_REG( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CKOSEL, ClockSource );
+    MODIFY_REG(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CKOSEL, ClockSource);
 }
 /**
  * @brief  GET the DFSDM2 Clock Out
@@ -1265,9 +1226,9 @@ __STATIC_INLINE void LL_SYSCFG_DFSDM2_SetClockOutSourceSelection( uint32_t Clock
  *         @arg @ref LL_SYSCFG_DFSDM2_CKOUT_M27
  * @retval None
  */
-__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetClockOutSourceSelection( void )
+__STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetClockOutSourceSelection(void)
 {
-    return (uint32_t) ( READ_BIT( SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CKOSEL ) );
+    return (uint32_t)(READ_BIT(SYSCFG->MCHDLYCR, SYSCFG_MCHDLYCR_DFSDM2CKOSEL));
 }
 
 #endif /* SYSCFG_MCHDLYCR_BSCKSEL */
@@ -1294,9 +1255,9 @@ __STATIC_INLINE uint32_t LL_SYSCFG_DFSDM2_GetClockOutSourceSelection( void )
  * @rmtoll DBGMCU_IDCODE DEV_ID        LL_DBGMCU_GetDeviceID
  * @retval Values between Min_Data=0x00 and Max_Data=0xFFF
  */
-__STATIC_INLINE uint32_t LL_DBGMCU_GetDeviceID( void )
+__STATIC_INLINE uint32_t LL_DBGMCU_GetDeviceID(void)
 {
-    return (uint32_t) ( READ_BIT( DBGMCU->IDCODE, DBGMCU_IDCODE_DEV_ID ) );
+    return (uint32_t)(READ_BIT(DBGMCU->IDCODE, DBGMCU_IDCODE_DEV_ID));
 }
 
 /**
@@ -1312,9 +1273,9 @@ __STATIC_INLINE uint32_t LL_DBGMCU_GetDeviceID( void )
   * @rmtoll DBGMCU_IDCODE REV_ID        LL_DBGMCU_GetRevisionID
   * @retval Values between Min_Data=0x00 and Max_Data=0xFFFF
   */
-__STATIC_INLINE uint32_t LL_DBGMCU_GetRevisionID( void )
+__STATIC_INLINE uint32_t LL_DBGMCU_GetRevisionID(void)
 {
-    return (uint32_t) ( READ_BIT( DBGMCU->IDCODE, DBGMCU_IDCODE_REV_ID ) >> DBGMCU_IDCODE_REV_ID_Pos );
+    return (uint32_t)(READ_BIT(DBGMCU->IDCODE, DBGMCU_IDCODE_REV_ID) >> DBGMCU_IDCODE_REV_ID_Pos);
 }
 
 /**
@@ -1322,44 +1283,59 @@ __STATIC_INLINE uint32_t LL_DBGMCU_GetRevisionID( void )
  * @rmtoll DBGMCU_CR    DBG_SLEEP     LL_DBGMCU_EnableDBGSleepMode
  * @retval None
  */
-__STATIC_INLINE void LL_DBGMCU_EnableDBGSleepMode( void ) { SET_BIT( DBGMCU->CR, DBGMCU_CR_DBG_SLEEP ); }
+__STATIC_INLINE void LL_DBGMCU_EnableDBGSleepMode(void)
+{
+    SET_BIT(DBGMCU->CR, DBGMCU_CR_DBG_SLEEP);
+}
 
 /**
  * @brief  Disable the Debug Module during SLEEP mode
  * @rmtoll DBGMCU_CR    DBG_SLEEP     LL_DBGMCU_DisableDBGSleepMode
  * @retval None
  */
-__STATIC_INLINE void LL_DBGMCU_DisableDBGSleepMode( void ) { CLEAR_BIT( DBGMCU->CR, DBGMCU_CR_DBG_SLEEP ); }
+__STATIC_INLINE void LL_DBGMCU_DisableDBGSleepMode(void)
+{
+    CLEAR_BIT(DBGMCU->CR, DBGMCU_CR_DBG_SLEEP);
+}
 
 /**
  * @brief  Enable the Debug Module during STOP mode
  * @rmtoll DBGMCU_CR    DBG_STOP      LL_DBGMCU_EnableDBGStopMode
  * @retval None
  */
-__STATIC_INLINE void LL_DBGMCU_EnableDBGStopMode( void ) { SET_BIT( DBGMCU->CR, DBGMCU_CR_DBG_STOP ); }
+__STATIC_INLINE void LL_DBGMCU_EnableDBGStopMode(void)
+{
+    SET_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STOP);
+}
 
 /**
  * @brief  Disable the Debug Module during STOP mode
  * @rmtoll DBGMCU_CR    DBG_STOP      LL_DBGMCU_DisableDBGStopMode
  * @retval None
  */
-__STATIC_INLINE void LL_DBGMCU_DisableDBGStopMode( void ) { CLEAR_BIT( DBGMCU->CR, DBGMCU_CR_DBG_STOP ); }
+__STATIC_INLINE void LL_DBGMCU_DisableDBGStopMode(void)
+{
+    CLEAR_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STOP);
+}
 
 /**
  * @brief  Enable the Debug Module during STANDBY mode
  * @rmtoll DBGMCU_CR    DBG_STANDBY   LL_DBGMCU_EnableDBGStandbyMode
  * @retval None
  */
-__STATIC_INLINE void LL_DBGMCU_EnableDBGStandbyMode( void ) { SET_BIT( DBGMCU->CR, DBGMCU_CR_DBG_STANDBY ); }
+__STATIC_INLINE void LL_DBGMCU_EnableDBGStandbyMode(void)
+{
+    SET_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STANDBY);
+}
 
 /**
  * @brief  Disable the Debug Module during STANDBY mode
  * @rmtoll DBGMCU_CR    DBG_STANDBY   LL_DBGMCU_DisableDBGStandbyMode
  * @retval None
  */
-__STATIC_INLINE void LL_DBGMCU_DisableDBGStandbyMode( void )
+__STATIC_INLINE void LL_DBGMCU_DisableDBGStandbyMode(void)
 {
-    CLEAR_BIT( DBGMCU->CR, DBGMCU_CR_DBG_STANDBY );
+    CLEAR_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STANDBY);
 }
 
 /**
@@ -1374,9 +1350,9 @@ __STATIC_INLINE void LL_DBGMCU_DisableDBGStandbyMode( void )
  *         @arg @ref LL_DBGMCU_TRACE_SYNCH_SIZE4
  * @retval None
  */
-__STATIC_INLINE void LL_DBGMCU_SetTracePinAssignment( uint32_t PinAssignment )
+__STATIC_INLINE void LL_DBGMCU_SetTracePinAssignment(uint32_t PinAssignment)
 {
-    MODIFY_REG( DBGMCU->CR, DBGMCU_CR_TRACE_IOEN | DBGMCU_CR_TRACE_MODE, PinAssignment );
+    MODIFY_REG(DBGMCU->CR, DBGMCU_CR_TRACE_IOEN | DBGMCU_CR_TRACE_MODE, PinAssignment);
 }
 
 /**
@@ -1390,9 +1366,9 @@ __STATIC_INLINE void LL_DBGMCU_SetTracePinAssignment( uint32_t PinAssignment )
  *         @arg @ref LL_DBGMCU_TRACE_SYNCH_SIZE2
  *         @arg @ref LL_DBGMCU_TRACE_SYNCH_SIZE4
  */
-__STATIC_INLINE uint32_t LL_DBGMCU_GetTracePinAssignment( void )
+__STATIC_INLINE uint32_t LL_DBGMCU_GetTracePinAssignment(void)
 {
-    return (uint32_t) ( READ_BIT( DBGMCU->CR, DBGMCU_CR_TRACE_IOEN | DBGMCU_CR_TRACE_MODE ) );
+    return (uint32_t)(READ_BIT(DBGMCU->CR, DBGMCU_CR_TRACE_IOEN | DBGMCU_CR_TRACE_MODE));
 }
 
 /**
@@ -1442,9 +1418,9 @@ __STATIC_INLINE uint32_t LL_DBGMCU_GetTracePinAssignment( void )
  *         (*) value not defined in all devices.
  * @retval None
  */
-__STATIC_INLINE void LL_DBGMCU_APB1_GRP1_FreezePeriph( uint32_t Periphs )
+__STATIC_INLINE void LL_DBGMCU_APB1_GRP1_FreezePeriph(uint32_t Periphs)
 {
-    SET_BIT( DBGMCU->APB1FZ, Periphs );
+    SET_BIT(DBGMCU->APB1FZ, Periphs);
 }
 
 /**
@@ -1494,9 +1470,9 @@ __STATIC_INLINE void LL_DBGMCU_APB1_GRP1_FreezePeriph( uint32_t Periphs )
  *         (*) value not defined in all devices.
  * @retval None
  */
-__STATIC_INLINE void LL_DBGMCU_APB1_GRP1_UnFreezePeriph( uint32_t Periphs )
+__STATIC_INLINE void LL_DBGMCU_APB1_GRP1_UnFreezePeriph(uint32_t Periphs)
 {
-    CLEAR_BIT( DBGMCU->APB1FZ, Periphs );
+    CLEAR_BIT(DBGMCU->APB1FZ, Periphs);
 }
 
 /**
@@ -1516,9 +1492,9 @@ __STATIC_INLINE void LL_DBGMCU_APB1_GRP1_UnFreezePeriph( uint32_t Periphs )
  *         (*) value not defined in all devices.
  * @retval None
  */
-__STATIC_INLINE void LL_DBGMCU_APB2_GRP1_FreezePeriph( uint32_t Periphs )
+__STATIC_INLINE void LL_DBGMCU_APB2_GRP1_FreezePeriph(uint32_t Periphs)
 {
-    SET_BIT( DBGMCU->APB2FZ, Periphs );
+    SET_BIT(DBGMCU->APB2FZ, Periphs);
 }
 
 /**
@@ -1538,9 +1514,9 @@ __STATIC_INLINE void LL_DBGMCU_APB2_GRP1_FreezePeriph( uint32_t Periphs )
  *         (*) value not defined in all devices.
  * @retval None
  */
-__STATIC_INLINE void LL_DBGMCU_APB2_GRP1_UnFreezePeriph( uint32_t Periphs )
+__STATIC_INLINE void LL_DBGMCU_APB2_GRP1_UnFreezePeriph(uint32_t Periphs)
 {
-    CLEAR_BIT( DBGMCU->APB2FZ, Periphs );
+    CLEAR_BIT(DBGMCU->APB2FZ, Periphs);
 }
 /**
  * @}
@@ -1572,9 +1548,9 @@ __STATIC_INLINE void LL_DBGMCU_APB2_GRP1_UnFreezePeriph( uint32_t Periphs )
  *         @arg @ref LL_FLASH_LATENCY_15
  * @retval None
  */
-__STATIC_INLINE void LL_FLASH_SetLatency( uint32_t Latency )
+__STATIC_INLINE void LL_FLASH_SetLatency(uint32_t Latency)
 {
-    MODIFY_REG( FLASH->ACR, FLASH_ACR_LATENCY, Latency );
+    MODIFY_REG(FLASH->ACR, FLASH_ACR_LATENCY, Latency);
 }
 
 /**
@@ -1598,9 +1574,9 @@ __STATIC_INLINE void LL_FLASH_SetLatency( uint32_t Latency )
  *         @arg @ref LL_FLASH_LATENCY_14
  *         @arg @ref LL_FLASH_LATENCY_15
  */
-__STATIC_INLINE uint32_t LL_FLASH_GetLatency( void )
+__STATIC_INLINE uint32_t LL_FLASH_GetLatency(void)
 {
-    return (uint32_t) ( READ_BIT( FLASH->ACR, FLASH_ACR_LATENCY ) );
+    return (uint32_t)(READ_BIT(FLASH->ACR, FLASH_ACR_LATENCY));
 }
 
 /**
@@ -1608,23 +1584,29 @@ __STATIC_INLINE uint32_t LL_FLASH_GetLatency( void )
  * @rmtoll FLASH_ACR    PRFTEN        LL_FLASH_EnablePrefetch
  * @retval None
  */
-__STATIC_INLINE void LL_FLASH_EnablePrefetch( void ) { SET_BIT( FLASH->ACR, FLASH_ACR_PRFTEN ); }
+__STATIC_INLINE void LL_FLASH_EnablePrefetch(void)
+{
+    SET_BIT(FLASH->ACR, FLASH_ACR_PRFTEN);
+}
 
 /**
  * @brief  Disable Prefetch
  * @rmtoll FLASH_ACR    PRFTEN        LL_FLASH_DisablePrefetch
  * @retval None
  */
-__STATIC_INLINE void LL_FLASH_DisablePrefetch( void ) { CLEAR_BIT( FLASH->ACR, FLASH_ACR_PRFTEN ); }
+__STATIC_INLINE void LL_FLASH_DisablePrefetch(void)
+{
+    CLEAR_BIT(FLASH->ACR, FLASH_ACR_PRFTEN);
+}
 
 /**
  * @brief  Check if Prefetch buffer is enabled
  * @rmtoll FLASH_ACR    PRFTEN        LL_FLASH_IsPrefetchEnabled
  * @retval State of bit (1 or 0).
  */
-__STATIC_INLINE uint32_t LL_FLASH_IsPrefetchEnabled( void )
+__STATIC_INLINE uint32_t LL_FLASH_IsPrefetchEnabled(void)
 {
-    return ( READ_BIT( FLASH->ACR, FLASH_ACR_PRFTEN ) == ( FLASH_ACR_PRFTEN ) );
+    return (READ_BIT(FLASH->ACR, FLASH_ACR_PRFTEN) == (FLASH_ACR_PRFTEN));
 }
 
 /**
@@ -1632,28 +1614,40 @@ __STATIC_INLINE uint32_t LL_FLASH_IsPrefetchEnabled( void )
  * @rmtoll FLASH_ACR    ICEN          LL_FLASH_EnableInstCache
  * @retval None
  */
-__STATIC_INLINE void LL_FLASH_EnableInstCache( void ) { SET_BIT( FLASH->ACR, FLASH_ACR_ICEN ); }
+__STATIC_INLINE void LL_FLASH_EnableInstCache(void)
+{
+    SET_BIT(FLASH->ACR, FLASH_ACR_ICEN);
+}
 
 /**
  * @brief  Disable Instruction cache
  * @rmtoll FLASH_ACR    ICEN          LL_FLASH_DisableInstCache
  * @retval None
  */
-__STATIC_INLINE void LL_FLASH_DisableInstCache( void ) { CLEAR_BIT( FLASH->ACR, FLASH_ACR_ICEN ); }
+__STATIC_INLINE void LL_FLASH_DisableInstCache(void)
+{
+    CLEAR_BIT(FLASH->ACR, FLASH_ACR_ICEN);
+}
 
 /**
  * @brief  Enable Data cache
  * @rmtoll FLASH_ACR    DCEN          LL_FLASH_EnableDataCache
  * @retval None
  */
-__STATIC_INLINE void LL_FLASH_EnableDataCache( void ) { SET_BIT( FLASH->ACR, FLASH_ACR_DCEN ); }
+__STATIC_INLINE void LL_FLASH_EnableDataCache(void)
+{
+    SET_BIT(FLASH->ACR, FLASH_ACR_DCEN);
+}
 
 /**
  * @brief  Disable Data cache
  * @rmtoll FLASH_ACR    DCEN          LL_FLASH_DisableDataCache
  * @retval None
  */
-__STATIC_INLINE void LL_FLASH_DisableDataCache( void ) { CLEAR_BIT( FLASH->ACR, FLASH_ACR_DCEN ); }
+__STATIC_INLINE void LL_FLASH_DisableDataCache(void)
+{
+    CLEAR_BIT(FLASH->ACR, FLASH_ACR_DCEN);
+}
 
 /**
  * @brief  Enable Instruction cache reset
@@ -1661,14 +1655,20 @@ __STATIC_INLINE void LL_FLASH_DisableDataCache( void ) { CLEAR_BIT( FLASH->ACR, 
  * @rmtoll FLASH_ACR    ICRST         LL_FLASH_EnableInstCacheReset
  * @retval None
  */
-__STATIC_INLINE void LL_FLASH_EnableInstCacheReset( void ) { SET_BIT( FLASH->ACR, FLASH_ACR_ICRST ); }
+__STATIC_INLINE void LL_FLASH_EnableInstCacheReset(void)
+{
+    SET_BIT(FLASH->ACR, FLASH_ACR_ICRST);
+}
 
 /**
  * @brief  Disable Instruction cache reset
  * @rmtoll FLASH_ACR    ICRST         LL_FLASH_DisableInstCacheReset
  * @retval None
  */
-__STATIC_INLINE void LL_FLASH_DisableInstCacheReset( void ) { CLEAR_BIT( FLASH->ACR, FLASH_ACR_ICRST ); }
+__STATIC_INLINE void LL_FLASH_DisableInstCacheReset(void)
+{
+    CLEAR_BIT(FLASH->ACR, FLASH_ACR_ICRST);
+}
 
 /**
  * @brief  Enable Data cache reset
@@ -1676,14 +1676,20 @@ __STATIC_INLINE void LL_FLASH_DisableInstCacheReset( void ) { CLEAR_BIT( FLASH->
  * @rmtoll FLASH_ACR    DCRST         LL_FLASH_EnableDataCacheReset
  * @retval None
  */
-__STATIC_INLINE void LL_FLASH_EnableDataCacheReset( void ) { SET_BIT( FLASH->ACR, FLASH_ACR_DCRST ); }
+__STATIC_INLINE void LL_FLASH_EnableDataCacheReset(void)
+{
+    SET_BIT(FLASH->ACR, FLASH_ACR_DCRST);
+}
 
 /**
  * @brief  Disable Data cache reset
  * @rmtoll FLASH_ACR    DCRST         LL_FLASH_DisableDataCacheReset
  * @retval None
  */
-__STATIC_INLINE void LL_FLASH_DisableDataCacheReset( void ) { CLEAR_BIT( FLASH->ACR, FLASH_ACR_DCRST ); }
+__STATIC_INLINE void LL_FLASH_DisableDataCacheReset(void)
+{
+    CLEAR_BIT(FLASH->ACR, FLASH_ACR_DCRST);
+}
 
 /**
  * @}

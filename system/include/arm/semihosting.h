@@ -60,8 +60,8 @@ enum OperationNumber
     SEMIHOSTING_SYS_WRITE0 = 0x04,
 
     // Codes returned by SEMIHOSTING_ReportException
-    ADP_Stopped_ApplicationExit = ( ( 2 << 16 ) + 38 ),
-    ADP_Stopped_RunTimeError = ( ( 2 << 16 ) + 35 ),
+    ADP_Stopped_ApplicationExit = ((2 << 16) + 38),
+    ADP_Stopped_RunTimeError = ((2 << 16) + 35),
 
 };
 
@@ -75,39 +75,39 @@ enum OperationNumber
 #define AngelSWI AngelSWI_ARM
 #endif
 // For thumb only architectures use the BKPT instruction instead of SWI.
-#if defined( __ARM_ARCH_7M__ ) || defined( __ARM_ARCH_7EM__ ) || defined( __ARM_ARCH_6M__ )
+#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_6M__)
 #define AngelSWIInsn "bkpt"
-#define AngelSWIAsm bkpt
+#define AngelSWIAsm  bkpt
 #else
 #define AngelSWIInsn "swi"
-#define AngelSWIAsm swi
+#define AngelSWIAsm  swi
 #endif
 
-#if defined( OS_DEBUG_SEMIHOSTING_FAULTS )
+#if defined(OS_DEBUG_SEMIHOSTING_FAULTS)
 // Testing the local semihosting handler cannot use another BKPT, since this
 // configuration cannot trigger HaedFault exceptions while the debugger is
 // connected, so we use an illegal op code, that will trigger an
 // UsageFault exception.
-#define AngelSWITestFault "setend be"
-#define AngelSWITestFaultOpCode ( 0xB658 )
+#define AngelSWITestFault       "setend be"
+#define AngelSWITestFaultOpCode (0xB658)
 #endif
 
-static inline int __attribute__( ( always_inline ) ) call_host( int reason, void *arg )
+static inline int __attribute__((always_inline)) call_host(int reason, void *arg)
 {
     int value;
     asm volatile(
 
         " mov r0, %[rsn]  \n"
         " mov r1, %[arg]  \n"
-#if defined( OS_DEBUG_SEMIHOSTING_FAULTS )
+#if defined(OS_DEBUG_SEMIHOSTING_FAULTS)
         " " AngelSWITestFault " \n"
 #else
         " " AngelSWIInsn " %[swi] \n"
 #endif
         " mov %[val], r0"
 
-        : [val] "=r"( value )                                          /* Outputs */
-        : [rsn] "r"( reason ), [arg] "r"( arg ), [swi] "i"( AngelSWI ) /* Inputs */
+        : [val] "=r"(value)                                      /* Outputs */
+        : [rsn] "r"(reason), [arg] "r"(arg), [swi] "i"(AngelSWI) /* Inputs */
         : "r0", "r1", "r2", "r3", "ip", "lr", "memory", "cc"
         // Clobbers r0 and r1, and lr if in supervisor mode
     );
@@ -123,11 +123,12 @@ static inline int __attribute__( ( always_inline ) ) call_host( int reason, void
 // ----------------------------------------------------------------------------
 
 // Function used in _exit() to return the status code as Angel exception.
-static inline void __attribute__( ( always_inline, noreturn ) ) report_exception( int reason )
+static inline void __attribute__((always_inline, noreturn)) report_exception(int reason)
 {
-    call_host( SEMIHOSTING_ReportException, (void *) reason );
+    call_host(SEMIHOSTING_ReportException, (void *)reason);
 
-    for ( ;; );
+    for (;;)
+        ;
 }
 
 // ----------------------------------------------------------------------------

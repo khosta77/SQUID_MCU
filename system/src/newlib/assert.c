@@ -33,11 +33,15 @@
 
 // ----------------------------------------------------------------------------
 
-void __attribute__( ( noreturn ) ) __assert_func( const char *file, int line, const char *func,
-                                                  const char *failedexpr )
+void __attribute__((noreturn)) __assert_func(const char *file, int line, const char *func, const char *failedexpr)
 {
-    trace_printf( "assertion \"%s\" failed: file \"%s\", line %d%s%s\n", failedexpr, file, line,
-                  func ? ", function: " : "", func ? func : "" );
+    trace_printf(
+        "assertion \"%s\" failed: file \"%s\", line %d%s%s\n",
+        failedexpr,
+        file,
+        line,
+        func ? ", function: " : "",
+        func ? func : "");
     abort();
     /* NOTREACHED */
 }
@@ -54,14 +58,14 @@ void __attribute__( ( noreturn ) ) __assert_func( const char *file, int line, co
 // #define assert_param(expr) ((void)0)
 // #endif // USE_FULL_ASSERT
 
-#if defined( USE_FULL_ASSERT )
+#if defined(USE_FULL_ASSERT)
 
-void assert_failed( uint8_t *file, uint32_t line );
+void assert_failed(uint8_t *file, uint32_t line);
 
 // Called from the assert_param() macro, usually defined in the stm32f*_conf.h
-void __attribute__( ( noreturn, weak ) ) assert_failed( uint8_t *file, uint32_t line )
+void __attribute__((noreturn, weak)) assert_failed(uint8_t *file, uint32_t line)
 {
-    trace_printf( "assert_param() failed: file \"%s\", line %d\n", file, line );
+    trace_printf("assert_param() failed: file \"%s\", line %d\n", file, line);
     abort();
     /* NOTREACHED */
 }

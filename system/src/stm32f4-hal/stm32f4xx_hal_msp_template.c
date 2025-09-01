@@ -48,7 +48,7 @@
  *         level initialization (GPIOs, clock, DMA, interrupt).
  * @retval None
  */
-void HAL_MspInit( void ) {}
+void HAL_MspInit(void) {}
 
 /**
  * @brief  DeInitializes the Global MSP.
@@ -56,7 +56,7 @@ void HAL_MspInit( void ) {}
  *         level de-initialization (GPIOs, clock, DMA, interrupt).
  * @retval None
  */
-void HAL_MspDeInit( void ) {}
+void HAL_MspDeInit(void) {}
 
 /**
  * @brief  Initializes the PPP MSP.
@@ -64,7 +64,7 @@ void HAL_MspDeInit( void ) {}
  *         peripheral(PPP) system level initialization (GPIOs, clock, DMA, interrupt)
  * @retval None
  */
-void HAL_PPP_MspInit( void ) {}
+void HAL_PPP_MspInit(void) {}
 
 /**
  * @brief  DeInitializes the PPP MSP.
@@ -72,7 +72,7 @@ void HAL_PPP_MspInit( void ) {}
  *         peripheral(PPP) system level de-initialization (GPIOs, clock, DMA, interrupt)
  * @retval None
  */
-void HAL_PPP_MspDeInit( void ) {}
+void HAL_PPP_MspDeInit(void) {}
 
 /**
  * @}

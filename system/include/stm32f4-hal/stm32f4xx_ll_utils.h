@@ -153,7 +153,7 @@ typedef struct
  * @{
  */
 #define LL_UTILS_HSEBYPASS_OFF 0x00000000U /*!< HSE Bypass is not enabled                */
-#define LL_UTILS_HSEBYPASS_ON 0x00000001U  /*!< HSE Bypass is enabled                    */
+#define LL_UTILS_HSEBYPASS_ON  0x00000001U /*!< HSE Bypass is enabled                    */
 /**
  * @}
  */
@@ -161,20 +161,16 @@ typedef struct
 /** @defgroup UTILS_EC_PACKAGETYPE PACKAGE TYPE
  * @{
  */
-#define LL_UTILS_PACKAGETYPE_WLCSP36_UFQFPN48_LQFP64                                                         \
-    0x00000000U /*!< WLCSP36 or UFQFPN48 or LQFP64 package type                         */
-#define LL_UTILS_PACKAGETYPE_WLCSP168_FBGA169_LQFP100_LQFP64_UFQFPN48                                        \
+#define LL_UTILS_PACKAGETYPE_WLCSP36_UFQFPN48_LQFP64 0x00000000U /*!< WLCSP36 or UFQFPN48 or LQFP64 package type */
+#define LL_UTILS_PACKAGETYPE_WLCSP168_FBGA169_LQFP100_LQFP64_UFQFPN48                                                                      \
     0x00000100U /*!< WLCSP168 or FBGA169 or LQFP100 or LQFP64 or UFQFPN48 package type  */
-#define LL_UTILS_PACKAGETYPE_WLCSP64_WLCSP81_LQFP176_UFBGA176                                                \
+#define LL_UTILS_PACKAGETYPE_WLCSP64_WLCSP81_LQFP176_UFBGA176                                                                              \
     0x00000200U /*!< WLCSP64 or WLCSP81 or LQFP176 or UFBGA176 package type             */
-#define LL_UTILS_PACKAGETYPE_LQFP144_UFBGA144_UFBGA144_UFBGA100                                              \
-    0x00000300U /*!< LQFP144 or UFBGA144 or UFBGA144 or UFBGA100 package type           */
-#define LL_UTILS_PACKAGETYPE_LQFP100_LQFP208_TFBGA216                                                        \
-    0x00000400U /*!< LQFP100 or LQFP208 or TFBGA216 package type                        */
-#define LL_UTILS_PACKAGETYPE_LQFP208_TFBGA216                                                                \
-    0x00000500U /*!< LQFP208 or TFBGA216 package type                                   */
-#define LL_UTILS_PACKAGETYPE_TQFP64_UFBGA144_LQFP144                                                         \
-    0x00000700U /*!< TQFP64 or UFBGA144 or LQFP144 package type                         */
+#define LL_UTILS_PACKAGETYPE_LQFP144_UFBGA144_UFBGA144_UFBGA100                                                                            \
+    0x00000300U                                                   /*!< LQFP144 or UFBGA144 or UFBGA144 or UFBGA100 package type           */
+#define LL_UTILS_PACKAGETYPE_LQFP100_LQFP208_TFBGA216 0x00000400U /*!< LQFP100 or LQFP208 or TFBGA216 package type */
+#define LL_UTILS_PACKAGETYPE_LQFP208_TFBGA216         0x00000500U /*!< LQFP208 or TFBGA216 package type                                   */
+#define LL_UTILS_PACKAGETYPE_TQFP64_UFBGA144_LQFP144  0x00000700U /*!< TQFP64 or UFBGA144 or LQFP144 package type */
 /**
  * @}
  */
@@ -198,27 +194,27 @@ typedef struct
  * @brief  Get Word0 of the unique device identifier (UID based on 96 bits)
  * @retval UID[31:0]
  */
-__STATIC_INLINE uint32_t LL_GetUID_Word0( void )
+__STATIC_INLINE uint32_t LL_GetUID_Word0(void)
 {
-    return (uint32_t) ( READ_REG( *( (uint32_t *) UID_BASE_ADDRESS ) ) );
+    return (uint32_t)(READ_REG(*((uint32_t *)UID_BASE_ADDRESS)));
 }
 
 /**
  * @brief  Get Word1 of the unique device identifier (UID based on 96 bits)
  * @retval UID[63:32]
  */
-__STATIC_INLINE uint32_t LL_GetUID_Word1( void )
+__STATIC_INLINE uint32_t LL_GetUID_Word1(void)
 {
-    return (uint32_t) ( READ_REG( *( (uint32_t *) ( UID_BASE_ADDRESS + 4U ) ) ) );
+    return (uint32_t)(READ_REG(*((uint32_t *)(UID_BASE_ADDRESS + 4U))));
 }
 
 /**
  * @brief  Get Word2 of the unique device identifier (UID based on 96 bits)
  * @retval UID[95:64]
  */
-__STATIC_INLINE uint32_t LL_GetUID_Word2( void )
+__STATIC_INLINE uint32_t LL_GetUID_Word2(void)
 {
-    return (uint32_t) ( READ_REG( *( (uint32_t *) ( UID_BASE_ADDRESS + 8U ) ) ) );
+    return (uint32_t)(READ_REG(*((uint32_t *)(UID_BASE_ADDRESS + 8U))));
 }
 
 /**
@@ -227,9 +223,9 @@ __STATIC_INLINE uint32_t LL_GetUID_Word2( void )
  *         Kbytes. As an example, 0x040 corresponds to 64 Kbytes.
  * @retval FLASH_SIZE[15:0]: Flash memory size
  */
-__STATIC_INLINE uint32_t LL_GetFlashSize( void )
+__STATIC_INLINE uint32_t LL_GetFlashSize(void)
 {
-    return (uint32_t) ( READ_REG( *( (uint32_t *) FLASHSIZE_BASE_ADDRESS ) ) & 0xFFFF );
+    return (uint32_t)(READ_REG(*((uint32_t *)FLASHSIZE_BASE_ADDRESS)) & 0xFFFF);
 }
 
 /**
@@ -245,9 +241,9 @@ __STATIC_INLINE uint32_t LL_GetFlashSize( void )
  *
  *         (*) value not defined in all devices.
  */
-__STATIC_INLINE uint32_t LL_GetPackageType( void )
+__STATIC_INLINE uint32_t LL_GetPackageType(void)
 {
-    return (uint32_t) ( READ_REG( *( (uint32_t *) PACKAGE_BASE_ADDRESS ) ) & 0x0700U );
+    return (uint32_t)(READ_REG(*((uint32_t *)PACKAGE_BASE_ADDRESS)) & 0x0700U);
 }
 
 /**
@@ -266,16 +262,16 @@ __STATIC_INLINE uint32_t LL_GetPackageType( void )
  * @param  Ticks Number of ticks
  * @retval None
  */
-__STATIC_INLINE void LL_InitTick( uint32_t HCLKFrequency, uint32_t Ticks )
+__STATIC_INLINE void LL_InitTick(uint32_t HCLKFrequency, uint32_t Ticks)
 {
     /* Configure the SysTick to have interrupt in 1ms time base */
-    SysTick->LOAD = (uint32_t) ( ( HCLKFrequency / Ticks ) - 1UL );       /* set reload register */
+    SysTick->LOAD = (uint32_t)((HCLKFrequency / Ticks) - 1UL);            /* set reload register */
     SysTick->VAL = 0UL;                                                   /* Load the SysTick Counter Value */
     SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk; /* Enable the Systick Timer */
 }
 
-void LL_Init1msTick( uint32_t HCLKFrequency );
-void LL_mDelay( uint32_t Delay );
+void LL_Init1msTick(uint32_t HCLKFrequency);
+void LL_mDelay(uint32_t Delay);
 
 /**
  * @}
@@ -285,12 +281,13 @@ void LL_mDelay( uint32_t Delay );
  * @{
  */
 
-void LL_SetSystemCoreClock( uint32_t HCLKFrequency );
-ErrorStatus LL_PLL_ConfigSystemClock_HSI( LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct,
-                                          LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct );
-ErrorStatus LL_PLL_ConfigSystemClock_HSE( uint32_t HSEFrequency, uint32_t HSEBypass,
-                                          LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct,
-                                          LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct );
+void LL_SetSystemCoreClock(uint32_t HCLKFrequency);
+ErrorStatus LL_PLL_ConfigSystemClock_HSI(LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct, LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct);
+ErrorStatus LL_PLL_ConfigSystemClock_HSE(
+    uint32_t HSEFrequency,
+    uint32_t HSEBypass,
+    LL_UTILS_PLLInitTypeDef *UTILS_PLLInitStruct,
+    LL_UTILS_ClkInitTypeDef *UTILS_ClkInitStruct);
 
 /**
  * @}

@@ -69,13 +69,12 @@
 /* #define RTC_CLOCK_SOURCE_LSI */
 
 #ifdef RTC_CLOCK_SOURCE_HSE
-#define RTC_ASYNCH_PREDIV 99U
-#define RTC_SYNCH_PREDIV 9U
-#define RCC_RTCCLKSOURCE_1MHZ                                                                                \
-    ( (uint32_t) ( (uint32_t) RCC_BDCR_RTCSEL | (uint32_t) ( ( HSE_VALUE / 1000000U ) << 16U ) ) )
+#define RTC_ASYNCH_PREDIV     99U
+#define RTC_SYNCH_PREDIV      9U
+#define RCC_RTCCLKSOURCE_1MHZ ((uint32_t)((uint32_t)RCC_BDCR_RTCSEL | (uint32_t)((HSE_VALUE / 1000000U) << 16U)))
 #else /* RTC_CLOCK_SOURCE_LSE || RTC_CLOCK_SOURCE_LSI */
 #define RTC_ASYNCH_PREDIV 0U
-#define RTC_SYNCH_PREDIV 31U
+#define RTC_SYNCH_PREDIV  31U
 #endif /* RTC_CLOCK_SOURCE_HSE */
 
 /* Private macro -------------------------------------------------------------*/
@@ -83,7 +82,7 @@
 RTC_HandleTypeDef hRTC_Handle;
 
 /* Private function prototypes -----------------------------------------------*/
-void RTC_WKUP_IRQHandler( void );
+void RTC_WKUP_IRQHandler(void);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -100,7 +99,7 @@ void RTC_WKUP_IRQHandler( void );
   * @param  TickPriority Tick interrupt priority.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_InitTick( uint32_t TickPriority )
+HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
     __IO uint32_t counter = 0U;
 
@@ -113,13 +112,13 @@ HAL_StatusTypeDef HAL_InitTick( uint32_t TickPriority )
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
     RCC_OscInitStruct.LSEState = RCC_LSE_ON;
     PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-#elif defined( RTC_CLOCK_SOURCE_LSI )
+#elif defined(RTC_CLOCK_SOURCE_LSI)
     /* Configue LSI as RTC clock soucre */
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
     RCC_OscInitStruct.LSIState = RCC_LSI_ON;
     PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
-#elif defined( RTC_CLOCK_SOURCE_HSE )
+#elif defined(RTC_CLOCK_SOURCE_HSE)
     /* Configue HSE as RTC clock soucre */
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
@@ -130,10 +129,10 @@ HAL_StatusTypeDef HAL_InitTick( uint32_t TickPriority )
 #error Please select the RTC Clock source
 #endif /* RTC_CLOCK_SOURCE_LSE */
 
-    if ( HAL_RCC_OscConfig( &RCC_OscInitStruct ) == HAL_OK )
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) == HAL_OK)
     {
         PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
-        if ( HAL_RCCEx_PeriphCLKConfig( &PeriphClkInitStruct ) == HAL_OK )
+        if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) == HAL_OK)
         {
             /* Enable RTC Clock */
             __HAL_RCC_RTC_ENABLE();
@@ -156,40 +155,40 @@ HAL_StatusTypeDef HAL_InitTick( uint32_t TickPriority )
             hRTC_Handle.Init.OutPut = RTC_OUTPUT_DISABLE;
             hRTC_Handle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
             hRTC_Handle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-            HAL_RTC_Init( &hRTC_Handle );
+            HAL_RTC_Init(&hRTC_Handle);
 
             /* Disable the write protection for RTC registers */
-            __HAL_RTC_WRITEPROTECTION_DISABLE( &hRTC_Handle );
+            __HAL_RTC_WRITEPROTECTION_DISABLE(&hRTC_Handle);
 
             /* Disable the Wake-up Timer */
-            __HAL_RTC_WAKEUPTIMER_DISABLE( &hRTC_Handle );
+            __HAL_RTC_WAKEUPTIMER_DISABLE(&hRTC_Handle);
 
             /* In case of interrupt mode is used, the interrupt source must disabled */
-            __HAL_RTC_WAKEUPTIMER_DISABLE_IT( &hRTC_Handle, RTC_IT_WUT );
+            __HAL_RTC_WAKEUPTIMER_DISABLE_IT(&hRTC_Handle, RTC_IT_WUT);
 
             /* Wait till RTC WUTWF flag is set  */
-            while ( __HAL_RTC_WAKEUPTIMER_GET_FLAG( &hRTC_Handle, RTC_FLAG_WUTWF ) == RESET )
+            while (__HAL_RTC_WAKEUPTIMER_GET_FLAG(&hRTC_Handle, RTC_FLAG_WUTWF) == RESET)
             {
-                if ( counter++ == ( SystemCoreClock / 48U ) )
+                if (counter++ == (SystemCoreClock / 48U))
                 {
                     return HAL_ERROR;
                 }
             }
 
             /* Clear PWR wake up Flag */
-            __HAL_PWR_CLEAR_FLAG( PWR_FLAG_WU );
+            __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
 
             /* Clear RTC Wake Up timer Flag */
-            __HAL_RTC_WAKEUPTIMER_CLEAR_FLAG( &hRTC_Handle, RTC_FLAG_WUTF );
+            __HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hRTC_Handle, RTC_FLAG_WUTF);
 
             /* Configure the Wake-up Timer counter */
             hRTC_Handle.Instance->WUTR = 0U;
 
             /* Clear the Wake-up Timer clock source bits in CR register */
-            hRTC_Handle.Instance->CR &= (uint32_t) ~RTC_CR_WUCKSEL;
+            hRTC_Handle.Instance->CR &= (uint32_t)~RTC_CR_WUCKSEL;
 
             /* Configure the clock source */
-            hRTC_Handle.Instance->CR |= (uint32_t) RTC_WAKEUPCLOCK_CK_SPRE_16BITS;
+            hRTC_Handle.Instance->CR |= (uint32_t)RTC_WAKEUPCLOCK_CK_SPRE_16BITS;
 
             /* RTC WakeUpTimer Interrupt Configuration: EXTI configuration */
             __HAL_RTC_WAKEUPTIMER_EXTI_ENABLE_IT();
@@ -197,16 +196,16 @@ HAL_StatusTypeDef HAL_InitTick( uint32_t TickPriority )
             __HAL_RTC_WAKEUPTIMER_EXTI_ENABLE_RISING_EDGE();
 
             /* Configure the Interrupt in the RTC_CR register */
-            __HAL_RTC_WAKEUPTIMER_ENABLE_IT( &hRTC_Handle, RTC_IT_WUT );
+            __HAL_RTC_WAKEUPTIMER_ENABLE_IT(&hRTC_Handle, RTC_IT_WUT);
 
             /* Enable the Wake-up Timer */
-            __HAL_RTC_WAKEUPTIMER_ENABLE( &hRTC_Handle );
+            __HAL_RTC_WAKEUPTIMER_ENABLE(&hRTC_Handle);
 
             /* Enable the write protection for RTC registers */
-            __HAL_RTC_WRITEPROTECTION_ENABLE( &hRTC_Handle );
+            __HAL_RTC_WRITEPROTECTION_ENABLE(&hRTC_Handle);
 
-            HAL_NVIC_SetPriority( RTC_WKUP_IRQn, TickPriority, 0U );
-            HAL_NVIC_EnableIRQ( RTC_WKUP_IRQn );
+            HAL_NVIC_SetPriority(RTC_WKUP_IRQn, TickPriority, 0U);
+            HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
             return HAL_OK;
         }
     }
@@ -218,14 +217,14 @@ HAL_StatusTypeDef HAL_InitTick( uint32_t TickPriority )
  * @note   Disable the tick increment by disabling RTC_WKUP interrupt.
  * @retval None
  */
-void HAL_SuspendTick( void )
+void HAL_SuspendTick(void)
 {
     /* Disable the write protection for RTC registers */
-    __HAL_RTC_WRITEPROTECTION_DISABLE( &hRTC_Handle );
+    __HAL_RTC_WRITEPROTECTION_DISABLE(&hRTC_Handle);
     /* Disable WAKE UP TIMER Interrupt */
-    __HAL_RTC_WAKEUPTIMER_DISABLE_IT( &hRTC_Handle, RTC_IT_WUT );
+    __HAL_RTC_WAKEUPTIMER_DISABLE_IT(&hRTC_Handle, RTC_IT_WUT);
     /* Enable the write protection for RTC registers */
-    __HAL_RTC_WRITEPROTECTION_ENABLE( &hRTC_Handle );
+    __HAL_RTC_WRITEPROTECTION_ENABLE(&hRTC_Handle);
 }
 
 /**
@@ -233,14 +232,14 @@ void HAL_SuspendTick( void )
  * @note   Enable the tick increment by Enabling RTC_WKUP interrupt.
  * @retval None
  */
-void HAL_ResumeTick( void )
+void HAL_ResumeTick(void)
 {
     /* Disable the write protection for RTC registers */
-    __HAL_RTC_WRITEPROTECTION_DISABLE( &hRTC_Handle );
+    __HAL_RTC_WRITEPROTECTION_DISABLE(&hRTC_Handle);
     /* Enable  WAKE UP TIMER  interrupt */
-    __HAL_RTC_WAKEUPTIMER_ENABLE_IT( &hRTC_Handle, RTC_IT_WUT );
+    __HAL_RTC_WAKEUPTIMER_ENABLE_IT(&hRTC_Handle, RTC_IT_WUT);
     /* Enable the write protection for RTC registers */
-    __HAL_RTC_WRITEPROTECTION_ENABLE( &hRTC_Handle );
+    __HAL_RTC_WRITEPROTECTION_ENABLE(&hRTC_Handle);
 }
 
 /**
@@ -251,13 +250,19 @@ void HAL_ResumeTick( void )
  * @param  hrtc  RTC handle
  * @retval None
  */
-void HAL_RTCEx_WakeUpTimerEventCallback( RTC_HandleTypeDef *hrtc ) { HAL_IncTick(); }
+void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc)
+{
+    HAL_IncTick();
+}
 
 /**
  * @brief  This function handles  WAKE UP TIMER  interrupt request.
  * @retval None
  */
-void RTC_WKUP_IRQHandler( void ) { HAL_RTCEx_WakeUpTimerIRQHandler( &hRTC_Handle ); }
+void RTC_WKUP_IRQHandler(void)
+{
+    HAL_RTCEx_WakeUpTimerIRQHandler(&hRTC_Handle);
+}
 
 /**
  * @}

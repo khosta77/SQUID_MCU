@@ -32,14 +32,14 @@
 
 // ----------------------------------------------------------------------------
 
-caddr_t _sbrk( int incr );
+caddr_t _sbrk(int incr);
 
 // ----------------------------------------------------------------------------
 
 // The definitions used here should be kept in sync with the
 // stack definitions in the linker script.
 
-caddr_t _sbrk( int incr )
+caddr_t _sbrk(int incr)
 {
     extern char _Heap_Begin; // Defined by the linker.
     extern char _Heap_Limit; // Defined by the linker.
@@ -47,7 +47,7 @@ caddr_t _sbrk( int incr )
     static char *current_heap_end;
     char *current_block_address;
 
-    if ( current_heap_end == 0 )
+    if (current_heap_end == 0)
     {
         current_heap_end = &_Heap_Begin;
     }
@@ -58,8 +58,8 @@ caddr_t _sbrk( int incr )
     // hard faults on Cortex-M0. So we assume that heap starts on
     // word boundary, hence make sure we always add a multiple of
     // 4 to it.
-    incr = ( incr + 3 ) & ( ~3 ); // align value to 4
-    if ( current_heap_end + incr > &_Heap_Limit )
+    incr = (incr + 3) & (~3); // align value to 4
+    if (current_heap_end + incr > &_Heap_Limit)
     {
         // Some of the libstdc++-v3 tests rely upon detecting
         // out of memory errors, so do not abort here.
@@ -72,13 +72,13 @@ caddr_t _sbrk( int incr )
 #else
         // Heap has overflowed
         errno = ENOMEM;
-        return (caddr_t) -1;
+        return (caddr_t)-1;
 #endif
     }
 
     current_heap_end += incr;
 
-    return (caddr_t) current_block_address;
+    return (caddr_t)current_block_address;
 }
 
 // ----------------------------------------------------------------------------

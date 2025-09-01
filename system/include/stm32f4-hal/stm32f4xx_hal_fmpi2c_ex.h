@@ -26,7 +26,7 @@ extern "C"
 {
 #endif
 
-#if defined( FMPI2C_CR1_PE )
+#if defined(FMPI2C_CR1_PE)
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal_def.h"
 
@@ -48,7 +48,7 @@ extern "C"
 /** @defgroup FMPI2CEx_Analog_Filter FMPI2C Extended Analog Filter
  * @{
  */
-#define FMPI2C_ANALOGFILTER_ENABLE 0x00000000U
+#define FMPI2C_ANALOGFILTER_ENABLE  0x00000000U
 #define FMPI2C_ANALOGFILTER_DISABLE FMPI2C_CR1_ANFOFF
 /**
  * @}
@@ -57,10 +57,8 @@ extern "C"
 /** @defgroup FMPI2CEx_FastModePlus FMPI2C Extended Fast Mode Plus
  * @{
  */
-#define FMPI2C_FASTMODEPLUS_SCL                                                                              \
-    SYSCFG_CFGR_FMPI2C1_SCL /*!< Enable Fast Mode Plus on FMPI2C1 SCL pins       */
-#define FMPI2C_FASTMODEPLUS_SDA                                                                              \
-    SYSCFG_CFGR_FMPI2C1_SDA /*!< Enable Fast Mode Plus on FMPI2C1 SDA pins       */
+#define FMPI2C_FASTMODEPLUS_SCL SYSCFG_CFGR_FMPI2C1_SCL /*!< Enable Fast Mode Plus on FMPI2C1 SCL pins       */
+#define FMPI2C_FASTMODEPLUS_SDA SYSCFG_CFGR_FMPI2C1_SDA /*!< Enable Fast Mode Plus on FMPI2C1 SDA pins       */
 /**
  * @}
  */
@@ -82,10 +80,10 @@ extern "C"
  */
 
 /* Peripheral Control functions  ************************************************/
-HAL_StatusTypeDef HAL_FMPI2CEx_ConfigAnalogFilter( FMPI2C_HandleTypeDef *hfmpi2c, uint32_t AnalogFilter );
-HAL_StatusTypeDef HAL_FMPI2CEx_ConfigDigitalFilter( FMPI2C_HandleTypeDef *hfmpi2c, uint32_t DigitalFilter );
-void HAL_FMPI2CEx_EnableFastModePlus( uint32_t ConfigFastModePlus );
-void HAL_FMPI2CEx_DisableFastModePlus( uint32_t ConfigFastModePlus );
+HAL_StatusTypeDef HAL_FMPI2CEx_ConfigAnalogFilter(FMPI2C_HandleTypeDef *hfmpi2c, uint32_t AnalogFilter);
+HAL_StatusTypeDef HAL_FMPI2CEx_ConfigDigitalFilter(FMPI2C_HandleTypeDef *hfmpi2c, uint32_t DigitalFilter);
+void HAL_FMPI2CEx_EnableFastModePlus(uint32_t ConfigFastModePlus);
+void HAL_FMPI2CEx_DisableFastModePlus(uint32_t ConfigFastModePlus);
 
 /* Private constants ---------------------------------------------------------*/
 /** @defgroup FMPI2CEx_Private_Constants FMPI2C Extended Private Constants
@@ -100,14 +98,13 @@ void HAL_FMPI2CEx_DisableFastModePlus( uint32_t ConfigFastModePlus );
 /** @defgroup FMPI2CEx_Private_Macro FMPI2C Extended Private Macros
  * @{
  */
-#define IS_FMPI2C_ANALOG_FILTER( FILTER )                                                                    \
-    ( ( ( FILTER ) == FMPI2C_ANALOGFILTER_ENABLE ) || ( ( FILTER ) == FMPI2C_ANALOGFILTER_DISABLE ) )
+#define IS_FMPI2C_ANALOG_FILTER(FILTER) (((FILTER) == FMPI2C_ANALOGFILTER_ENABLE) || ((FILTER) == FMPI2C_ANALOGFILTER_DISABLE))
 
-#define IS_FMPI2C_DIGITAL_FILTER( FILTER ) ( ( FILTER ) <= 0x0000000FU )
+#define IS_FMPI2C_DIGITAL_FILTER(FILTER) ((FILTER) <= 0x0000000FU)
 
-#define IS_FMPI2C_FASTMODEPLUS( __CONFIG__ )                                                                 \
-    ( ( ( ( __CONFIG__ ) & ( FMPI2C_FASTMODEPLUS_SCL ) ) == FMPI2C_FASTMODEPLUS_SCL ) ||                     \
-      ( ( ( __CONFIG__ ) & ( FMPI2C_FASTMODEPLUS_SDA ) ) == FMPI2C_FASTMODEPLUS_SDA ) )
+#define IS_FMPI2C_FASTMODEPLUS(__CONFIG__)                                                                                                 \
+    ((((__CONFIG__) & (FMPI2C_FASTMODEPLUS_SCL)) == FMPI2C_FASTMODEPLUS_SCL)                                                               \
+     || (((__CONFIG__) & (FMPI2C_FASTMODEPLUS_SDA)) == FMPI2C_FASTMODEPLUS_SDA))
 
 /**
  * @}

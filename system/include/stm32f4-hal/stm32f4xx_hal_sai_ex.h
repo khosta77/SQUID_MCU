@@ -37,25 +37,24 @@ extern "C"
  * @{
  */
 
-#if defined( STM32F427xx ) || defined( STM32F437xx ) || defined( STM32F429xx ) || defined( STM32F439xx ) ||  \
-    defined( STM32F446xx ) || defined( STM32F469xx ) || defined( STM32F479xx ) || defined( STM32F413xx ) ||  \
-    defined( STM32F423xx )
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F446xx)                   \
+    || defined(STM32F469xx) || defined(STM32F479xx) || defined(STM32F413xx) || defined(STM32F423xx)
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /** @defgroup SAI_Clock_Source  SAI Clock Source
  * @{
  */
-#if defined( STM32F413xx ) || defined( STM32F423xx )
+#if defined(STM32F413xx) || defined(STM32F423xx)
 #define SAI_CLKSOURCE_PLLI2S 0x00000000U
-#define SAI_CLKSOURCE_EXT 0x00100000U
-#define SAI_CLKSOURCE_PLLR 0x00200000U
-#define SAI_CLKSOURCE_HS 0x00300000U
+#define SAI_CLKSOURCE_EXT    0x00100000U
+#define SAI_CLKSOURCE_PLLR   0x00200000U
+#define SAI_CLKSOURCE_HS     0x00300000U
 #else
 #define SAI_CLKSOURCE_PLLSAI 0x00000000U
 #define SAI_CLKSOURCE_PLLI2S 0x00100000U
-#define SAI_CLKSOURCE_EXT 0x00200000U
-#define SAI_CLKSOURCE_NA 0x00400000U /*!< No applicable for STM32F446xx */
+#define SAI_CLKSOURCE_EXT    0x00200000U
+#define SAI_CLKSOURCE_NA     0x00400000U /*!< No applicable for STM32F446xx */
 #endif
 
 /**
@@ -72,8 +71,8 @@ extern "C"
  */
 
 /* Extended features functions ************************************************/
-void SAI_BlockSynchroConfig( SAI_HandleTypeDef *hsai );
-uint32_t SAI_GetInputClock( SAI_HandleTypeDef *hsai );
+void SAI_BlockSynchroConfig(SAI_HandleTypeDef *hsai);
+uint32_t SAI_GetInputClock(SAI_HandleTypeDef *hsai);
 /**
  * @}
  */
@@ -85,18 +84,18 @@ uint32_t SAI_GetInputClock( SAI_HandleTypeDef *hsai );
 /* Private variables ---------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
 /* Private macros ------------------------------------------------------------*/
-#if defined( STM32F413xx ) || defined( STM32F423xx )
-#define IS_SAI_CLK_SOURCE( SOURCE )                                                                          \
-    ( ( ( SOURCE ) == SAI_CLKSOURCE_PLLI2S ) || ( ( SOURCE ) == SAI_CLKSOURCE_EXT ) ||                       \
-      ( ( SOURCE ) == SAI_CLKSOURCE_PLLR ) || ( ( SOURCE ) == SAI_CLKSOURCE_HS ) )
+#if defined(STM32F413xx) || defined(STM32F423xx)
+#define IS_SAI_CLK_SOURCE(SOURCE)                                                                                                          \
+    (((SOURCE) == SAI_CLKSOURCE_PLLI2S) || ((SOURCE) == SAI_CLKSOURCE_EXT) || ((SOURCE) == SAI_CLKSOURCE_PLLR)                             \
+     || ((SOURCE) == SAI_CLKSOURCE_HS))
 #else
-#define IS_SAI_CLK_SOURCE( SOURCE )                                                                          \
-    ( ( ( SOURCE ) == SAI_CLKSOURCE_PLLSAI ) || ( ( SOURCE ) == SAI_CLKSOURCE_EXT ) ||                       \
-      ( ( SOURCE ) == SAI_CLKSOURCE_PLLI2S ) || ( ( SOURCE ) == SAI_CLKSOURCE_NA ) )
+#define IS_SAI_CLK_SOURCE(SOURCE)                                                                                                          \
+    (((SOURCE) == SAI_CLKSOURCE_PLLSAI) || ((SOURCE) == SAI_CLKSOURCE_EXT) || ((SOURCE) == SAI_CLKSOURCE_PLLI2S)                           \
+     || ((SOURCE) == SAI_CLKSOURCE_NA))
 #endif
 /* Private functions ---------------------------------------------------------*/
 
-#endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx ||          \
+#endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx ||                                        \
           STM32F479xx || STM32F413xx || STM32F423xx */
 /**
  * @}

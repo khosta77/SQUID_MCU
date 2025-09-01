@@ -27,27 +27,26 @@ extern "C"
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#if defined( STM32F405xx ) || defined( STM32F415xx ) || defined( STM32F407xx ) || defined( STM32F417xx ) ||  \
-    defined( STM32F412Zx ) || defined( STM32F412Vx ) || defined( STM32F412Rx ) || defined( STM32F413xx ) ||  \
-    defined( STM32F423xx )
+#if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) || defined(STM32F412Zx)                   \
+    || defined(STM32F412Vx) || defined(STM32F412Rx) || defined(STM32F413xx) || defined(STM32F423xx)
 #include "stm32f4xx_ll_fsmc.h"
-#endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx || STM32F412Zx || STM32F412Vx ||          \
+#endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx || STM32F412Zx || STM32F412Vx ||                                        \
           STM32F412Rx || STM32F413xx || STM32F423xx */
 
-#if defined( STM32F427xx ) || defined( STM32F437xx ) || defined( STM32F429xx ) || defined( STM32F439xx ) ||  \
-    defined( STM32F446xx ) || defined( STM32F469xx ) || defined( STM32F479xx )
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F446xx)                   \
+    || defined(STM32F469xx) || defined(STM32F479xx)
 #include "stm32f4xx_ll_fmc.h"
-#endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx ||          \
+#endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx ||                                        \
           STM32F479xx */
 
 /** @addtogroup STM32F4xx_HAL_Driver
  * @{
  */
 
-#if defined( STM32F405xx ) || defined( STM32F415xx ) || defined( STM32F407xx ) || defined( STM32F417xx ) ||  \
-    defined( STM32F427xx ) || defined( STM32F437xx ) || defined( STM32F429xx ) || defined( STM32F439xx ) ||  \
-    defined( STM32F446xx ) || defined( STM32F469xx ) || defined( STM32F479xx ) || defined( STM32F412Zx ) ||  \
-    defined( STM32F412Vx ) || defined( STM32F412Rx ) || defined( STM32F413xx ) || defined( STM32F423xx )
+#if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) || defined(STM32F427xx)                   \
+    || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F446xx) || defined(STM32F469xx)                \
+    || defined(STM32F479xx) || defined(STM32F412Zx) || defined(STM32F412Vx) || defined(STM32F412Rx) || defined(STM32F413xx)                \
+    || defined(STM32F423xx)
 
 /** @addtogroup SRAM
  * @{
@@ -74,7 +73,7 @@ typedef enum
 /**
  * @brief  SRAM handle Structure definition
  */
-#if ( USE_HAL_SRAM_REGISTER_CALLBACKS == 1 )
+#if (USE_HAL_SRAM_REGISTER_CALLBACKS == 1)
 typedef struct __SRAM_HandleTypeDef
 #else
 typedef struct
@@ -92,15 +91,15 @@ typedef struct
 
     DMA_HandleTypeDef *hdma; /*!< Pointer DMA handler                          */
 
-#if ( USE_HAL_SRAM_REGISTER_CALLBACKS == 1 )
-    void ( *MspInitCallback )( struct __SRAM_HandleTypeDef *hsram );   /*!< SRAM Msp Init callback   */
-    void ( *MspDeInitCallback )( struct __SRAM_HandleTypeDef *hsram ); /*!< SRAM Msp DeInit callback */
-    void ( *DmaXferCpltCallback )( DMA_HandleTypeDef *hdma );  /*!< SRAM DMA Xfer Complete callback     */
-    void ( *DmaXferErrorCallback )( DMA_HandleTypeDef *hdma ); /*!< SRAM DMA Xfer Error callback        */
+#if (USE_HAL_SRAM_REGISTER_CALLBACKS == 1)
+    void (*MspInitCallback)(struct __SRAM_HandleTypeDef *hsram);   /*!< SRAM Msp Init callback   */
+    void (*MspDeInitCallback)(struct __SRAM_HandleTypeDef *hsram); /*!< SRAM Msp DeInit callback */
+    void (*DmaXferCpltCallback)(DMA_HandleTypeDef *hdma);          /*!< SRAM DMA Xfer Complete callback     */
+    void (*DmaXferErrorCallback)(DMA_HandleTypeDef *hdma);         /*!< SRAM DMA Xfer Error callback        */
 #endif
 } SRAM_HandleTypeDef;
 
-#if ( USE_HAL_SRAM_REGISTER_CALLBACKS == 1 )
+#if (USE_HAL_SRAM_REGISTER_CALLBACKS == 1)
 /**
  * @brief  HAL SRAM Callback ID enumeration definition
  */
@@ -115,8 +114,8 @@ typedef enum
 /**
  * @brief  HAL SRAM Callback pointer definition
  */
-typedef void ( *pSRAM_CallbackTypeDef )( SRAM_HandleTypeDef *hsram );
-typedef void ( *pSRAM_DmaCallbackTypeDef )( DMA_HandleTypeDef *hdma );
+typedef void (*pSRAM_CallbackTypeDef)(SRAM_HandleTypeDef *hsram);
+typedef void (*pSRAM_DmaCallbackTypeDef)(DMA_HandleTypeDef *hdma);
 #endif
 /**
  * @}
@@ -132,16 +131,16 @@ typedef void ( *pSRAM_DmaCallbackTypeDef )( DMA_HandleTypeDef *hdma );
  * @param  __HANDLE__ SRAM handle
  * @retval None
  */
-#if ( USE_HAL_SRAM_REGISTER_CALLBACKS == 1 )
-#define __HAL_SRAM_RESET_HANDLE_STATE( __HANDLE__ )                                                          \
-    do                                                                                                       \
-    {                                                                                                        \
-        ( __HANDLE__ )->State = HAL_SRAM_STATE_RESET;                                                        \
-        ( __HANDLE__ )->MspInitCallback = NULL;                                                              \
-        ( __HANDLE__ )->MspDeInitCallback = NULL;                                                            \
-    } while ( 0 )
+#if (USE_HAL_SRAM_REGISTER_CALLBACKS == 1)
+#define __HAL_SRAM_RESET_HANDLE_STATE(__HANDLE__)                                                                                          \
+    do                                                                                                                                     \
+    {                                                                                                                                      \
+        (__HANDLE__)->State = HAL_SRAM_STATE_RESET;                                                                                        \
+        (__HANDLE__)->MspInitCallback = NULL;                                                                                              \
+        (__HANDLE__)->MspDeInitCallback = NULL;                                                                                            \
+    } while (0)
 #else
-#define __HAL_SRAM_RESET_HANDLE_STATE( __HANDLE__ ) ( ( __HANDLE__ )->State = HAL_SRAM_STATE_RESET )
+#define __HAL_SRAM_RESET_HANDLE_STATE(__HANDLE__) ((__HANDLE__)->State = HAL_SRAM_STATE_RESET)
 #endif
 
 /**
@@ -157,14 +156,13 @@ typedef void ( *pSRAM_DmaCallbackTypeDef )( DMA_HandleTypeDef *hdma );
  *  @{
  */
 /* Initialization/de-initialization functions  **********************************/
-HAL_StatusTypeDef HAL_SRAM_Init( SRAM_HandleTypeDef *hsram, FMC_NORSRAM_TimingTypeDef *Timing,
-                                 FMC_NORSRAM_TimingTypeDef *ExtTiming );
-HAL_StatusTypeDef HAL_SRAM_DeInit( SRAM_HandleTypeDef *hsram );
-void HAL_SRAM_MspInit( SRAM_HandleTypeDef *hsram );
-void HAL_SRAM_MspDeInit( SRAM_HandleTypeDef *hsram );
+HAL_StatusTypeDef HAL_SRAM_Init(SRAM_HandleTypeDef *hsram, FMC_NORSRAM_TimingTypeDef *Timing, FMC_NORSRAM_TimingTypeDef *ExtTiming);
+HAL_StatusTypeDef HAL_SRAM_DeInit(SRAM_HandleTypeDef *hsram);
+void HAL_SRAM_MspInit(SRAM_HandleTypeDef *hsram);
+void HAL_SRAM_MspDeInit(SRAM_HandleTypeDef *hsram);
 
-void HAL_SRAM_DMA_XferCpltCallback( DMA_HandleTypeDef *hdma );
-void HAL_SRAM_DMA_XferErrorCallback( DMA_HandleTypeDef *hdma );
+void HAL_SRAM_DMA_XferCpltCallback(DMA_HandleTypeDef *hdma);
+void HAL_SRAM_DMA_XferErrorCallback(DMA_HandleTypeDef *hdma);
 /**
  * @}
  */
@@ -173,31 +171,25 @@ void HAL_SRAM_DMA_XferErrorCallback( DMA_HandleTypeDef *hdma );
  *  @{
  */
 /* I/O operation functions  *****************************************************/
-HAL_StatusTypeDef HAL_SRAM_Read_8b( SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint8_t *pDstBuffer,
-                                    uint32_t BufferSize );
-HAL_StatusTypeDef HAL_SRAM_Write_8b( SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint8_t *pSrcBuffer,
-                                     uint32_t BufferSize );
-HAL_StatusTypeDef HAL_SRAM_Read_16b( SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint16_t *pDstBuffer,
-                                     uint32_t BufferSize );
-HAL_StatusTypeDef HAL_SRAM_Write_16b( SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint16_t *pSrcBuffer,
-                                      uint32_t BufferSize );
-HAL_StatusTypeDef HAL_SRAM_Read_32b( SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint32_t *pDstBuffer,
-                                     uint32_t BufferSize );
-HAL_StatusTypeDef HAL_SRAM_Write_32b( SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint32_t *pSrcBuffer,
-                                      uint32_t BufferSize );
-HAL_StatusTypeDef HAL_SRAM_Read_DMA( SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint32_t *pDstBuffer,
-                                     uint32_t BufferSize );
-HAL_StatusTypeDef HAL_SRAM_Write_DMA( SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint32_t *pSrcBuffer,
-                                      uint32_t BufferSize );
-#if ( USE_HAL_SRAM_REGISTER_CALLBACKS == 1 )
+HAL_StatusTypeDef HAL_SRAM_Read_8b(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint8_t *pDstBuffer, uint32_t BufferSize);
+HAL_StatusTypeDef HAL_SRAM_Write_8b(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint8_t *pSrcBuffer, uint32_t BufferSize);
+HAL_StatusTypeDef HAL_SRAM_Read_16b(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint16_t *pDstBuffer, uint32_t BufferSize);
+HAL_StatusTypeDef HAL_SRAM_Write_16b(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint16_t *pSrcBuffer, uint32_t BufferSize);
+HAL_StatusTypeDef HAL_SRAM_Read_32b(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint32_t *pDstBuffer, uint32_t BufferSize);
+HAL_StatusTypeDef HAL_SRAM_Write_32b(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint32_t *pSrcBuffer, uint32_t BufferSize);
+HAL_StatusTypeDef HAL_SRAM_Read_DMA(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint32_t *pDstBuffer, uint32_t BufferSize);
+HAL_StatusTypeDef HAL_SRAM_Write_DMA(SRAM_HandleTypeDef *hsram, uint32_t *pAddress, uint32_t *pSrcBuffer, uint32_t BufferSize);
+#if (USE_HAL_SRAM_REGISTER_CALLBACKS == 1)
 /* SRAM callback registering/unregistering */
-HAL_StatusTypeDef HAL_SRAM_RegisterCallback( SRAM_HandleTypeDef *hsram, HAL_SRAM_CallbackIDTypeDef CallbackId,
-                                             pSRAM_CallbackTypeDef pCallback );
-HAL_StatusTypeDef HAL_SRAM_UnRegisterCallback( SRAM_HandleTypeDef *hsram,
-                                               HAL_SRAM_CallbackIDTypeDef CallbackId );
-HAL_StatusTypeDef HAL_SRAM_RegisterDmaCallback( SRAM_HandleTypeDef *hsram,
-                                                HAL_SRAM_CallbackIDTypeDef CallbackId,
-                                                pSRAM_DmaCallbackTypeDef pCallback );
+HAL_StatusTypeDef HAL_SRAM_RegisterCallback(
+    SRAM_HandleTypeDef *hsram,
+    HAL_SRAM_CallbackIDTypeDef CallbackId,
+    pSRAM_CallbackTypeDef pCallback);
+HAL_StatusTypeDef HAL_SRAM_UnRegisterCallback(SRAM_HandleTypeDef *hsram, HAL_SRAM_CallbackIDTypeDef CallbackId);
+HAL_StatusTypeDef HAL_SRAM_RegisterDmaCallback(
+    SRAM_HandleTypeDef *hsram,
+    HAL_SRAM_CallbackIDTypeDef CallbackId,
+    pSRAM_DmaCallbackTypeDef pCallback);
 #endif
 /**
  * @}
@@ -207,8 +199,8 @@ HAL_StatusTypeDef HAL_SRAM_RegisterDmaCallback( SRAM_HandleTypeDef *hsram,
  *  @{
  */
 /* SRAM Control functions  ******************************************************/
-HAL_StatusTypeDef HAL_SRAM_WriteOperation_Enable( SRAM_HandleTypeDef *hsram );
-HAL_StatusTypeDef HAL_SRAM_WriteOperation_Disable( SRAM_HandleTypeDef *hsram );
+HAL_StatusTypeDef HAL_SRAM_WriteOperation_Enable(SRAM_HandleTypeDef *hsram);
+HAL_StatusTypeDef HAL_SRAM_WriteOperation_Disable(SRAM_HandleTypeDef *hsram);
 /**
  * @}
  */
@@ -217,7 +209,7 @@ HAL_StatusTypeDef HAL_SRAM_WriteOperation_Disable( SRAM_HandleTypeDef *hsram );
  *  @{
  */
 /* SRAM State functions *********************************************************/
-HAL_SRAM_StateTypeDef HAL_SRAM_GetState( SRAM_HandleTypeDef *hsram );
+HAL_SRAM_StateTypeDef HAL_SRAM_GetState(SRAM_HandleTypeDef *hsram);
 /**
  * @}
  */
@@ -235,8 +227,8 @@ HAL_SRAM_StateTypeDef HAL_SRAM_GetState( SRAM_HandleTypeDef *hsram );
  * @}
  */
 
-#endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx || STM32F427xx || STM32F437xx ||          \
-          STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx || STM32F479xx || STM32F412Zx ||          \
+#endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx || STM32F427xx || STM32F437xx ||                                        \
+          STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx || STM32F479xx || STM32F412Zx ||                                        \
           STM32F412Vx || STM32F412Rx || STM32F413xx || STM32F423xx */
 /**
  * @}

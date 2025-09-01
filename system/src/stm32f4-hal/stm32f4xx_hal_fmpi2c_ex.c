@@ -55,7 +55,7 @@
  */
 
 #ifdef HAL_FMPI2C_MODULE_ENABLED
-#if defined( FMPI2C_CR1_PE )
+#if defined(FMPI2C_CR1_PE)
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -90,34 +90,34 @@
  * @param  AnalogFilter New state of the Analog filter.
  * @retval HAL status
  */
-HAL_StatusTypeDef HAL_FMPI2CEx_ConfigAnalogFilter( FMPI2C_HandleTypeDef *hfmpi2c, uint32_t AnalogFilter )
+HAL_StatusTypeDef HAL_FMPI2CEx_ConfigAnalogFilter(FMPI2C_HandleTypeDef *hfmpi2c, uint32_t AnalogFilter)
 {
     /* Check the parameters */
-    assert_param( IS_FMPI2C_ALL_INSTANCE( hfmpi2c->Instance ) );
-    assert_param( IS_FMPI2C_ANALOG_FILTER( AnalogFilter ) );
+    assert_param(IS_FMPI2C_ALL_INSTANCE(hfmpi2c->Instance));
+    assert_param(IS_FMPI2C_ANALOG_FILTER(AnalogFilter));
 
-    if ( hfmpi2c->State == HAL_FMPI2C_STATE_READY )
+    if (hfmpi2c->State == HAL_FMPI2C_STATE_READY)
     {
         /* Process Locked */
-        __HAL_LOCK( hfmpi2c );
+        __HAL_LOCK(hfmpi2c);
 
         hfmpi2c->State = HAL_FMPI2C_STATE_BUSY;
 
         /* Disable the selected FMPI2C peripheral */
-        __HAL_FMPI2C_DISABLE( hfmpi2c );
+        __HAL_FMPI2C_DISABLE(hfmpi2c);
 
         /* Reset FMPI2Cx ANOFF bit */
-        hfmpi2c->Instance->CR1 &= ~( FMPI2C_CR1_ANFOFF );
+        hfmpi2c->Instance->CR1 &= ~(FMPI2C_CR1_ANFOFF);
 
         /* Set analog filter bit*/
         hfmpi2c->Instance->CR1 |= AnalogFilter;
 
-        __HAL_FMPI2C_ENABLE( hfmpi2c );
+        __HAL_FMPI2C_ENABLE(hfmpi2c);
 
         hfmpi2c->State = HAL_FMPI2C_STATE_READY;
 
         /* Process Unlocked */
-        __HAL_UNLOCK( hfmpi2c );
+        __HAL_UNLOCK(hfmpi2c);
 
         return HAL_OK;
     }
@@ -134,29 +134,29 @@ HAL_StatusTypeDef HAL_FMPI2CEx_ConfigAnalogFilter( FMPI2C_HandleTypeDef *hfmpi2c
  * @param  DigitalFilter Coefficient of digital noise filter between Min_Data=0x00 and Max_Data=0x0F.
  * @retval HAL status
  */
-HAL_StatusTypeDef HAL_FMPI2CEx_ConfigDigitalFilter( FMPI2C_HandleTypeDef *hfmpi2c, uint32_t DigitalFilter )
+HAL_StatusTypeDef HAL_FMPI2CEx_ConfigDigitalFilter(FMPI2C_HandleTypeDef *hfmpi2c, uint32_t DigitalFilter)
 {
     uint32_t tmpreg;
 
     /* Check the parameters */
-    assert_param( IS_FMPI2C_ALL_INSTANCE( hfmpi2c->Instance ) );
-    assert_param( IS_FMPI2C_DIGITAL_FILTER( DigitalFilter ) );
+    assert_param(IS_FMPI2C_ALL_INSTANCE(hfmpi2c->Instance));
+    assert_param(IS_FMPI2C_DIGITAL_FILTER(DigitalFilter));
 
-    if ( hfmpi2c->State == HAL_FMPI2C_STATE_READY )
+    if (hfmpi2c->State == HAL_FMPI2C_STATE_READY)
     {
         /* Process Locked */
-        __HAL_LOCK( hfmpi2c );
+        __HAL_LOCK(hfmpi2c);
 
         hfmpi2c->State = HAL_FMPI2C_STATE_BUSY;
 
         /* Disable the selected FMPI2C peripheral */
-        __HAL_FMPI2C_DISABLE( hfmpi2c );
+        __HAL_FMPI2C_DISABLE(hfmpi2c);
 
         /* Get the old register value */
         tmpreg = hfmpi2c->Instance->CR1;
 
         /* Reset FMPI2Cx DNF bits [11:8] */
-        tmpreg &= ~( FMPI2C_CR1_DNF );
+        tmpreg &= ~(FMPI2C_CR1_DNF);
 
         /* Set FMPI2Cx DNF coefficient */
         tmpreg |= DigitalFilter << 8U;
@@ -164,12 +164,12 @@ HAL_StatusTypeDef HAL_FMPI2CEx_ConfigDigitalFilter( FMPI2C_HandleTypeDef *hfmpi2
         /* Store the new register value */
         hfmpi2c->Instance->CR1 = tmpreg;
 
-        __HAL_FMPI2C_ENABLE( hfmpi2c );
+        __HAL_FMPI2C_ENABLE(hfmpi2c);
 
         hfmpi2c->State = HAL_FMPI2C_STATE_READY;
 
         /* Process Unlocked */
-        __HAL_UNLOCK( hfmpi2c );
+        __HAL_UNLOCK(hfmpi2c);
 
         return HAL_OK;
     }
@@ -190,16 +190,16 @@ HAL_StatusTypeDef HAL_FMPI2CEx_ConfigDigitalFilter( FMPI2C_HandleTypeDef *hfmpi2
  *        can be enabled only by using FMPI2C_FASTMODEPLUS_FMPI2C1 parameter.
  * @retval None
  */
-void HAL_FMPI2CEx_EnableFastModePlus( uint32_t ConfigFastModePlus )
+void HAL_FMPI2CEx_EnableFastModePlus(uint32_t ConfigFastModePlus)
 {
     /* Check the parameter */
-    assert_param( IS_FMPI2C_FASTMODEPLUS( ConfigFastModePlus ) );
+    assert_param(IS_FMPI2C_FASTMODEPLUS(ConfigFastModePlus));
 
     /* Enable SYSCFG clock */
     __HAL_RCC_SYSCFG_CLK_ENABLE();
 
     /* Enable fast mode plus driving capability for selected pin */
-    SET_BIT( SYSCFG->CFGR, (uint32_t) ConfigFastModePlus );
+    SET_BIT(SYSCFG->CFGR, (uint32_t)ConfigFastModePlus);
 }
 
 /**
@@ -213,16 +213,16 @@ void HAL_FMPI2CEx_EnableFastModePlus( uint32_t ConfigFastModePlus )
  *        can be disabled only by using FMPI2C_FASTMODEPLUS_FMPI2C1 parameter.
  * @retval None
  */
-void HAL_FMPI2CEx_DisableFastModePlus( uint32_t ConfigFastModePlus )
+void HAL_FMPI2CEx_DisableFastModePlus(uint32_t ConfigFastModePlus)
 {
     /* Check the parameter */
-    assert_param( IS_FMPI2C_FASTMODEPLUS( ConfigFastModePlus ) );
+    assert_param(IS_FMPI2C_FASTMODEPLUS(ConfigFastModePlus));
 
     /* Enable SYSCFG clock */
     __HAL_RCC_SYSCFG_CLK_ENABLE();
 
     /* Disable fast mode plus driving capability for selected pin */
-    CLEAR_BIT( SYSCFG->CFGR, (uint32_t) ConfigFastModePlus );
+    CLEAR_BIT(SYSCFG->CFGR, (uint32_t)ConfigFastModePlus);
 }
 
 /**

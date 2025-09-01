@@ -47,13 +47,13 @@
 
 #include "../../include/cmsis/stm32f4xx.h"
 
-#if !defined( HSE_VALUE )
-#define HSE_VALUE ( (uint32_t) 25000000 ) /*!< Default value of the External oscillator in Hz */
-#endif                                    /* HSE_VALUE */
+#if !defined(HSE_VALUE)
+#define HSE_VALUE ((uint32_t)25000000) /*!< Default value of the External oscillator in Hz */
+#endif                                 /* HSE_VALUE */
 
-#if !defined( HSI_VALUE )
-#define HSI_VALUE ( (uint32_t) 16000000 ) /*!< Value of the Internal oscillator in Hz*/
-#endif                                    /* HSI_VALUE */
+#if !defined(HSI_VALUE)
+#define HSI_VALUE ((uint32_t)16000000) /*!< Value of the Internal oscillator in Hz*/
+#endif                                 /* HSI_VALUE */
 
 /**
  * @}
@@ -73,24 +73,24 @@
 
 /************************* Miscellaneous Configuration ************************/
 /*!< Uncomment the following line if you need to use external SRAM or SDRAM as data memory  */
-#if defined( STM32F405xx ) || defined( STM32F415xx ) || defined( STM32F407xx ) || defined( STM32F417xx ) ||  \
-    defined( STM32F427xx ) || defined( STM32F437xx ) || defined( STM32F429xx ) || defined( STM32F439xx ) ||  \
-    defined( STM32F469xx ) || defined( STM32F479xx ) || defined( STM32F412Zx ) || defined( STM32F412Vx )
+#if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) || defined(STM32F427xx)                   \
+    || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F469xx) || defined(STM32F479xx)                \
+    || defined(STM32F412Zx) || defined(STM32F412Vx)
 /* #define DATA_IN_ExtSRAM */
-#endif /* STM32F40xxx || STM32F41xxx || STM32F42xxx || STM32F43xxx || STM32F469xx || STM32F479xx ||          \
+#endif /* STM32F40xxx || STM32F41xxx || STM32F42xxx || STM32F43xxx || STM32F469xx || STM32F479xx ||                                        \
           STM32F412Zx || STM32F412Vx */
 
-#if defined( STM32F427xx ) || defined( STM32F437xx ) || defined( STM32F429xx ) || defined( STM32F439xx ) ||  \
-    defined( STM32F446xx ) || defined( STM32F469xx ) || defined( STM32F479xx )
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F446xx)                   \
+    || defined(STM32F469xx) || defined(STM32F479xx)
 /* #define DATA_IN_ExtSDRAM */
-#endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx ||          \
+#endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx ||                                        \
           STM32F479xx */
 
 /*!< Uncomment the following line if you need to relocate your vector Table in
      Internal SRAM. */
 /* #define VECT_TAB_SRAM */
-#define VECT_TAB_OFFSET                                                                                      \
-    0x00 /*!< Vector Table base offset field.                                                                \
+#define VECT_TAB_OFFSET                                                                                                                    \
+    0x00 /*!< Vector Table base offset field.                                                                                              \
               This value must be a multiple of 0x200. */
 /******************************************************************************/
 
@@ -118,8 +118,8 @@
              variable is updated automatically.
 */
 uint32_t SystemCoreClock = 16000000;
-const uint8_t AHBPrescTable[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9 };
-const uint8_t APBPrescTable[8] = { 0, 0, 0, 0, 1, 2, 3, 4 };
+const uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
+const uint8_t APBPrescTable[8] = {0, 0, 0, 0, 1, 2, 3, 4};
 /**
  * @}
  */
@@ -128,8 +128,8 @@ const uint8_t APBPrescTable[8] = { 0, 0, 0, 0, 1, 2, 3, 4 };
  * @{
  */
 
-#if defined( DATA_IN_ExtSRAM ) || defined( DATA_IN_ExtSDRAM )
-static void SystemInit_ExtMemCtl( void );
+#if defined(DATA_IN_ExtSRAM) || defined(DATA_IN_ExtSDRAM)
+static void SystemInit_ExtMemCtl(void);
 #endif /* DATA_IN_ExtSRAM || DATA_IN_ExtSDRAM */
 
 /**
@@ -147,14 +147,14 @@ static void SystemInit_ExtMemCtl( void );
  * @param  None
  * @retval None
  */
-void SystemInit( void )
+void SystemInit(void)
 {
 /* FPU settings ------------------------------------------------------------*/
-#if ( __FPU_PRESENT == 1 ) && ( __FPU_USED == 1 )
-    SCB->CPACR |= ( ( 3UL << 10 * 2 ) | ( 3UL << 11 * 2 ) ); /* set CP10 and CP11 Full Access */
+#if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+    SCB->CPACR |= ((3UL << 10 * 2) | (3UL << 11 * 2)); /* set CP10 and CP11 Full Access */
 #endif
 
-#if defined( DATA_IN_ExtSRAM ) || defined( DATA_IN_ExtSDRAM )
+#if defined(DATA_IN_ExtSRAM) || defined(DATA_IN_ExtSDRAM)
     SystemInit_ExtMemCtl();
 #endif /* DATA_IN_ExtSRAM || DATA_IN_ExtSDRAM */
 
@@ -202,14 +202,14 @@ void SystemInit( void )
  * @param  None
  * @retval None
  */
-void SystemCoreClockUpdate( void )
+void SystemCoreClockUpdate(void)
 {
     uint32_t tmp = 0, pllvco = 0, pllp = 2, pllsource = 0, pllm = 2;
 
     /* Get SYSCLK source -------------------------------------------------------*/
     tmp = RCC->CFGR & RCC_CFGR_SWS;
 
-    switch ( tmp )
+    switch (tmp)
     {
         case 0x00: /* HSI used as system clock source */
             SystemCoreClock = HSI_VALUE;
@@ -222,21 +222,21 @@ void SystemCoreClockUpdate( void )
             /* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLL_M) * PLL_N
                SYSCLK = PLL_VCO / PLL_P
                */
-            pllsource = ( RCC->PLLCFGR & RCC_PLLCFGR_PLLSRC ) >> 22;
+            pllsource = (RCC->PLLCFGR & RCC_PLLCFGR_PLLSRC) >> 22;
             pllm = RCC->PLLCFGR & RCC_PLLCFGR_PLLM;
 
-            if ( pllsource != 0 )
+            if (pllsource != 0)
             {
                 /* HSE used as PLL clock source */
-                pllvco = ( HSE_VALUE / pllm ) * ( ( RCC->PLLCFGR & RCC_PLLCFGR_PLLN ) >> 6 );
+                pllvco = (HSE_VALUE / pllm) * ((RCC->PLLCFGR & RCC_PLLCFGR_PLLN) >> 6);
             }
             else
             {
                 /* HSI used as PLL clock source */
-                pllvco = ( HSI_VALUE / pllm ) * ( ( RCC->PLLCFGR & RCC_PLLCFGR_PLLN ) >> 6 );
+                pllvco = (HSI_VALUE / pllm) * ((RCC->PLLCFGR & RCC_PLLCFGR_PLLN) >> 6);
             }
 
-            pllp = ( ( ( RCC->PLLCFGR & RCC_PLLCFGR_PLLP ) >> 16 ) + 1 ) * 2;
+            pllp = (((RCC->PLLCFGR & RCC_PLLCFGR_PLLP) >> 16) + 1) * 2;
             SystemCoreClock = pllvco / pllp;
             break;
         default:
@@ -245,14 +245,14 @@ void SystemCoreClockUpdate( void )
     }
     /* Compute HCLK frequency --------------------------------------------------*/
     /* Get HCLK prescaler */
-    tmp = AHBPrescTable[( ( RCC->CFGR & RCC_CFGR_HPRE ) >> 4 )];
+    tmp = AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> 4)];
     /* HCLK frequency */
     SystemCoreClock >>= tmp;
 }
 
-#if defined( DATA_IN_ExtSRAM ) && defined( DATA_IN_ExtSDRAM )
-#if defined( STM32F427xx ) || defined( STM32F437xx ) || defined( STM32F429xx ) || defined( STM32F439xx ) ||  \
-    defined( STM32F469xx ) || defined( STM32F479xx )
+#if defined(DATA_IN_ExtSRAM) && defined(DATA_IN_ExtSDRAM)
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F469xx)                   \
+    || defined(STM32F479xx)
 /**
  * @brief  Setup the external memory controller.
  *         Called in startup_stm32f4xx.s before jump to main.
@@ -261,7 +261,7 @@ void SystemCoreClockUpdate( void )
  * @param  None
  * @retval None
  */
-void SystemInit_ExtMemCtl( void )
+void SystemInit_ExtMemCtl(void)
 {
     __IO uint32_t tmp = 0x00;
 
@@ -272,7 +272,7 @@ void SystemInit_ExtMemCtl( void )
     RCC->AHB1ENR |= 0x000001F8;
 
     /* Delay after an RCC peripheral clock enabling */
-    tmp = READ_BIT( RCC->AHB1ENR, RCC_AHB1ENR_GPIOCEN );
+    tmp = READ_BIT(RCC->AHB1ENR, RCC_AHB1ENR_GPIOCEN);
 
     /* Connect PDx pins to FMC Alternate function */
     GPIOD->AFR[0] = 0x00CCC0CC;
@@ -350,7 +350,7 @@ void SystemInit_ExtMemCtl( void )
     /* Enable the FMC interface clock */
     RCC->AHB3ENR |= 0x00000001;
     /* Delay after an RCC peripheral clock enabling */
-    tmp = READ_BIT( RCC->AHB3ENR, RCC_AHB3ENR_FMCEN );
+    tmp = READ_BIT(RCC->AHB3ENR, RCC_AHB3ENR_FMCEN);
 
     FMC_Bank5_6->SDCR[0] = 0x000019E4;
     FMC_Bank5_6->SDTR[0] = 0x01115351;
@@ -359,18 +359,19 @@ void SystemInit_ExtMemCtl( void )
     /* Clock enable command */
     FMC_Bank5_6->SDCMR = 0x00000011;
     tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
-    while ( ( tmpreg != 0 ) && ( timeout-- > 0 ) )
+    while ((tmpreg != 0) && (timeout-- > 0))
     {
         tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
     }
 
     /* Delay */
-    for ( index = 0; index < 1000; index++ );
+    for (index = 0; index < 1000; index++)
+        ;
 
     /* PALL command */
     FMC_Bank5_6->SDCMR = 0x00000012;
     timeout = 0xFFFF;
-    while ( ( tmpreg != 0 ) && ( timeout-- > 0 ) )
+    while ((tmpreg != 0) && (timeout-- > 0))
     {
         tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
     }
@@ -378,7 +379,7 @@ void SystemInit_ExtMemCtl( void )
     /* Auto refresh command */
     FMC_Bank5_6->SDCMR = 0x00000073;
     timeout = 0xFFFF;
-    while ( ( tmpreg != 0 ) && ( timeout-- > 0 ) )
+    while ((tmpreg != 0) && (timeout-- > 0))
     {
         tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
     }
@@ -386,36 +387,36 @@ void SystemInit_ExtMemCtl( void )
     /* MRD register program */
     FMC_Bank5_6->SDCMR = 0x00046014;
     timeout = 0xFFFF;
-    while ( ( tmpreg != 0 ) && ( timeout-- > 0 ) )
+    while ((tmpreg != 0) && (timeout-- > 0))
     {
         tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
     }
 
     /* Set refresh count */
     tmpreg = FMC_Bank5_6->SDRTR;
-    FMC_Bank5_6->SDRTR = ( tmpreg | ( 0x0000027C << 1 ) );
+    FMC_Bank5_6->SDRTR = (tmpreg | (0x0000027C << 1));
 
     /* Disable write protection */
     tmpreg = FMC_Bank5_6->SDCR[0];
-    FMC_Bank5_6->SDCR[0] = ( tmpreg & 0xFFFFFDFF );
+    FMC_Bank5_6->SDCR[0] = (tmpreg & 0xFFFFFDFF);
 
-#if defined( STM32F427xx ) || defined( STM32F437xx ) || defined( STM32F429xx ) || defined( STM32F439xx )
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx)
     /* Configure and enable Bank1_SRAM2 */
     FMC_Bank1->BTCR[2] = 0x00001011;
     FMC_Bank1->BTCR[3] = 0x00000201;
     FMC_Bank1E->BWTR[2] = 0x0fffffff;
 #endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx */
-#if defined( STM32F469xx ) || defined( STM32F479xx )
+#if defined(STM32F469xx) || defined(STM32F479xx)
     /* Configure and enable Bank1_SRAM2 */
     FMC_Bank1->BTCR[2] = 0x00001091;
     FMC_Bank1->BTCR[3] = 0x00110212;
     FMC_Bank1E->BWTR[2] = 0x0fffffff;
 #endif /* STM32F469xx || STM32F479xx */
 
-    (void) ( tmp );
+    (void)(tmp);
 }
 #endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F469xx || STM32F479xx */
-#elif defined( DATA_IN_ExtSRAM ) || defined( DATA_IN_ExtSDRAM )
+#elif defined(DATA_IN_ExtSRAM) || defined(DATA_IN_ExtSDRAM)
 /**
  * @brief  Setup the external memory controller.
  *         Called in startup_stm32f4xx.s before jump to main.
@@ -424,16 +425,16 @@ void SystemInit_ExtMemCtl( void )
  * @param  None
  * @retval None
  */
-void SystemInit_ExtMemCtl( void )
+void SystemInit_ExtMemCtl(void)
 {
     __IO uint32_t tmp = 0x00;
-#if defined( STM32F427xx ) || defined( STM32F437xx ) || defined( STM32F429xx ) || defined( STM32F439xx ) ||  \
-    defined( STM32F446xx ) || defined( STM32F469xx ) || defined( STM32F479xx )
-#if defined( DATA_IN_ExtSDRAM )
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F446xx)                   \
+    || defined(STM32F469xx) || defined(STM32F479xx)
+#if defined(DATA_IN_ExtSDRAM)
     register uint32_t tmpreg = 0, timeout = 0xFFFF;
     register __IO uint32_t index;
 
-#if defined( STM32F446xx )
+#if defined(STM32F446xx)
     /* Enable GPIOA, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG interface
         clock */
     RCC->AHB1ENR |= 0x0000007D;
@@ -443,9 +444,9 @@ void SystemInit_ExtMemCtl( void )
     RCC->AHB1ENR |= 0x000001F8;
 #endif /* STM32F446xx */
     /* Delay after an RCC peripheral clock enabling */
-    tmp = READ_BIT( RCC->AHB1ENR, RCC_AHB1ENR_GPIOCEN );
+    tmp = READ_BIT(RCC->AHB1ENR, RCC_AHB1ENR_GPIOCEN);
 
-#if defined( STM32F446xx )
+#if defined(STM32F446xx)
     /* Connect PAx pins to FMC Alternate function */
     GPIOA->AFR[0] |= 0xC0000000;
     GPIOA->AFR[1] |= 0x00000000;
@@ -519,8 +520,8 @@ void SystemInit_ExtMemCtl( void )
     /* No pull-up, pull-down for PGx pins */
     GPIOG->PUPDR = 0x00000000;
 
-#if defined( STM32F427xx ) || defined( STM32F437xx ) || defined( STM32F429xx ) || defined( STM32F439xx ) ||  \
-    defined( STM32F469xx ) || defined( STM32F479xx )
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F469xx)                   \
+    || defined(STM32F479xx)
     /* Connect PHx pins to FMC Alternate function */
     GPIOH->AFR[0] = 0x00C0CC00;
     GPIOH->AFR[1] = 0xCCCCCCCC;
@@ -550,10 +551,10 @@ void SystemInit_ExtMemCtl( void )
     /* Enable the FMC interface clock */
     RCC->AHB3ENR |= 0x00000001;
     /* Delay after an RCC peripheral clock enabling */
-    tmp = READ_BIT( RCC->AHB3ENR, RCC_AHB3ENR_FMCEN );
+    tmp = READ_BIT(RCC->AHB3ENR, RCC_AHB3ENR_FMCEN);
 
     /* Configure and enable SDRAM bank1 */
-#if defined( STM32F446xx )
+#if defined(STM32F446xx)
     FMC_Bank5_6->SDCR[0] = 0x00001954;
 #else
     FMC_Bank5_6->SDCR[0] = 0x000019E4;
@@ -564,71 +565,72 @@ void SystemInit_ExtMemCtl( void )
     /* Clock enable command */
     FMC_Bank5_6->SDCMR = 0x00000011;
     tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
-    while ( ( tmpreg != 0 ) && ( timeout-- > 0 ) )
+    while ((tmpreg != 0) && (timeout-- > 0))
     {
         tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
     }
 
     /* Delay */
-    for ( index = 0; index < 1000; index++ );
+    for (index = 0; index < 1000; index++)
+        ;
 
     /* PALL command */
     FMC_Bank5_6->SDCMR = 0x00000012;
     timeout = 0xFFFF;
-    while ( ( tmpreg != 0 ) && ( timeout-- > 0 ) )
+    while ((tmpreg != 0) && (timeout-- > 0))
     {
         tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
     }
 
     /* Auto refresh command */
-#if defined( STM32F446xx )
+#if defined(STM32F446xx)
     FMC_Bank5_6->SDCMR = 0x000000F3;
 #else
     FMC_Bank5_6->SDCMR = 0x00000073;
 #endif /* STM32F446xx */
     timeout = 0xFFFF;
-    while ( ( tmpreg != 0 ) && ( timeout-- > 0 ) )
+    while ((tmpreg != 0) && (timeout-- > 0))
     {
         tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
     }
 
     /* MRD register program */
-#if defined( STM32F446xx )
+#if defined(STM32F446xx)
     FMC_Bank5_6->SDCMR = 0x00044014;
 #else
     FMC_Bank5_6->SDCMR = 0x00046014;
 #endif /* STM32F446xx */
     timeout = 0xFFFF;
-    while ( ( tmpreg != 0 ) && ( timeout-- > 0 ) )
+    while ((tmpreg != 0) && (timeout-- > 0))
     {
         tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
     }
 
     /* Set refresh count */
     tmpreg = FMC_Bank5_6->SDRTR;
-#if defined( STM32F446xx )
-    FMC_Bank5_6->SDRTR = ( tmpreg | ( 0x0000050C << 1 ) );
+#if defined(STM32F446xx)
+    FMC_Bank5_6->SDRTR = (tmpreg | (0x0000050C << 1));
 #else
-    FMC_Bank5_6->SDRTR = ( tmpreg | ( 0x0000027C << 1 ) );
+    FMC_Bank5_6->SDRTR = (tmpreg | (0x0000027C << 1));
 #endif /* STM32F446xx */
 
     /* Disable write protection */
     tmpreg = FMC_Bank5_6->SDCR[0];
-    FMC_Bank5_6->SDCR[0] = ( tmpreg & 0xFFFFFDFF );
+    FMC_Bank5_6->SDCR[0] = (tmpreg & 0xFFFFFDFF);
 #endif /* DATA_IN_ExtSDRAM */
-#endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx ||          \
+#endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx ||                                        \
           STM32F479xx */
 
-#if defined( STM32F405xx ) || defined( STM32F415xx ) || defined( STM32F407xx ) || defined( STM32F417xx ) ||  \
-    defined( STM32F427xx ) || defined( STM32F437xx ) || defined( STM32F429xx ) || defined( STM32F439xx ) ||  \
-    defined( STM32F469xx ) || defined( STM32F479xx ) || defined( STM32F412Zx ) || defined( STM32F412Vx )
+#if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) || defined(STM32F427xx)                   \
+    || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F469xx) || defined(STM32F479xx)                \
+    || defined(STM32F412Zx) || defined(STM32F412Vx)
 
-#if defined( DATA_IN_ExtSRAM )
+#if defined(DATA_IN_ExtSRAM)
     /*-- GPIOs Configuration -----------------------------------------------------*/
     /* Enable GPIOD, GPIOE, GPIOF and GPIOG interface clock */
     RCC->AHB1ENR |= 0x00000078;
     /* Delay after an RCC peripheral clock enabling */
-    tmp = READ_BIT( RCC->AHB1ENR, RCC_AHB1ENR_GPIODEN );
+    tmp = READ_BIT(RCC->AHB1ENR, RCC_AHB1ENR_GPIODEN);
 
     /* Connect PDx pins to FMC Alternate function */
     GPIOD->AFR[0] = 0x00CCC0CC;
@@ -682,26 +684,26 @@ void SystemInit_ExtMemCtl( void )
     /* Enable the FMC/FSMC interface clock */
     RCC->AHB3ENR |= 0x00000001;
 
-#if defined( STM32F427xx ) || defined( STM32F437xx ) || defined( STM32F429xx ) || defined( STM32F439xx )
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx)
     /* Delay after an RCC peripheral clock enabling */
-    tmp = READ_BIT( RCC->AHB3ENR, RCC_AHB3ENR_FMCEN );
+    tmp = READ_BIT(RCC->AHB3ENR, RCC_AHB3ENR_FMCEN);
     /* Configure and enable Bank1_SRAM2 */
     FMC_Bank1->BTCR[2] = 0x00001011;
     FMC_Bank1->BTCR[3] = 0x00000201;
     FMC_Bank1E->BWTR[2] = 0x0fffffff;
 #endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx */
-#if defined( STM32F469xx ) || defined( STM32F479xx )
+#if defined(STM32F469xx) || defined(STM32F479xx)
     /* Delay after an RCC peripheral clock enabling */
-    tmp = READ_BIT( RCC->AHB3ENR, RCC_AHB3ENR_FMCEN );
+    tmp = READ_BIT(RCC->AHB3ENR, RCC_AHB3ENR_FMCEN);
     /* Configure and enable Bank1_SRAM2 */
     FMC_Bank1->BTCR[2] = 0x00001091;
     FMC_Bank1->BTCR[3] = 0x00110212;
     FMC_Bank1E->BWTR[2] = 0x0fffffff;
 #endif /* STM32F469xx || STM32F479xx */
-#if defined( STM32F405xx ) || defined( STM32F415xx ) || defined( STM32F407xx ) || defined( STM32F417xx ) ||  \
-    defined( STM32F412Zx ) || defined( STM32F412Vx )
+#if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) || defined(STM32F412Zx)                   \
+    || defined(STM32F412Vx)
     /* Delay after an RCC peripheral clock enabling */
-    tmp = READ_BIT( RCC->AHB3ENR, RCC_AHB3ENR_FSMCEN );
+    tmp = READ_BIT(RCC->AHB3ENR, RCC_AHB3ENR_FSMCEN);
     /* Configure and enable Bank1_SRAM2 */
     FSMC_Bank1->BTCR[2] = 0x00001011;
     FSMC_Bank1->BTCR[3] = 0x00000201;
@@ -709,9 +711,9 @@ void SystemInit_ExtMemCtl( void )
 #endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx || STM32F412Zx || STM32F412Vx */
 
 #endif /* DATA_IN_ExtSRAM */
-#endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx || STM32F427xx || STM32F437xx ||          \
+#endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx || STM32F427xx || STM32F437xx ||                                        \
           STM32F429xx || STM32F439xx || STM32F469xx || STM32F479xx || STM32F412Zx || STM32F412Vx  */
-    (void) ( tmp );
+    (void)(tmp);
 }
 #endif /* DATA_IN_ExtSRAM && DATA_IN_ExtSDRAM */
 /**

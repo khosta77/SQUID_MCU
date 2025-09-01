@@ -88,14 +88,14 @@ typedef struct
  * @param  __HANDLE__ CRC handle.
  * @retval None
  */
-#define __HAL_CRC_RESET_HANDLE_STATE( __HANDLE__ ) ( ( __HANDLE__ )->State = HAL_CRC_STATE_RESET )
+#define __HAL_CRC_RESET_HANDLE_STATE(__HANDLE__) ((__HANDLE__)->State = HAL_CRC_STATE_RESET)
 
 /**
  * @brief  Reset CRC Data Register.
  * @param  __HANDLE__ CRC handle
  * @retval None
  */
-#define __HAL_CRC_DR_RESET( __HANDLE__ ) ( ( __HANDLE__ )->Instance->CR |= CRC_CR_RESET )
+#define __HAL_CRC_DR_RESET(__HANDLE__) ((__HANDLE__)->Instance->CR |= CRC_CR_RESET)
 
 /**
  * @brief Store data in the Independent Data (ID) register.
@@ -104,8 +104,7 @@ typedef struct
  * @note  Refer to the Reference Manual to get the authorized __VALUE__ length in bits
  * @retval None
  */
-#define __HAL_CRC_SET_IDR( __HANDLE__, __VALUE__ )                                                           \
-    ( WRITE_REG( ( __HANDLE__ )->Instance->IDR, ( __VALUE__ ) ) )
+#define __HAL_CRC_SET_IDR(__HANDLE__, __VALUE__) (WRITE_REG((__HANDLE__)->Instance->IDR, (__VALUE__)))
 
 /**
  * @brief Return the data stored in the Independent Data (ID) register.
@@ -113,7 +112,7 @@ typedef struct
  * @note  Refer to the Reference Manual to get the authorized __VALUE__ length in bits
  * @retval Value of the ID register
  */
-#define __HAL_CRC_GET_IDR( __HANDLE__ ) ( ( ( __HANDLE__ )->Instance->IDR ) & CRC_IDR_IDR )
+#define __HAL_CRC_GET_IDR(__HANDLE__) (((__HANDLE__)->Instance->IDR) & CRC_IDR_IDR)
 /**
  * @}
  */
@@ -136,10 +135,10 @@ typedef struct
 /** @defgroup CRC_Exported_Functions_Group1 Initialization and de-initialization functions
  * @{
  */
-HAL_StatusTypeDef HAL_CRC_Init( CRC_HandleTypeDef *hcrc );
-HAL_StatusTypeDef HAL_CRC_DeInit( CRC_HandleTypeDef *hcrc );
-void HAL_CRC_MspInit( CRC_HandleTypeDef *hcrc );
-void HAL_CRC_MspDeInit( CRC_HandleTypeDef *hcrc );
+HAL_StatusTypeDef HAL_CRC_Init(CRC_HandleTypeDef *hcrc);
+HAL_StatusTypeDef HAL_CRC_DeInit(CRC_HandleTypeDef *hcrc);
+void HAL_CRC_MspInit(CRC_HandleTypeDef *hcrc);
+void HAL_CRC_MspDeInit(CRC_HandleTypeDef *hcrc);
 /**
  * @}
  */
@@ -148,8 +147,8 @@ void HAL_CRC_MspDeInit( CRC_HandleTypeDef *hcrc );
 /** @defgroup CRC_Exported_Functions_Group2 Peripheral Control functions
  * @{
  */
-uint32_t HAL_CRC_Accumulate( CRC_HandleTypeDef *hcrc, uint32_t pBuffer[], uint32_t BufferLength );
-uint32_t HAL_CRC_Calculate( CRC_HandleTypeDef *hcrc, uint32_t pBuffer[], uint32_t BufferLength );
+uint32_t HAL_CRC_Accumulate(CRC_HandleTypeDef *hcrc, uint32_t pBuffer[], uint32_t BufferLength);
+uint32_t HAL_CRC_Calculate(CRC_HandleTypeDef *hcrc, uint32_t pBuffer[], uint32_t BufferLength);
 /**
  * @}
  */
@@ -158,7 +157,7 @@ uint32_t HAL_CRC_Calculate( CRC_HandleTypeDef *hcrc, uint32_t pBuffer[], uint32_
 /** @defgroup CRC_Exported_Functions_Group3 Peripheral State functions
  * @{
  */
-HAL_CRC_StateTypeDef HAL_CRC_GetState( CRC_HandleTypeDef *hcrc );
+HAL_CRC_StateTypeDef HAL_CRC_GetState(CRC_HandleTypeDef *hcrc);
 /**
  * @}
  */
