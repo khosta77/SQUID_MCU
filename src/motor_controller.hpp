@@ -33,7 +33,6 @@ void send2driver(const uint8_t *frame);
 
 // Обработчики прерываний
 extern "C" void DMA1_Stream6_IRQHandler(void);
-extern "C" void DMA1_Stream4_IRQHandler(void);
 extern "C" void DMA1_Stream2_IRQHandler(void);
 extern "C" void EXTI0_IRQHandler(void);
 extern "C" void EXTI1_IRQHandler(void);

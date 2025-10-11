@@ -94,7 +94,7 @@ void USART_init()
     uint32_t usartdiv = (f_CK + (baud / 2)) / (16 * baud); // Округление
     UART4->BRR = (usartdiv / 16) << 4 | (usartdiv % 16); 
     UART4->CR1 |= (USART_CR1_TE | USART_CR1_RE);
-    UART4->CR3 |= (USART_CR3_DMAT | USART_CR3_DMAR);
+    UART4->CR3 |= USART_CR3_DMAR;  // Только DMA для приема
     UART4->CR1 |= USART_CR1_UE;
 
     // USART2 - связь с драйверами моторов
@@ -106,7 +106,6 @@ void USART_init()
 
 uint8_t usart4_mrk = 0x00;
 uint8_t usart4_rx_array[256];
-uint8_t usart4_tx_array[256];
 
 uint8_t usart2_mrk = 0xFF;
 
@@ -136,18 +135,6 @@ extern "C" void __attribute__((interrupt, used)) DMA1_Stream6_IRQHandler(void) /
         while ((DMA1_Stream6->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
             ;
         DMA1->HIFCR |= DMA_HIFCR_CTCIF6;
-    }
-}
-
-extern "C" void __attribute__((interrupt, used)) DMA1_Stream4_IRQHandler(void) // USART4 TX
-{
-    if ((DMA1->HISR & DMA_HISR_TCIF4) == DMA_HISR_TCIF4)
-    {
-        usart4_mrk = 0xA0;
-        DMA1_Stream4->CR &= ~DMA_SxCR_EN;
-        while ((DMA1_Stream4->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
-            ;
-        DMA1->HIFCR |= DMA_HIFCR_CTCIF4;
     }
 }
 
@@ -184,12 +171,7 @@ void DMA_init()
     NVIC_EnableIRQ(DMA1_Stream6_IRQn);
     NVIC_SetPriority(DMA1_Stream6_IRQn, 7);
 
-    // DMA1_Stream4 this USART4_TX
-    // DMA1_Stream2 this USART4_RX
-    DMA1_Stream4->CR &= ~DMA_SxCR_EN;
-    while ((DMA1_Stream4->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
-        ;
-
+    // DMA1_Stream2 this UART4_RX
     DMA1_Stream2->CR &= ~DMA_SxCR_EN;
     while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
         ;
@@ -198,22 +180,12 @@ void DMA_init()
     // - DMA_SxCR_MINC - увеличенный объем памяти
     // - DMA_SxCR_TCIE - прерывания по приему/передачи
     // - DMA_SxCR_CIRC (for rx) - циклическая работа
-    DMA1_Stream4->CR |= ((0x4 << 25) | DMA_SxCR_MINC | DMA_SxCR_TCIE);
     DMA1_Stream2->CR |= ((0x4 << 25) | DMA_SxCR_MINC | DMA_SxCR_TCIE | DMA_SxCR_CIRC);
-    DMA1_Stream4->CR &= ~(DMA_SxCR_MSIZE | DMA_SxCR_PSIZE);
     DMA1_Stream2->CR &= ~(DMA_SxCR_MSIZE | DMA_SxCR_PSIZE);
-    DMA1_Stream4->CR |= (DMA_SxCR_MSIZE_0 | DMA_SxCR_PSIZE_0); // 8-bit размер
-    DMA1_Stream4->CR &= ~(3UL << 6); // Очищаем DIR биты
-    DMA1_Stream4->CR |= (0x00 << 6); // Memory-to-Peripheral (правильное направление)
     DMA1_Stream2->CR &= ~(3UL << 6); // Из переферии в память
-    DMA1_Stream4->NDTR = 256;
     DMA1_Stream2->NDTR = 256;
-    DMA1_Stream4->PAR = (uint32_t)(&UART4->DR);
     DMA1_Stream2->PAR = (uint32_t)(&UART4->DR);
-    DMA1_Stream4->M0AR = (uint32_t)&usart4_tx_array[0];
     DMA1_Stream2->M0AR = (uint32_t)&usart4_rx_array[0];
-    NVIC_EnableIRQ(DMA1_Stream4_IRQn);
-    NVIC_SetPriority(DMA1_Stream4_IRQn, 6);
     NVIC_EnableIRQ(DMA1_Stream2_IRQn);
     NVIC_SetPriority(DMA1_Stream2_IRQn, 5);
 
@@ -373,24 +345,6 @@ int main(void)
     initMotorInterrupts();
     initEndstopInterrupts();
 
-#if 1
-    uint8_t test_data[12] = {
-        0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C
-    };
-    
-    while (1)
-    {
-        // Отправляем тестовые данные через USART4
-        for (int i = 0; i < 12; i++) {
-            sendResponse(test_data[i]);
-        }
-        
-        for (volatile uint32_t i = 0; i < 2000000; i++);
-        GPIOD->ODR ^= GPIO_ODR_OD14; // Переключаем светодиод
-    }
-#endif
-
-    // Изначальный рабочий цикл
     while (1)
     {
         if (usart4_mrk)
