@@ -88,10 +88,10 @@ public:
     explicit operator bool() const;
 
 private:
-    uint32_t number_ = 0;        // Номер мотора
     uint32_t acceleration_ = 0;  // Ускорение
     uint32_t maxSpeed_ = 0;      // Максимальная скорость
     uint32_t steps_ = 0;         // Количество шагов
+    uint32_t number_ = 0;        // Номер мотора
 
     /**
      * @brief Проверить валидность параметров мотора

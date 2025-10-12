@@ -1,20 +1,25 @@
 #include "motor_settings.hpp"
 #include "constants.hpp"
 
+
 MotorSettings::MotorSettings(uint8_t motorIndex, const uint8_t* rxData) {
-    uint8_t offset = 1 + (motorIndex * 16);
+    uint8_t offset = (motorIndex * 16);
     
-    number_ = rxData[offset] | (rxData[offset + 1] << 8) | 
-              (rxData[offset + 2] << 16) | (rxData[offset + 3] << 24);
+    // Данные приходят как: 0x01, 0x00, 0x00, 0x00 -> должно быть 0x00000001
+    // Это означает, что данные в little-endian формате, но перевернуты
+    // Попробуем обратный порядок байтов
+    number_ = (rxData[offset + 3] << 24) | (rxData[offset + 2] << 16) | 
+              (rxData[offset + 1] << 8) | rxData[offset];
     
-    acceleration_ = rxData[offset + 4] | (rxData[offset + 5] << 8) | 
-                    (rxData[offset + 6] << 16) | (rxData[offset + 7] << 24);
+    acceleration_ = (rxData[offset + 7] << 24) | (rxData[offset + 6] << 16) | 
+                    (rxData[offset + 5] << 8) | rxData[offset + 4];
     
-    maxSpeed_ = rxData[offset + 8] | (rxData[offset + 9] << 8) | 
-                (rxData[offset + 10] << 16) | (rxData[offset + 11] << 24);
+    maxSpeed_ = (rxData[offset + 11] << 24) | (rxData[offset + 10] << 16) | 
+                (rxData[offset + 9] << 8) | rxData[offset + 8];
     
-    steps_ = rxData[offset + 12] | (rxData[offset + 13] << 8) | 
-             (rxData[offset + 14] << 16) | (rxData[offset + 15] << 24);
+    steps_ = (rxData[offset + 15] << 24) | (rxData[offset + 14] << 16) | 
+             (rxData[offset + 13] << 8) | rxData[offset + 12];
+    
 }
 
 uint32_t MotorSettings::getNumber() const {
