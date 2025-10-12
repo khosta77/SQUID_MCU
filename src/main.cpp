@@ -89,16 +89,13 @@ void USART_init()
     UART4->CR3 = 0;
 
     // UART4 - связь с ПК
-    uint32_t f_CK = SystemCoreClock; // Тактовая частота UART4 (16 МГц, HSI)
-    uint32_t baud = 9600;
-    uint32_t usartdiv = (f_CK + (baud / 2)) / (16 * baud); // Округление
-    UART4->BRR = (usartdiv / 16) << 4 | (usartdiv % 16); 
+    UART4->BRR = 0x8B;  // 115200 
     UART4->CR1 |= (USART_CR1_TE | USART_CR1_RE);
     UART4->CR3 |= USART_CR3_DMAR;  // Только DMA для приема
     UART4->CR1 |= USART_CR1_UE;
 
     // USART2 - связь с драйверами моторов
-    USART2->BRR = 0x8B; // 115200
+    USART2->BRR = 0x8B;  // 115200
     USART2->CR1 |= (USART_CR1_TE | USART_CR1_RE);
     USART2->CR3 |= (USART_CR3_DMAT);
     USART2->CR1 |= USART_CR1_UE;
@@ -107,15 +104,94 @@ void USART_init()
 uint8_t usart4_mrk = 0x00;
 uint8_t usart4_rx_array[256];
 
+void clear_usart4_rx_array()
+{
+    for(uint16_t i = 0; i < 256; i++) {
+        usart4_rx_array[i] = 0x00;
+    }
+}
+
+void stopDMAStream2() {
+    DMA1_Stream2->CR &= ~DMA_SxCR_EN;
+    while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
+        ;
+}
+
+void enableAllMotorsByDefault()
+{
+    // Включаем подачу тока на все моторы по умолчанию (EN = 1)
+    // PC0-PC9: EN сигналы для моторов 1-10
+    GPIOC->ODR |= 0x03FF; // Устанавливаем биты 0-9 для EN
+    
+    // SELECT и KEY остаются выключенными до настройки моторов
+}
+
 uint8_t usart2_mrk = 0xFF;
 
-// Глобальная функция для отправки ответов через UART4
+// Переменные состояния для двухэтапного протокола
+volatile bool waitingForMotorData = false;  // Флаг ожидания данных моторов
+volatile uint16_t expectedDataSize = 0;     // Ожидаемый размер данных
+volatile uint32_t timeoutCounter = 0;       // Счетчик таймаута
+volatile bool timeoutOccurred = false;       // Флаг таймаута
+
+void theTimeoutWorked()
+{
+    waitingForMotorData = false;
+    sendResponse(0x0D);
+}
+
+// Функция ожидания данных моторов и их обработки
+void waitForMotorDataAndProcess(uint8_t command, uint8_t motorCount) {
+    uint32_t timeoutLimit = 5000000; // 5 секунд при 16 МГц
+    GPIOD->ODR &= ~GPIO_ODR_OD13;
+#if 0
+    while (waitingForMotorData && !timeoutOccurred) {
+        // Проверяем таймаут
+        if (timeoutCounter++ > timeoutLimit) {
+            timeoutOccurred = true;
+            break;
+        }
+        
+        // Проверяем аварийную остановку
+        if (emergencyStop) {
+            emergencyStopAllMotors();
+            sendResponse(0x0B);
+            waitingForMotorData = false;
+            return;
+        }
+        
+        // Короткая задержка для предотвращения перегрузки CPU
+        for (volatile uint32_t i = 0; i < 1000; i++);
+    }
+#endif
+    stopDMAStream2();
+
+    GPIOD->ODR |= GPIO_ODR_OD13;  // Оранжевый индикатор
+    
+    if (timeoutOccurred)
+    {
+        return theTimeoutWorked();
+    }
+
+    GPIOD->ODR &= ~GPIO_ODR_OD15;
+    if (IS_SYNC_COMMAND(command))
+    {
+        processSyncMode(motorCount);
+    }
+    
+    if (IS_ASYNC_COMMAND(command))
+    {
+        processAsyncMode(motorCount);
+    }
+    
+    waitingForMotorData = false;
+}
+
 void sendResponse(uint8_t response) {
     while (!(UART4->SR & USART_SR_TXE));
     UART4->DR = response;
 }
 
-// Функции для работы с драйверами
 void send2driver(const uint8_t *frame)
 {
     while (usart2_mrk == 0x00)
@@ -142,11 +218,17 @@ extern "C" void __attribute__((interrupt, used)) DMA1_Stream2_IRQHandler(void) /
 {
     if ((DMA1->LISR & DMA_LISR_TCIF2) == DMA_LISR_TCIF2)
     {
-        usart4_mrk = 0x0A;
         DMA1_Stream2->CR &= ~DMA_SxCR_EN;
         while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
             ;
         DMA1->LIFCR |= DMA_LIFCR_CTCIF2;
+        GPIOD->ODR ^= GPIO_ODR_OD14; 
+        if (waitingForMotorData) {
+            timeoutCounter = 0;
+            usart4_mrk = 0x0A; // Сигнализируем о получении данных
+        } else {
+            usart4_mrk = 0x0A;
+        }
     }
 }
 
@@ -183,7 +265,7 @@ void DMA_init()
     DMA1_Stream2->CR |= ((0x4 << 25) | DMA_SxCR_MINC | DMA_SxCR_TCIE | DMA_SxCR_CIRC);
     DMA1_Stream2->CR &= ~(DMA_SxCR_MSIZE | DMA_SxCR_PSIZE);
     DMA1_Stream2->CR &= ~(3UL << 6); // Из переферии в память
-    DMA1_Stream2->NDTR = 256;
+    DMA1_Stream2->NDTR = 1;
     DMA1_Stream2->PAR = (uint32_t)(&UART4->DR);
     DMA1_Stream2->M0AR = (uint32_t)&usart4_rx_array[0];
     NVIC_EnableIRQ(DMA1_Stream2_IRQn);
@@ -332,14 +414,16 @@ void initEndstopInterrupts() {
 int main(void)
 {
     SystemClock_HSI_Config();
+    clear_usart4_rx_array();
     GPIO_init();
-    DMA_init();        // СНАЧАЛА DMA!
-    USART_init();      // ПОТОМ USART!
+    DMA_init();
+    USART_init();
 
-    // Инициализируем индикаторный светодиод (PD14)
+    enableAllMotorsByDefault();
+
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
-    GPIOD->MODER |= GPIO_MODER_MODER14_0; // Устанавливаем как выход (01)
-    GPIOD->ODR |= GPIO_ODR_OD14; // Включаем светодиод
+    GPIOD->MODER |= GPIO_MODER_MODER12_0 | GPIO_MODER_MODER13_0 | GPIO_MODER_MODER14_0 | GPIO_MODER_MODER15_0; // Устанавливаем как выход (01)
+    GPIOD->ODR |= GPIO_ODR_OD12 | GPIO_ODR_OD13 | GPIO_ODR_OD14 | GPIO_ODR_OD15; // Включаем светодиод
     
     // Инициализируем прерывания
     initMotorInterrupts();
@@ -357,6 +441,10 @@ int main(void)
                 processCommand(usart4_rx_array[0]);
             }
 
+            stopDMAStream2();
+            clear_usart4_rx_array();
+            GPIOD->ODR |= GPIO_ODR_OD12 | GPIO_ODR_OD13 | GPIO_ODR_OD14 | GPIO_ODR_OD15; // Включаем светодиод
+            DMA1_Stream2->NDTR = 1;
             DMA1_Stream2->CR |= DMA_SxCR_EN;
         }
     }
