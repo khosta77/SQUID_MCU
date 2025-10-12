@@ -23,15 +23,6 @@ void stopDMAStream2() {
         ;
 }
 
-void enableAllMotorsByDefault()
-{
-    // Включаем подачу тока на все моторы по умолчанию (EN = 1)
-    // PC0-PC9: EN сигналы для моторов 1-10
-    GPIOC->ODR |= 0x03FF; // Устанавливаем биты 0-9 для EN
-    
-    // SELECT и KEY остаются выключенными до настройки моторов
-}
-
 uint8_t usart2_mrk = 0xFF;
 
 // Переменные состояния для двухэтапного протокола
@@ -50,6 +41,7 @@ void theTimeoutWorked()
 void waitForMotorDataAndProcess(uint8_t command, uint8_t motorCount) {
     uint32_t timeoutLimit = 5000000; // 5 секунд при 16 МГц
     GPIOD->ODR &= ~GPIO_ODR_OD13;
+
 #if 0
     while (waitingForMotorData && !timeoutOccurred) {
         // Проверяем таймаут
@@ -70,6 +62,7 @@ void waitForMotorDataAndProcess(uint8_t command, uint8_t motorCount) {
         for (volatile uint32_t i = 0; i < 1000; i++);
     }
 #endif
+
     stopDMAStream2();
 
     GPIOD->ODR |= GPIO_ODR_OD13;  // Оранжевый индикатор
@@ -101,36 +94,6 @@ void send2driver(const uint8_t *frame)
     DMA1_Stream6->M0AR = (uint32_t)frame;
     DMA1_Stream6->NDTR = 12;
     DMA1_Stream6->CR |= DMA_SxCR_EN;
-}
-
-extern "C" void __attribute__((interrupt, used)) DMA1_Stream6_IRQHandler(void) // TX
-{
-    if ((DMA1->HISR & DMA_HISR_TCIF6) == DMA_HISR_TCIF6)
-    {
-        usart2_mrk = 0xFF;
-        DMA1_Stream6->CR &= ~DMA_SxCR_EN;
-        while ((DMA1_Stream6->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
-            ;
-        DMA1->HIFCR |= DMA_HIFCR_CTCIF6;
-    }
-}
-
-extern "C" void __attribute__((interrupt, used)) DMA1_Stream2_IRQHandler(void) // UART4 RX
-{
-    if ((DMA1->LISR & DMA_LISR_TCIF2) == DMA_LISR_TCIF2)
-    {
-        DMA1_Stream2->CR &= ~DMA_SxCR_EN;
-        while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
-            ;
-        DMA1->LIFCR |= DMA_LIFCR_CTCIF2;
-        GPIOD->ODR ^= GPIO_ODR_OD14; 
-        if (waitingForMotorData) {
-            timeoutCounter = 0;
-            usart4_mrk = 0x0A; // Сигнализируем о получении данных
-        } else {
-            usart4_mrk = 0x0A;
-        }
-    }
 }
 
 void DMA_init()
@@ -192,6 +155,129 @@ void SystemClock_HSI_Config(void)
     while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_HSI)
         ;
     SystemCoreClockUpdate();
+}
+
+// Инициализация прерываний для STATUS моторов (PE0-PE9)
+void initMotorInterrupts() {
+    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+
+    for (int i = 0; i < 10; i++) {
+        uint8_t exti_cr = i / 4;
+        uint8_t exti_pos = (i % 4) * 4;
+
+        SYSCFG->EXTICR[exti_cr] &= ~(0xF << exti_pos);
+        SYSCFG->EXTICR[exti_cr] |= (0x4 << exti_pos); // PE0-PE9
+
+        EXTI->FTSR |= (1UL << i); // Falling edge trigger
+        EXTI->IMR |= (1UL << i);  // Enable interrupt
+    }
+
+    // Включаем прерывания в NVIC
+    NVIC_EnableIRQ(EXTI0_IRQn);
+    NVIC_EnableIRQ(EXTI1_IRQn);
+    NVIC_EnableIRQ(EXTI2_IRQn);
+    NVIC_EnableIRQ(EXTI3_IRQn);
+    NVIC_EnableIRQ(EXTI4_IRQn);
+    NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+    NVIC_SetPriority(EXTI0_IRQn, 2);
+    NVIC_SetPriority(EXTI1_IRQn, 2);
+    NVIC_SetPriority(EXTI2_IRQn, 2);
+    NVIC_SetPriority(EXTI3_IRQn, 2);
+    NVIC_SetPriority(EXTI4_IRQn, 2);
+    NVIC_SetPriority(EXTI9_5_IRQn, 2);
+}
+
+// Инициализация прерываний для ENDSTOP (PE10-PE15)
+void initEndstopInterrupts() {
+    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+
+    for (int i = 10; i < 16; i++) {
+        uint8_t exti_cr = i / 4;
+        uint8_t exti_pos = (i % 4) * 4;
+
+        SYSCFG->EXTICR[exti_cr] &= ~(0xF << exti_pos);
+        SYSCFG->EXTICR[exti_cr] |= (0x4 << exti_pos); // PE10-PE15
+
+        EXTI->FTSR |= (1UL << i); // Falling edge trigger
+        EXTI->IMR |= (1UL << i);  // Enable interrupt
+    }
+
+    // Включаем прерывания в NVIC
+    NVIC_EnableIRQ(EXTI15_10_IRQn);
+    NVIC_SetPriority(EXTI15_10_IRQn, 0); // Высший приоритет для аварийной остановки
+}
+
+int main(void)
+{
+    SystemClock_HSI_Config();
+    clear_usart4_rx_array();
+    initGPIO();
+    DMA_init();
+    initSerial();
+
+    // Задержка для инициализации. Нужно для того, чтобы
+    // драйверы моторов успели инициализироваться
+    for(uint32_t t = 0; t < 1000; ++t);
+    GPIOC->ODR |= 0x03FF; // Вкл. подачу тока на все моторы по умолчанию
+
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
+    GPIOD->MODER |= GPIO_MODER_MODER12_0 | GPIO_MODER_MODER13_0 | GPIO_MODER_MODER14_0 | GPIO_MODER_MODER15_0; // Устанавливаем как выход (01)
+    GPIOD->ODR |= GPIO_ODR_OD12 | GPIO_ODR_OD13 | GPIO_ODR_OD14 | GPIO_ODR_OD15; // Включаем светодиод
+    
+    // Инициализируем прерывания
+    initMotorInterrupts();
+    initEndstopInterrupts();
+
+    while (1)
+    {
+        if (usart4_mrk)
+        {
+            usart4_mrk = 0x00;
+            while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
+                ;
+
+            if (usart4_rx_array[0] != 0) {
+                processCommand(usart4_rx_array[0]);
+            }
+
+            stopDMAStream2();
+            clear_usart4_rx_array();
+            GPIOD->ODR |= GPIO_ODR_OD12 | GPIO_ODR_OD13 | GPIO_ODR_OD14 | GPIO_ODR_OD15; // Включаем светодиод
+            DMA1_Stream2->NDTR = 1;
+            DMA1_Stream2->CR |= DMA_SxCR_EN;
+        }
+    }
+}
+
+extern "C" void __attribute__((interrupt, used)) DMA1_Stream6_IRQHandler(void) // TX
+{
+    if ((DMA1->HISR & DMA_HISR_TCIF6) == DMA_HISR_TCIF6)
+    {
+        usart2_mrk = 0xFF;
+        DMA1_Stream6->CR &= ~DMA_SxCR_EN;
+        while ((DMA1_Stream6->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
+            ;
+        DMA1->HIFCR |= DMA_HIFCR_CTCIF6;
+    }
+}
+
+extern "C" void __attribute__((interrupt, used)) DMA1_Stream2_IRQHandler(void) // UART4 RX
+{
+    if ((DMA1->LISR & DMA_LISR_TCIF2) == DMA_LISR_TCIF2)
+    {
+        DMA1_Stream2->CR &= ~DMA_SxCR_EN;
+        while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
+            ;
+        DMA1->LIFCR |= DMA_LIFCR_CTCIF2;
+        GPIOD->ODR ^= GPIO_ODR_OD14; 
+        if (waitingForMotorData) {
+            timeoutCounter = 0;
+            usart4_mrk = 0x0A; // Сигнализируем о получении данных
+        } else {
+            usart4_mrk = 0x0A;
+        }
+    }
 }
 
 // Обработчики прерываний для STATUS моторов (PE0-PE9)
@@ -259,94 +345,4 @@ extern "C" void __attribute__((interrupt, used)) EXTI15_10_IRQHandler(void)
     if (EXTI->PR & EXTI_PR_PR13) { emergencyStop = true; EXTI->PR = EXTI_PR_PR13; }
     if (EXTI->PR & EXTI_PR_PR14) { emergencyStop = true; EXTI->PR = EXTI_PR_PR14; }
     if (EXTI->PR & EXTI_PR_PR15) { emergencyStop = true; EXTI->PR = EXTI_PR_PR15; }
-}
-
-// Инициализация прерываний для STATUS моторов (PE0-PE9)
-void initMotorInterrupts() {
-    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
-
-    for (int i = 0; i < 10; i++) {
-        uint8_t exti_cr = i / 4;
-        uint8_t exti_pos = (i % 4) * 4;
-
-        SYSCFG->EXTICR[exti_cr] &= ~(0xF << exti_pos);
-        SYSCFG->EXTICR[exti_cr] |= (0x4 << exti_pos); // PE0-PE9
-
-        EXTI->FTSR |= (1UL << i); // Falling edge trigger
-        EXTI->IMR |= (1UL << i);  // Enable interrupt
-    }
-
-    // Включаем прерывания в NVIC
-    NVIC_EnableIRQ(EXTI0_IRQn);
-    NVIC_EnableIRQ(EXTI1_IRQn);
-    NVIC_EnableIRQ(EXTI2_IRQn);
-    NVIC_EnableIRQ(EXTI3_IRQn);
-    NVIC_EnableIRQ(EXTI4_IRQn);
-    NVIC_EnableIRQ(EXTI9_5_IRQn);
-
-    NVIC_SetPriority(EXTI0_IRQn, 2);
-    NVIC_SetPriority(EXTI1_IRQn, 2);
-    NVIC_SetPriority(EXTI2_IRQn, 2);
-    NVIC_SetPriority(EXTI3_IRQn, 2);
-    NVIC_SetPriority(EXTI4_IRQn, 2);
-    NVIC_SetPriority(EXTI9_5_IRQn, 2);
-}
-
-// Инициализация прерываний для ENDSTOP (PE10-PE15)
-void initEndstopInterrupts() {
-    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
-
-    for (int i = 10; i < 16; i++) {
-        uint8_t exti_cr = i / 4;
-        uint8_t exti_pos = (i % 4) * 4;
-
-        SYSCFG->EXTICR[exti_cr] &= ~(0xF << exti_pos);
-        SYSCFG->EXTICR[exti_cr] |= (0x4 << exti_pos); // PE10-PE15
-
-        EXTI->FTSR |= (1UL << i); // Falling edge trigger
-        EXTI->IMR |= (1UL << i);  // Enable interrupt
-    }
-
-    // Включаем прерывания в NVIC
-    NVIC_EnableIRQ(EXTI15_10_IRQn);
-    NVIC_SetPriority(EXTI15_10_IRQn, 0); // Высший приоритет для аварийной остановки
-}
-
-int main(void)
-{
-    SystemClock_HSI_Config();
-    clear_usart4_rx_array();
-    initGPIO();
-    DMA_init();
-    initSerial();
-
-    enableAllMotorsByDefault();
-
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
-    GPIOD->MODER |= GPIO_MODER_MODER12_0 | GPIO_MODER_MODER13_0 | GPIO_MODER_MODER14_0 | GPIO_MODER_MODER15_0; // Устанавливаем как выход (01)
-    GPIOD->ODR |= GPIO_ODR_OD12 | GPIO_ODR_OD13 | GPIO_ODR_OD14 | GPIO_ODR_OD15; // Включаем светодиод
-    
-    // Инициализируем прерывания
-    initMotorInterrupts();
-    initEndstopInterrupts();
-
-    while (1)
-    {
-        if (usart4_mrk)
-        {
-            usart4_mrk = 0x00;
-            while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
-                ;
-
-            if (usart4_rx_array[0] != 0) {
-                processCommand(usart4_rx_array[0]);
-            }
-
-            stopDMAStream2();
-            clear_usart4_rx_array();
-            GPIOD->ODR |= GPIO_ODR_OD12 | GPIO_ODR_OD13 | GPIO_ODR_OD14 | GPIO_ODR_OD15; // Включаем светодиод
-            DMA1_Stream2->NDTR = 1;
-            DMA1_Stream2->CR |= DMA_SxCR_EN;
-        }
-    }
 }
