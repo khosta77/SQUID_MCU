@@ -60,10 +60,6 @@ void stopAllMotors() {
     GPIOB->ODR &= 0xFC00;
 }
 
-// Функции обработки команд протокола
-// (макросы определены в motor_controller.hpp)
-
-// Функции обработки команд
 void processCommand(uint8_t command) {
     // Проверяем аварийную остановку
     if (emergencyStop) {

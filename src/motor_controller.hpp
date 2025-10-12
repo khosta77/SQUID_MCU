@@ -7,13 +7,9 @@
 // Макросы обработки команд протокола
 
 #define GET_MOTOR_COUNT(command) ((command) & CMD_MOTOR_COUNT_MASK)
-
 #define IS_SYNC_COMMAND(command) (((command) & CMD_SYNC_MASK) == CMD_SYNC_MASK)
-
 #define IS_ASYNC_COMMAND(command) (((command) & CMD_ASYNC_MASK) == CMD_ASYNC_MASK)
-
 #define IS_VERSION_COMMAND(command) (((command) & CMD_VERSION_MASK) == CMD_VERSION_MASK)
-
 #define VALIDATE_MOTOR_COUNT(count) ((count) >= 1 && (count) <= MAX_MOTORS)
 
 // Глобальные переменные для отслеживания состояния моторов
@@ -52,19 +48,11 @@ void sendResponse(uint8_t response);
 // Функции для работы с драйверами
 void send2driver(const uint8_t *frame);
 
-// Функции проверки команд
-// (макросы определены выше)
-
 // Функции обработки режимов
 void processSyncMode(uint8_t motorCount);
 void processAsyncMode(uint8_t motorCount);
 
 // Функции управления моторами
-void selectMotorDriver(uint8_t motorNumber);
-void deselectMotorDriver(uint8_t motorNumber);
-void enableMotorDriver(uint8_t motorNumber);
-void disableMotorDriver(uint8_t motorNumber);
-void launchMotor(uint8_t motorNumber);
 void stopAllMotors();
 void clear_usart4_rx_array();
 void enableAllMotorsByDefault();
@@ -73,9 +61,6 @@ void enableAllMotorsByDefault();
 void emergencyStopAllMotors();
 bool checkAllMotorsCompleted();
 void resetMotorStates();
-
-// Вспомогательные функции
-// (макросы определены выше)
 
 // Обработчики прерываний
 extern "C" void DMA1_Stream6_IRQHandler(void);
