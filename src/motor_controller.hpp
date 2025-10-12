@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "constants.hpp"
 #include "motor_settings.hpp"
+#include "serial.hpp"
 
 // Макросы обработки команд протокола
 
@@ -41,9 +42,6 @@ void processCommand(uint8_t command);
 
 // Функция ожидания данных моторов
 void waitForMotorDataAndProcess(uint8_t command, uint8_t motorCount);
-
-// Глобальная функция для отправки ответов
-void sendResponse(uint8_t response);
 
 // Функции для работы с драйверами
 void send2driver(const uint8_t *frame);

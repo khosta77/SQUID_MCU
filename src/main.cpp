@@ -3,30 +3,9 @@
 #include "constants.hpp"
 #include "motor_settings.hpp"
 #include "gpio.hpp"
+#include "serial.hpp"
 
 #include <string.h>
-
-void USART_init()
-{
-    RCC->APB1ENR |= RCC_APB1ENR_UART4EN;
-    RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
-
-    UART4->CR1 = 0; // Сбрасываем все биты
-    UART4->CR2 = 0; // 1 стоп-бит
-    UART4->CR3 = 0;
-
-    // UART4 - связь с ПК
-    UART4->BRR = 0x8B;  // 115200 
-    UART4->CR1 |= (USART_CR1_TE | USART_CR1_RE);
-    UART4->CR3 |= USART_CR3_DMAR;  // Только DMA для приема
-    UART4->CR1 |= USART_CR1_UE;
-
-    // USART2 - связь с драйверами моторов
-    USART2->BRR = 0x8B;  // 115200
-    USART2->CR1 |= (USART_CR1_TE | USART_CR1_RE);
-    USART2->CR3 |= (USART_CR3_DMAT);
-    USART2->CR1 |= USART_CR1_UE;
-}
 
 uint8_t usart4_mrk = 0x00;
 uint8_t usart4_rx_array[256];
@@ -64,7 +43,7 @@ volatile bool timeoutOccurred = false;       // Флаг таймаута
 void theTimeoutWorked()
 {
     waitingForMotorData = false;
-    sendResponse(0x0D);
+    sendByte2PC(0x0D);
 }
 
 // Функция ожидания данных моторов и их обработки
@@ -82,7 +61,7 @@ void waitForMotorDataAndProcess(uint8_t command, uint8_t motorCount) {
         // Проверяем аварийную остановку
         if (emergencyStop) {
             emergencyStopAllMotors();
-            sendResponse(0x0B);
+            sendByte2PC(0x0B);
             waitingForMotorData = false;
             return;
         }
@@ -112,11 +91,6 @@ void waitForMotorDataAndProcess(uint8_t command, uint8_t motorCount) {
     }
     
     waitingForMotorData = false;
-}
-
-void sendResponse(uint8_t response) {
-    while (!(UART4->SR & USART_SR_TXE));
-    UART4->DR = response;
 }
 
 void send2driver(const uint8_t *frame)
@@ -344,7 +318,7 @@ int main(void)
     clear_usart4_rx_array();
     initGPIO();
     DMA_init();
-    USART_init();
+    initSerial();
 
     enableAllMotorsByDefault();
 

@@ -64,7 +64,7 @@ void processCommand(uint8_t command) {
     // Проверяем аварийную остановку
     if (emergencyStop) {
         emergencyStopAllMotors();
-        sendResponse(0x0B); // Код ошибки аварийной остановки
+        sendByte2PC(0x0B); // Код ошибки аварийной остановки
         return;
     }
 
@@ -73,7 +73,7 @@ void processCommand(uint8_t command) {
 
     // Обработка команды запроса версии
     if (IS_VERSION_COMMAND(command)) {
-        sendResponse(FIRMWARE_VERSION);
+        sendByte2PC(FIRMWARE_VERSION);
         return; // Версия - простая команда, не требует данных
     }
 
@@ -82,7 +82,7 @@ void processCommand(uint8_t command) {
     
     // Валидация количества моторов
     if (!VALIDATE_MOTOR_COUNT(motorCount)) {
-        sendResponse(0x01); // Ошибка: некорректное количество моторов
+        sendByte2PC(0x01); // Ошибка: некорректное количество моторов
         return;
     }
 
@@ -100,7 +100,7 @@ void processCommand(uint8_t command) {
     while ((DMA1_Stream2->CR & DMA_SxCR_EN) != DMA_SxCR_EN)
         ;
     // Отправляем подтверждение готовности
-    sendResponse(RESPONSE_READY);
+    sendByte2PC(RESPONSE_READY);
     
     // НЕ ВЫХОДИМ из функции! Ждем данные или таймаут
     waitForMotorDataAndProcess(command, motorCount);
@@ -118,8 +118,8 @@ void processSyncMode(uint8_t motorCount) {
         MotorSettings params(i, &usart4_rx_array[0]);
         
         if (!params) {
-            sendResponse(static_cast<uint8_t>(params.getNumber()));
-            sendResponse(0xAA); // Ошибка валидации параметров
+            sendByte2PC(static_cast<uint8_t>(params.getNumber()));
+            sendByte2PC(0xAA); // Ошибка валидации параметров
             return;
         }
         
@@ -136,14 +136,14 @@ void processSyncMode(uint8_t motorCount) {
         // Проверяем аварийную остановку
         if (emergencyStop) {
             emergencyStopAllMotors();
-            sendResponse(0x0B); // Код ошибки аварийной остановки
+            sendByte2PC(0x0B); // Код ошибки аварийной остановки
             return;
         }
     }
 #endif
 
     if (!emergencyStop) {
-        sendResponse(RESPONSE_SUCCESS);
+        sendByte2PC(RESPONSE_SUCCESS);
     }
 }
 
@@ -159,7 +159,7 @@ void processAsyncMode(uint8_t motorCount) {
         
         // Валидируем параметры
         if (!params) {
-            sendResponse(0x01); // Ошибка валидации параметров
+            sendByte2PC(0x01); // Ошибка валидации параметров
             return;
         }
         
@@ -173,14 +173,14 @@ void processAsyncMode(uint8_t motorCount) {
         // Проверяем аварийную остановку
         if (emergencyStop) {
             emergencyStopAllMotors();
-            sendResponse(0x0B); // Код ошибки аварийной остановки
+            sendByte2PC(0x0B); // Код ошибки аварийной остановки
             return;
         }
     }
 #endif
 
     if (!emergencyStop) {
-        sendResponse(RESPONSE_SUCCESS);
+        sendByte2PC(RESPONSE_SUCCESS);
     }
 }
 
