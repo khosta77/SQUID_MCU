@@ -27,42 +27,30 @@ void theTimeoutWorked()
 }
 
 // Функция ожидания данных моторов и их обработки
-void waitForMotorDataAndProcess(uint8_t command, uint8_t motorCount) {
-    uint32_t timeoutLimit = 5000000; // 5 секунд при 16 МГц
-    GPIOD->ODR &= ~GPIO_ODR_OD13;
+void waitForMotorDataAndProcess(uint8_t command, uint8_t motorCount)
+{
+    const uint32_t timeoutLimit = 5000000;
+    uint32_t timeoutCounter = 0;
 
+    while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
+    {
 #if 0
-    while (waitingForMotorData && !timeoutOccurred) {
-        // Проверяем таймаут
-        if (timeoutCounter++ > timeoutLimit) {
-            timeoutOccurred = true;
+        if (timeoutCounter++ > timeoutLimit)
             break;
-        }
         
-        // Проверяем аварийную остановку
-        if (emergencyStop) {
+        if (emergencyStop)
+        {
             emergencyStopAllMotors();
             sendByte2PC(0x0B);
             waitingForMotorData = false;
             return;
-        }
-        
-        // Короткая задержка для предотвращения перегрузки CPU
-        for (volatile uint32_t i = 0; i < 1000; i++);
-    }
+        } 
 #endif
-
-    while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
-        ;
-
-    GPIOD->ODR |= GPIO_ODR_OD13;  // Оранжевый индикатор
-    
-    if (timeoutOccurred)
-    {
-        return theTimeoutWorked();
     }
+    
+    if (timeoutCounter >= timeoutLimit)
+        return theTimeoutWorked();
 
-    GPIOD->ODR &= ~GPIO_ODR_OD15;
     if (IS_SYNC_COMMAND(command))
     {
         processSyncMode(motorCount);
