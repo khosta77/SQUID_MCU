@@ -1,17 +1,20 @@
 e_SRCS += \
 ./src/main.cpp \
 ./src/motor_controller.cpp \
-./src/motor_settings.cpp 
+./src/motor_settings.cpp \
+./src/gpio.cpp
 
 C_DEPS += \
 ./src/main.d \
 ./src/motor_controller.d \
-./src/motor_settings.d
+./src/motor_settings.d \
+./src/gpio.d
 
 OBJS += \
 ./src/main.o \
 ./src/motor_controller.o \
-./src/motor_settings.o
+./src/motor_settings.o \
+./src/gpio.o
 
 
 src/%.o: ./src/%.cpp src/subdir.mk
