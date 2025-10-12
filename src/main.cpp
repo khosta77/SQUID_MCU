@@ -52,7 +52,8 @@ void waitForMotorDataAndProcess(uint8_t command, uint8_t motorCount) {
     }
 #endif
 
-    stopDMAStream2();
+    while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
+        ;
 
     GPIOD->ODR |= GPIO_ODR_OD13;  // Оранжевый индикатор
     
