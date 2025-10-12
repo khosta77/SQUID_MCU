@@ -1,3 +1,3 @@
 #pragma once
 
-inline void initGPIO();
+void initGPIO();
