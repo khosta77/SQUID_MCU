@@ -13,13 +13,6 @@
 #define IS_VERSION_COMMAND(command) (((command) & CMD_VERSION_MASK) == CMD_VERSION_MASK)
 #define VALIDATE_MOTOR_COUNT(count) ((count) >= 1 && (count) <= MAX_MOTORS)
 
-// Глобальные переменные для отслеживания состояния моторов
-extern volatile uint16_t activeMotors;        // Битовое поле активных моторов
-extern volatile uint16_t completedMotors;     // Битовое поле завершенных моторов
-extern volatile bool emergencyStop;           // Флаг аварийной остановки
-extern volatile uint8_t currentMotorCount;    // Количество моторов в текущей команде
-extern volatile uint16_t syncMotorBuffer;     // Битовое поле моторов для синхронного запуска
-
 // Функции инициализации
 void GPIO_init();
 void USART_init();
@@ -53,7 +46,6 @@ void processAsyncMode(uint8_t motorCount);
 // Функции управления моторами
 void stopAllMotors();
 void clear_usart4_rx_array();
-void enableAllMotorsByDefault();
 
 // Функции состояния системы
 void emergencyStopAllMotors();

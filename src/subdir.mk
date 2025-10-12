@@ -3,21 +3,24 @@ e_SRCS += \
 ./src/motor_controller.cpp \
 ./src/motor_settings.cpp \
 ./src/gpio.cpp \
-./src/serial.cpp
+./src/serial.cpp \
+./src/constants.cpp
 
 C_DEPS += \
 ./src/main.d \
 ./src/motor_controller.d \
 ./src/motor_settings.d \
 ./src/gpio.d \
-./src/serial.d
+./src/serial.d \
+./src/constants.d
 
 OBJS += \
 ./src/main.o \
 ./src/motor_controller.o \
 ./src/motor_settings.o \
 ./src/gpio.o \
-./src/serial.o
+./src/serial.o \
+./src/constants.o
 
 
 src/%.o: ./src/%.cpp src/subdir.mk

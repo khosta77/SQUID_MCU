@@ -19,3 +19,21 @@ constexpr uint8_t RESPONSE_SUCCESS = 0xFF;   // Успешное выполне�
 
 // Максимальное количество моторов
 constexpr uint8_t MAX_MOTORS = 10;
+
+// Внешние переменные из main.cpp
+extern uint8_t usart4_rx_array[256];
+extern uint8_t usart2_mrk;
+extern uint8_t usart4_mrk;
+
+// Внешние переменные состояния из main.cpp
+extern volatile bool waitingForMotorData;
+extern volatile uint16_t expectedDataSize;
+extern volatile uint32_t timeoutCounter;
+extern volatile bool timeoutOccurred;
+
+// Глобальные переменные для отслеживания состояния моторов
+extern volatile uint16_t activeMotors;        // Битовое поле активных моторов
+extern volatile uint16_t completedMotors;     // Битовое поле завершенных моторов
+extern volatile bool emergencyStop;           // Флаг аварийной остановки
+extern volatile uint8_t currentMotorCount;    // Количество моторов в текущей команде
+extern volatile uint16_t syncMotorBuffer;     // Битовое поле моторов для синхронного запуска

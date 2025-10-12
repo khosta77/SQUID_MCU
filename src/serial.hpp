@@ -5,7 +5,7 @@
 /*
  * @brief Инициализация USART2 и UART4
  */
-inline void initSerial();
+void initSerial();
 
 /*
  * @brief Отправка байта на ПК

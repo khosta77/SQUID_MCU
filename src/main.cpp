@@ -7,9 +7,6 @@
 
 #include <string.h>
 
-uint8_t usart4_mrk = 0x00;
-uint8_t usart4_rx_array[256];
-
 void clear_usart4_rx_array()
 {
     for(uint16_t i = 0; i < 256; i++) {
@@ -22,14 +19,6 @@ void stopDMAStream2() {
     while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
         ;
 }
-
-uint8_t usart2_mrk = 0xFF;
-
-// Переменные состояния для двухэтапного протокола
-volatile bool waitingForMotorData = false;  // Флаг ожидания данных моторов
-volatile uint16_t expectedDataSize = 0;     // Ожидаемый размер данных
-volatile uint32_t timeoutCounter = 0;       // Счетчик таймаута
-volatile bool timeoutOccurred = false;       // Флаг таймаута
 
 void theTimeoutWorked()
 {

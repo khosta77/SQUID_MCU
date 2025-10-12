@@ -11,23 +11,7 @@ void emergencyStopAllMotors();
 bool checkAllMotorsCompleted();
 void resetMotorStates();
 
-// Глобальные переменные для отслеживания состояния моторов
-volatile uint16_t activeMotors = 0;        // Битовое поле активных моторов
-volatile uint16_t completedMotors = 0;     // Битовое поле завершенных моторов
-volatile bool emergencyStop = false;       // Флаг аварийной остановки
-volatile uint8_t currentMotorCount = 0;    // Количество моторов в текущей команде
-volatile uint16_t syncMotorBuffer = 0;     // Битовое поле моторов для синхронного запуска
-
-// Внешние переменные из main.cpp
-extern uint8_t usart4_rx_array[256];
-extern uint8_t usart2_mrk;
-
-// Внешние переменные состояния из main.cpp
-extern volatile bool waitingForMotorData;
-extern volatile uint16_t expectedDataSize;
-extern volatile uint32_t timeoutCounter;
-extern volatile bool timeoutOccurred;
-
+// Глобальные переменные для отслеживания состояния моторов определены в constants.cpp
 
 void configureMotor(uint8_t motorNumber, const MotorSettings& params) {
     GPIOD->ODR |= (1UL << (motorNumber - 1)); // Включаем SELECT
