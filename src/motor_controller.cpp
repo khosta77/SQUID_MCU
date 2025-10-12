@@ -2,24 +2,14 @@
 #include "../system/include/cmsis/stm32f4xx.h"
 #include <string.h>
 
-// Forward declarations для статических функций
-static void selectMotorDriver(uint8_t motorNumber);
-static void deselectMotorDriver(uint8_t motorNumber);
-static void enableMotorDriver(uint8_t motorNumber);
-static void disableMotorDriver(uint8_t motorNumber);
-static void launchMotor(uint8_t motorNumber);
-static void launchMotorsSync(uint16_t motorMask);
-static void stopAllMotors();
-static uint8_t getMotorCount(uint8_t command);
-static bool isSyncCommand(uint8_t command);
-static bool isAsyncCommand(uint8_t command);
-static bool isVersionCommand(uint8_t command);
-static bool validateMotorCount(uint8_t count);
-static void processSyncMode(uint8_t motorCount);
-static void processAsyncMode(uint8_t motorCount);
-static void emergencyStopAllMotors();
-static bool checkAllMotorsCompleted();
-static void resetMotorStates();
+// Forward declarations
+void launchAsyncMotor(uint8_t motorNumber);
+void stopAllMotors();
+void processSyncMode(uint8_t motorCount);
+void processAsyncMode(uint8_t motorCount);
+void emergencyStopAllMotors();
+bool checkAllMotorsCompleted();
+void resetMotorStates();
 
 // Глобальные переменные для отслеживания состояния моторов
 volatile uint16_t activeMotors = 0;        // Битовое поле активных моторов
@@ -32,96 +22,46 @@ volatile uint16_t syncMotorBuffer = 0;     // Битовое поле мотор
 extern uint8_t usart4_rx_array[256];
 extern uint8_t usart2_mrk;
 
-// Функции управления моторами
-static void selectMotorDriver(uint8_t motorNumber) {
-    if (motorNumber >= 1 && motorNumber <= MAX_MOTORS) {
-        GPIOD->ODR |= (1UL << (motorNumber - 1)); // Включаем SELECT
-    }
-}
+// Внешние переменные состояния из main.cpp
+extern volatile bool waitingForMotorData;
+extern volatile uint16_t expectedDataSize;
+extern volatile uint32_t timeoutCounter;
+extern volatile bool timeoutOccurred;
 
-static void deselectMotorDriver(uint8_t motorNumber) {
-    if (motorNumber >= 1 && motorNumber <= MAX_MOTORS) {
-        GPIOD->ODR &= ~(1UL << (motorNumber - 1)); // Выключаем SELECT
-    }
-}
-
-static void enableMotorDriver(uint8_t motorNumber) {
-    if (motorNumber >= 1 && motorNumber <= MAX_MOTORS) {
-        GPIOC->ODR |= (1UL << (motorNumber - 1)); // Включаем EN
-    }
-}
-
-static void disableMotorDriver(uint8_t motorNumber) {
-    if (motorNumber >= 1 && motorNumber <= MAX_MOTORS) {
-        GPIOC->ODR &= ~(1UL << (motorNumber - 1)); // Выключаем EN
-    }
-}
 
 void configureMotor(uint8_t motorNumber, const MotorSettings& params) {
-    if (motorNumber < 1 || motorNumber > MAX_MOTORS) return;
+    GPIOD->ODR |= (1UL << (motorNumber - 1)); // Включаем SELECT
+    GPIOB->ODR |= (1UL << (motorNumber - 1)); // Включаем KEY
+    for(uint32_t t = 0; t < 100; ++t);
     
-    // Выбираем драйвер мотора
-    selectMotorDriver(motorNumber);
-    
-    // Включаем драйвер для настройки
-    enableMotorDriver(motorNumber);
-    
-    // Отправляем параметры драйверу (12 байт)
+    // Отправляем параметры драйверу (12 байт: ускорение, скорость, шаги)
     send2driver(reinterpret_cast<const uint8_t*>(&params));
     
-    // Ждем готовности мотора (проверяем STATUS)
-    while (!(GPIOE->IDR & (1UL << (motorNumber - 1)))) {
-        // Ждем готовности
-    }
-    
-    // Выключаем драйвер после настройки
-    disableMotorDriver(motorNumber);
-    
-    // Снимаем выбор драйвера
-    deselectMotorDriver(motorNumber);
+    // Ожидаем завершения отправки данных по DMA
+    while (usart2_mrk == 0x00);
+
+    GPIOB->ODR &= ~(1UL << (motorNumber - 1)); // Выключаем KEY
+    for(uint32_t t = 0; t < 100; ++t);
 }
 
-static void launchMotor(uint8_t motorNumber) {
-    if (motorNumber < 1 || motorNumber > MAX_MOTORS) return;
-    
-    // Включаем драйвер для запуска
-    enableMotorDriver(motorNumber);
+void launchAsyncMotor(uint8_t motorNumber) {
+    GPIOD->ODR &= ~(1UL << (motorNumber - 1)); // Выключаем SELECT после настройки
 }
 
-static void launchMotorsSync(uint16_t motorMask) {
-    // Одновременно запускаем все моторы из маски
-    GPIOC->ODR |= motorMask;
-}
-
-static void stopAllMotors() {
-    // Выключаем все EN (PC0-PC9)
+void stopAllMotors() {
+    // АВАРИЙНАЯ ОСТАНОВКА: Выключаем все моторы при срабатывании концевого выключателя
+    // Выключаем все EN (PC0-PC9) - отключаем подачу тока
     GPIOC->ODR &= 0xFC00;
     
-    // Выключаем все SELECT (PD0-PD9)
+    // Выключаем все SELECT (PD0-PD9) - снимаем выбор моторов
     GPIOD->ODR &= 0xFC00;
+    
+    // Выключаем все KEY (PB0-PB9) - отключаем передачу данных
+    GPIOB->ODR &= 0xFC00;
 }
 
 // Функции обработки команд протокола
-
-static uint8_t getMotorCount(uint8_t command) {
-    return command & CMD_MOTOR_COUNT_MASK;
-}
-
-static bool isSyncCommand(uint8_t command) {
-    return (command & CMD_SYNC_MASK) == CMD_SYNC_MASK;
-}
-
-static bool isAsyncCommand(uint8_t command) {
-    return (command & CMD_ASYNC_MASK) == CMD_ASYNC_MASK;
-}
-
-static bool isVersionCommand(uint8_t command) {
-    return (command & CMD_VERSION_MASK) == CMD_VERSION_MASK;
-}
-
-static bool validateMotorCount(uint8_t count) {
-    return count >= 1 && count <= MAX_MOTORS;
-}
+// (макросы определены в motor_controller.hpp)
 
 // Функции обработки команд
 void processCommand(uint8_t command) {
@@ -136,63 +76,65 @@ void processCommand(uint8_t command) {
     resetMotorStates();
 
     // Обработка команды запроса версии
-    if (isVersionCommand(command)) {
+    if (IS_VERSION_COMMAND(command)) {
         sendResponse(FIRMWARE_VERSION);
-        return;
+        return; // Версия - простая команда, не требует данных
     }
 
     // Получаем количество моторов
-    uint8_t motorCount = getMotorCount(command);
+    uint8_t motorCount = GET_MOTOR_COUNT(command);
     
     // Валидация количества моторов
-    if (!validateMotorCount(motorCount)) {
+    if (!VALIDATE_MOTOR_COUNT(motorCount)) {
         sendResponse(0x01); // Ошибка: некорректное количество моторов
         return;
     }
 
+    // НОВАЯ ЛОГИКА: Настраиваем ожидание данных моторов
+    expectedDataSize = motorCount * 16; // 16 байт на мотор
+    waitingForMotorData = true;
+    timeoutCounter = 0;
+    timeoutOccurred = false;
+    
+    // Настраиваем DMA на ожидание данных моторов
+    clear_usart4_rx_array();
+    DMA1_Stream2->NDTR = expectedDataSize;
+    DMA1_Stream2->M0AR = (uint32_t)&usart4_rx_array[0];
+    DMA1_Stream2->CR |= DMA_SxCR_EN;
+    while ((DMA1_Stream2->CR & DMA_SxCR_EN) != DMA_SxCR_EN)
+        ;
+    // Отправляем подтверждение готовности
+    sendResponse(RESPONSE_READY);
+    
+    // НЕ ВЫХОДИМ из функции! Ждем данные или таймаут
+    waitForMotorDataAndProcess(command, motorCount);
+}
+
+void processSyncMode(uint8_t motorCount) {
+    syncMotorBuffer = 0; // Сбрасываем буфер синхронного режима
+    
     // Устанавливаем количество активных моторов
     currentMotorCount = motorCount;
     activeMotors = (1 << motorCount) - 1; // Устанавливаем биты для моторов 1-motorCount
-
-    // Отправляем подтверждение готовности
-    sendResponse(RESPONSE_READY);
-
-    // Определяем режим работы
-    if (isSyncCommand(command)) {
-        // Синхронный режим - настраиваем все моторы, затем запускаем одновременно
-        processSyncMode(motorCount);
-    } else if (isAsyncCommand(command)) {
-        // Асинхронный режим - настраиваем и запускаем по мере готовности
-        processAsyncMode(motorCount);
-    } else {
-        sendResponse(0x02); // Ошибка: некорректный режим работы
-    }
-}
-
-static void processSyncMode(uint8_t motorCount) {
-    syncMotorBuffer = 0; // Сбрасываем буфер синхронного режима
     
-    // Настраиваем все моторы по очереди
     for (uint8_t i = 0; i < motorCount; i++) {
-        // Парсим параметры мотора
-        MotorSettings params(i, usart4_rx_array);
+
+        MotorSettings params(i, &usart4_rx_array[0]);
         
-        // Валидируем параметры
         if (!params) {
-            sendResponse(0x01); // Ошибка валидации параметров
+            sendResponse(static_cast<uint8_t>(params.getNumber()));
+            sendResponse(0xAA); // Ошибка валидации параметров
             return;
         }
         
-        // Настраиваем мотор
         configureMotor(params.getNumber(), params);
-        
-        // Добавляем мотор в буфер синхронного запуска
         syncMotorBuffer |= (1UL << (params.getNumber() - 1));
     }
     
     // Запускаем все моторы одновременно
-    launchMotorsSync(syncMotorBuffer);
-    
+    GPIOD->ODR &= ~syncMotorBuffer;
+
+#if 0 // TODO раскрытить когда будет время.
     // Ждем завершения всех моторов или аварийной остановки
     while (!checkAllMotorsCompleted() && !emergencyStop) {
         // Проверяем аварийную остановку
@@ -202,13 +144,18 @@ static void processSyncMode(uint8_t motorCount) {
             return;
         }
     }
-    
+#endif
+
     if (!emergencyStop) {
         sendResponse(RESPONSE_SUCCESS);
     }
 }
 
-static void processAsyncMode(uint8_t motorCount) {
+void processAsyncMode(uint8_t motorCount) {
+    // Устанавливаем количество активных моторов
+    currentMotorCount = motorCount;
+    activeMotors = (1 << motorCount) - 1; // Устанавливаем биты для моторов 1-motorCount
+    
     // Асинхронный режим - настраиваем и запускаем по мере готовности
     for (uint8_t i = 0; i < motorCount; i++) {
         // Парсим параметры мотора
@@ -220,13 +167,11 @@ static void processAsyncMode(uint8_t motorCount) {
             return;
         }
         
-        // Настраиваем мотор
         configureMotor(params.getNumber(), params);
-        
-        // Сразу запускаем мотор (асинхронный режим)
-        launchMotor(params.getNumber());
+        launchAsyncMotor(params.getNumber());
     }
     
+#if 0
     // Ждем завершения всех моторов или аварийной остановки
     while (!checkAllMotorsCompleted() && !emergencyStop) {
         // Проверяем аварийную остановку
@@ -236,14 +181,15 @@ static void processAsyncMode(uint8_t motorCount) {
             return;
         }
     }
-    
+#endif
+
     if (!emergencyStop) {
         sendResponse(RESPONSE_SUCCESS);
     }
 }
 
 // Функции состояния системы
-static void emergencyStopAllMotors() {
+void emergencyStopAllMotors() {
     stopAllMotors();
     
     // Сбрасываем состояние
@@ -254,11 +200,11 @@ static void emergencyStopAllMotors() {
     syncMotorBuffer = 0;
 }
 
-static bool checkAllMotorsCompleted() {
+bool checkAllMotorsCompleted() {
     return (activeMotors & completedMotors) == activeMotors;
 }
 
-static void resetMotorStates() {
+void resetMotorStates() {
     activeMotors = 0;
     completedMotors = 0;
     emergencyStop = false;
