@@ -6,7 +6,8 @@ e_SRCS += \
 ./src/gpio.cpp \
 ./src/serial.cpp \
 ./src/constants.cpp \
-./src/protocol.cpp
+./src/protocol.cpp \
+./src/uart_dma.cpp
 
 C_DEPS += \
 ./src/main.d \
@@ -16,7 +17,8 @@ C_DEPS += \
 ./src/gpio.d \
 ./src/serial.d \
 ./src/constants.d \
-./src/protocol.d
+./src/protocol.d \
+./src/uart_dma.d
 
 OBJS += \
 ./src/main.o \
@@ -26,7 +28,8 @@ OBJS += \
 ./src/gpio.o \
 ./src/serial.o \
 ./src/constants.o \
-./src/protocol.o
+./src/protocol.o \
+./src/uart_dma.o
 
 
 src/%.o: ./src/%.cpp src/subdir.mk
