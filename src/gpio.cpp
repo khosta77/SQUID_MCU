@@ -8,6 +8,7 @@ void initGPIO()
                      RCC_AHB1ENR_GPIOCEN | RCC_AHB1ENR_GPIODEN |
                      RCC_AHB1ENR_GPIOEEN;
 
+#if 0 // MOTOR_CODE_DISABLED - USART2 GPIO (PA2/PA3)
     // GPIOA - USART интерфейсы
     // PA2 (USART2_TX) - альтернативная функция
     GPIOA->MODER &= ~GPIO_MODER_MODER2;
@@ -20,6 +21,7 @@ void initGPIO()
     GPIOA->MODER |= GPIO_MODER_MODER3_1;
     GPIOA->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR3;
     GPIOA->AFR[0] |= (0x7 << 12); // AF7 для USART2_RX
+#endif // MOTOR_CODE_DISABLED
 
     // PA0 (USART4_TX) - альтернативная функция
     GPIOA->MODER &= ~GPIO_MODER_MODER0;
@@ -33,6 +35,7 @@ void initGPIO()
     GPIOA->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR1;
     GPIOA->AFR[0] |= (0x8 << 4); // AF8 для USART4_RX
 
+#if 0 // MOTOR_CODE_DISABLED - Motor GPIO
     // GPIOB - KEY1-10 (PB0-PB9) - входы с подтяжкой
     for (int i = 0; i < 10; i++) {
         GPIOB->MODER &= ~(3UL << (i * 2)); // Вход (00)
@@ -73,4 +76,5 @@ void initGPIO()
         GPIOE->PUPDR &= ~(3UL << (i * 2));
         GPIOE->PUPDR |= (2UL << (i * 2)); // Pull-down (10)
     }
+#endif // MOTOR_CODE_DISABLED
 }

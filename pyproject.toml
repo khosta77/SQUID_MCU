@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "squid-mcu-tools"
+version = "0.1.0"
+description = "Test utilities for SQUID MCU firmware"
+authors = ["Stepan Filimonov"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pyserial = "^3.5"
+click = "^8.1.7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
