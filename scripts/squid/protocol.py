@@ -1,0 +1,31 @@
+from enum import IntEnum
+
+PROTOCOL_STX = 0x02
+PROTOCOL_MIN_PACKET_SIZE = 5
+PROTOCOL_MAX_PACKET_SIZE = 256
+
+
+class Command(IntEnum):
+    VERSION = 0x01
+    STATUS = 0x02
+    STOP = 0x03
+    SYNC_MOVE = 0x10
+    ASYNC_MOVE = 0x11
+
+
+class Response(IntEnum):
+    VERSION = 0x81
+    STATUS = 0x82
+    STOP = 0x83
+    MOVE = 0x90
+    ERROR = 0xFF
+
+
+class ErrorCode(IntEnum):
+    INVALID_COMMAND = 0x01
+    INVALID_PACKET_LENGTH = 0x02
+    XOR_CHECKSUM_ERROR = 0x03
+    INVALID_MOTOR_COUNT = 0x04
+    MOTOR_PARAM_ERROR = 0x05
+    EMERGENCY_STOP = 0x0B
+    TIMEOUT = 0x0D

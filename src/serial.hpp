@@ -2,13 +2,11 @@
 
 #include <cstdint>
 
-/*
- * @brief Инициализация USART2 и UART4
- */
 void initSerial();
-
-/*
- * @brief Отправка байта на ПК
- * @param data Байт для отправки
- */
-void sendByte2PC(const uint8_t data);
+void sendByte2PC(uint8_t data);
+void sendPacket(uint8_t responseCmd, const uint8_t* data, uint16_t dataLen);
+void sendErrorPacket(uint8_t errorCode);
+void sendVersionResponse();
+void sendStatusResponse(uint16_t activeMotors, uint16_t completedMotors);
+void sendStopResponse(uint8_t result);
+void sendMoveResponse(uint8_t result);

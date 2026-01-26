@@ -7,15 +7,54 @@ constexpr uint8_t FIRMWARE_VERSION_MAJOR = 1;
 constexpr uint8_t FIRMWARE_VERSION_MINOR = 0;
 constexpr uint8_t FIRMWARE_VERSION = (FIRMWARE_VERSION_MAJOR << 4) | FIRMWARE_VERSION_MINOR;
 
-// Константы протокола
-constexpr uint8_t CMD_SYNC_MASK = 0x80;         // 0x8N - синхронный режим
-constexpr uint8_t CMD_ASYNC_MASK = 0x40;        // 0x4N - асинхронный режим  
-constexpr uint8_t CMD_VERSION_MASK = 0x20;      // 0x20 - запрос версии
-constexpr uint8_t CMD_MOTOR_COUNT_MASK = 0x0F;  // Младшие 4 бита - количество моторов
+// ============================================================================
+// Новый пакетный протокол
+// ============================================================================
+// Формат: [STX] [Length_H] [Length_L] [Cmd] [Data...] [XOR]
+// - STX не участвует в XOR
+// - Length = полная длина пакета (от STX до XOR)
+// - XOR = xor от Length_H до последнего байта Data
+// ============================================================================
 
-// Коды ответов
-constexpr uint8_t RESPONSE_READY = 0x00;     // Готовность к приему
-constexpr uint8_t RESPONSE_SUCCESS = 0xFF;   // Успешное выполнение
+constexpr uint8_t PROTOCOL_STX = 0x02;
+constexpr uint16_t PROTOCOL_MIN_PACKET_SIZE = 5;
+constexpr uint16_t PROTOCOL_MAX_PACKET_SIZE = 256;
+constexpr uint8_t PROTOCOL_HEADER_SIZE = 4;
+
+// Коды команд (TX от PC к MCU)
+namespace Cmd {
+    constexpr uint8_t VERSION    = 0x01;
+    constexpr uint8_t STATUS     = 0x02;
+    constexpr uint8_t STOP       = 0x03;
+    constexpr uint8_t SYNC_MOVE  = 0x10;
+    constexpr uint8_t ASYNC_MOVE = 0x11;
+}
+
+// Коды ответов (RX от MCU к PC)
+namespace Response {
+    constexpr uint8_t VERSION    = 0x81;
+    constexpr uint8_t STATUS     = 0x82;
+    constexpr uint8_t STOP       = 0x83;
+    constexpr uint8_t MOVE       = 0x90;
+    constexpr uint8_t ERROR      = 0xFF;
+}
+
+// Коды ошибок
+namespace Error {
+    constexpr uint8_t INVALID_COMMAND       = 0x01;
+    constexpr uint8_t INVALID_PACKET_LENGTH = 0x02;
+    constexpr uint8_t XOR_CHECKSUM_ERROR    = 0x03;
+    constexpr uint8_t INVALID_MOTOR_COUNT   = 0x04;
+    constexpr uint8_t MOTOR_PARAM_ERROR     = 0x05;
+    constexpr uint8_t EMERGENCY_STOP        = 0x0B;
+    constexpr uint8_t TIMEOUT               = 0x0D;
+}
+
+// Коды результата
+namespace Result {
+    constexpr uint8_t SUCCESS = 0x00;
+    constexpr uint8_t BUSY    = 0x01;
+}
 
 // Максимальное количество моторов
 constexpr uint8_t MAX_MOTORS = 10;

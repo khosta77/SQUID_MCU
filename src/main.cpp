@@ -4,8 +4,14 @@
 #include "motor_settings.hpp"
 #include "gpio.hpp"
 #include "serial.hpp"
+#include "protocol.hpp"
+#include "motor_simulator.hpp"
 
 #include <string.h>
+
+PacketParser g_packetParser;
+volatile bool g_packetReady = false;
+volatile uint8_t g_rxByte = 0;
 
 void clear_usart4_rx_array()
 {
@@ -78,48 +84,21 @@ void send2driver(const uint8_t *frame)
 
 void DMA_init()
 {
+#if 0 // MOTOR_CODE_DISABLED - DMA currently not used
     RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN;
 
-#if 0 // MOTOR_CODE_DISABLED - DMA1_Stream6 for USART2_TX
     DMA1_Stream6->CR &= ~DMA_SxCR_EN;
     while ((DMA1_Stream6->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
         ;
 
-    // - (0x4 << 25) - 4-ый канал
-    // - DMA_SxCR_MINC - увеличенный объем памяти
-    // - DMA_SxCR_TCIE - прерывания по приему/передачи
-    // - DMA_SxCR_CIRC (for rx) - циклическая работа
     DMA1_Stream6->CR |= ((0x4 << 25) | DMA_SxCR_MINC | DMA_SxCR_TCIE);
     DMA1_Stream6->CR &= ~(DMA_SxCR_MSIZE | DMA_SxCR_PSIZE);
-    DMA1_Stream6->CR |= (0x01 << 6); // Из памяти в перефирию
+    DMA1_Stream6->CR |= (0x01 << 6);
     DMA1_Stream6->NDTR = 12;
     DMA1_Stream6->PAR = (uint32_t)(&USART2->DR);
-    // DMA1_Stream6->M0AR = (uint32_t) &usart2_tx_array[0];
     NVIC_EnableIRQ(DMA1_Stream6_IRQn);
     NVIC_SetPriority(DMA1_Stream6_IRQn, 7);
-#endif // MOTOR_CODE_DISABLED
-
-    // DMA1_Stream2 this UART4_RX
-    DMA1_Stream2->CR &= ~DMA_SxCR_EN;
-    while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
-        ;
-
-    // - (0x4 << 25) - 4-ый канал
-    // - DMA_SxCR_MINC - увеличенный объем памяти
-    // - DMA_SxCR_TCIE - прерывания по приему/передачи
-    // - DMA_SxCR_CIRC (for rx) - циклическая работа
-    DMA1_Stream2->CR |= ((0x4 << 25) | DMA_SxCR_MINC | DMA_SxCR_TCIE | DMA_SxCR_CIRC);
-    DMA1_Stream2->CR &= ~(DMA_SxCR_MSIZE | DMA_SxCR_PSIZE);
-    DMA1_Stream2->CR &= ~(3UL << 6); // Из переферии в память
-    DMA1_Stream2->NDTR = 1;
-    DMA1_Stream2->PAR = (uint32_t)(&UART4->DR);
-    DMA1_Stream2->M0AR = (uint32_t)&usart4_rx_array[0];
-    NVIC_EnableIRQ(DMA1_Stream2_IRQn);
-    NVIC_SetPriority(DMA1_Stream2_IRQn, 5);
-
-    DMA1_Stream2->CR |= DMA_SxCR_EN;
-    while ((DMA1_Stream2->CR & DMA_SxCR_EN) != DMA_SxCR_EN)
-        ;
+#endif
 }
 
 void SystemClock_HSI_Config(void)
@@ -137,6 +116,13 @@ void SystemClock_HSI_Config(void)
     while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_HSI)
         ;
     SystemCoreClockUpdate();
+}
+
+void SysTick_Init(void)
+{
+    SysTick->LOAD = (SystemCoreClock / 1000) - 1;
+    SysTick->VAL = 0;
+    SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
 }
 
 #if 0 // MOTOR_CODE_DISABLED
@@ -199,6 +185,7 @@ int main(void)
     initGPIO();
     DMA_init();
     initSerial();
+    SysTick_Init();
 
 #if 0 // MOTOR_CODE_DISABLED
     // Задержка для инициализации. Нужно для того, чтобы
@@ -208,8 +195,8 @@ int main(void)
 #endif // MOTOR_CODE_DISABLED
 
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
-    GPIOD->MODER |= GPIO_MODER_MODER12_0 | GPIO_MODER_MODER13_0 | GPIO_MODER_MODER14_0 | GPIO_MODER_MODER15_0; // Устанавливаем как выход (01)
-    GPIOD->ODR |= GPIO_ODR_OD12 | GPIO_ODR_OD13 | GPIO_ODR_OD14 | GPIO_ODR_OD15; // Включаем светодиод
+    GPIOD->MODER |= GPIO_MODER_MODER12_0 | GPIO_MODER_MODER13_0 | GPIO_MODER_MODER14_0 | GPIO_MODER_MODER15_0;
+    GPIOD->ODR |= GPIO_ODR_OD12 | GPIO_ODR_OD13 | GPIO_ODR_OD14 | GPIO_ODR_OD15;
 
 #if 0 // MOTOR_CODE_DISABLED
     // Инициализируем прерывания
@@ -219,21 +206,15 @@ int main(void)
 
     while (1)
     {
-        if (usart4_mrk)
+        if (g_packetReady)
         {
-            usart4_mrk = 0x00;
-            while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
-                ;
+            g_packetReady = false;
+            GPIOD->ODR ^= GPIO_ODR_OD12;
 
-            if (usart4_rx_array[0] != 0) {
-                processCommand(usart4_rx_array[0]);
-            }
+            processPacketCommand(g_packetParser);
 
-            stopDMAStream2();
-            clear_usart4_rx_array();
-            GPIOD->ODR |= GPIO_ODR_OD12 | GPIO_ODR_OD13 | GPIO_ODR_OD14 | GPIO_ODR_OD15; // Включаем светодиод
-            DMA1_Stream2->NDTR = 1;
-            DMA1_Stream2->CR |= DMA_SxCR_EN;
+            g_packetParser.reset();
+            GPIOD->ODR ^= GPIO_ODR_OD13;
         }
     }
 }
@@ -252,20 +233,15 @@ extern "C" void __attribute__((interrupt, used)) DMA1_Stream6_IRQHandler(void) /
 }
 #endif // MOTOR_CODE_DISABLED
 
-extern "C" void __attribute__((interrupt, used)) DMA1_Stream2_IRQHandler(void) // UART4 RX
+extern "C" void __attribute__((interrupt, used)) UART4_IRQHandler(void)
 {
-    if ((DMA1->LISR & DMA_LISR_TCIF2) == DMA_LISR_TCIF2)
+    if (UART4->SR & USART_SR_RXNE)
     {
-        DMA1_Stream2->CR &= ~DMA_SxCR_EN;
-        while ((DMA1_Stream2->CR & DMA_SxCR_EN) == DMA_SxCR_EN)
-            ;
-        DMA1->LIFCR |= DMA_LIFCR_CTCIF2;
-        GPIOD->ODR ^= GPIO_ODR_OD14; 
-        if (waitingForMotorData) {
-            timeoutCounter = 0;
-            usart4_mrk = 0x0A; // Сигнализируем о получении данных
-        } else {
-            usart4_mrk = 0x0A;
+        g_rxByte = static_cast<uint8_t>(UART4->DR);
+        GPIOD->ODR ^= GPIO_ODR_OD14;
+
+        if (g_packetParser.processByte(g_rxByte)) {
+            g_packetReady = true;
         }
     }
 }
@@ -338,3 +314,8 @@ extern "C" void __attribute__((interrupt, used)) EXTI15_10_IRQHandler(void)
     if (EXTI->PR & EXTI_PR_PR15) { emergencyStop = true; EXTI->PR = EXTI_PR_PR15; }
 }
 #endif // MOTOR_CODE_DISABLED
+
+extern "C" void __attribute__((interrupt, used)) SysTick_Handler(void)
+{
+    g_motorSimulator.tick();
+}

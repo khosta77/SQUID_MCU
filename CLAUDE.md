@@ -8,6 +8,13 @@ Firmware for STM32F407VG microcontroller controlling up to 10 stepper motors in 
 
 **Target:** STM32F407VG (ARM Cortex-M4, 168 MHz, 1MB Flash, 192KB SRAM)
 
+## Documentation
+
+- [docs/COMMAND.md](docs/COMMAND.md) - Protocol commands and packet format
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - System architecture and diagrams
+- [docs/FILETREE.md](docs/FILETREE.md) - File structure and modification guide
+- [ABOUT.md](ABOUT.md) - System overview
+
 ## Build Commands
 
 ```bash
@@ -16,9 +23,31 @@ make all
 
 # Clean build artifacts
 make clean
+
+# Flash via ST-Link
+st-flash write main.bin 0x08000000
 ```
 
 **Toolchain:** arm-none-eabi-gcc, arm-none-eabi-g++
+
+## Python CLI
+
+```bash
+# Install dependencies
+poetry install
+
+# Commands
+poetry run python scripts/cli.py version
+poetry run python scripts/cli.py status
+poetry run python scripts/cli.py stop
+poetry run python scripts/cli.py move -m 1 -s 5000
+
+# Run unit tests
+poetry run pytest tests/test_packet.py tests/test_motor.py -v
+
+# Run integration tests (requires MCU)
+poetry run pytest tests/test_integration.py -v --port /dev/tty.usbserial-*
+```
 
 ## Architecture
 
@@ -45,30 +74,35 @@ PC (Client) <--USB--> FTDI FT232RL <--UART4--> STM32F407VG <--USART2--> Motor Dr
 
 | File | Purpose |
 |------|---------|
-| `main.cpp` | Entry point, DMA/interrupt handlers, system init |
+| `main.cpp` | Entry point, DMA/SysTick handlers, system init |
 | `motor_controller.cpp/hpp` | Motor control logic, command processing |
+| `motor_simulator.cpp/hpp` | Motor simulation with SysTick timer |
 | `motor_settings.cpp/hpp` | MotorSettings class (16 bytes per motor) |
+| `protocol.cpp/hpp` | Packet parser state machine |
 | `constants.cpp/hpp` | Protocol constants, global state variables |
-| `serial.cpp/hpp` | UART/USART initialization |
+| `serial.cpp/hpp` | UART/USART initialization, packet sending |
 | `gpio.cpp/hpp` | GPIO initialization |
 
-### Protocol
+### Protocol (Packet-based)
 
-Commands (1 byte):
-- `0x8N` - Synchronous mode (N = motor count 1-10)
-- `0x4N` - Asynchronous mode (N = motor count 1-10)
-- `0x20` - Firmware version request
+**Packet format:** `[STX=0x02] [Length_H] [Length_L] [Cmd] [Data...] [XOR]`
 
-Motor data: 16 bytes per motor (number, acceleration, maxSpeed, steps - all uint32_t)
+Commands:
+- `0x01` - VERSION request
+- `0x02` - STATUS request
+- `0x03` - STOP all motors
+- `0x10` - SYNC_MOVE (synchronous)
+- `0x11` - ASYNC_MOVE (asynchronous)
 
-Response codes:
-- `0x00` - Ready
-- `0xFF` - Success
-- `0x0B` - Emergency stop
+Motor data: 16 bytes per motor (number, acceleration, maxSpeed, steps - all uint32_t little-endian)
+
+See [docs/COMMAND.md](docs/COMMAND.md) for full protocol specification.
 
 ## Key Implementation Details
 
 - All peripheral access via direct CMSIS register manipulation
+- SysTick timer (1ms) for motor simulation
+- PacketParser state machine for incoming data
 - Interrupts: EXTI0-9 for motor status, EXTI10-15 for emergency stop (highest priority)
 - Global state flags (`volatile`) track motor completion and emergency conditions
-- DMA used for both command reception and driver communication
+- DMA used for command reception
