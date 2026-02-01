@@ -3,6 +3,9 @@ e_SRCS += \
 ./src/motor_controller.cpp \
 ./src/motor_settings.cpp \
 ./src/motor_simulator.cpp \
+./src/motor_driver.cpp \
+./src/key_controller.cpp \
+./src/usart2_driver.cpp \
 ./src/gpio.cpp \
 ./src/serial.cpp \
 ./src/constants.cpp \
@@ -14,6 +17,9 @@ C_DEPS += \
 ./src/motor_controller.d \
 ./src/motor_settings.d \
 ./src/motor_simulator.d \
+./src/motor_driver.d \
+./src/key_controller.d \
+./src/usart2_driver.d \
 ./src/gpio.d \
 ./src/serial.d \
 ./src/constants.d \
@@ -25,6 +31,9 @@ OBJS += \
 ./src/motor_controller.o \
 ./src/motor_settings.o \
 ./src/motor_simulator.o \
+./src/motor_driver.o \
+./src/key_controller.o \
+./src/usart2_driver.o \
 ./src/gpio.o \
 ./src/serial.o \
 ./src/constants.o \

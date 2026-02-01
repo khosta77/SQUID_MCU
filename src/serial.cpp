@@ -2,21 +2,17 @@
 #include "constants.hpp"
 #include "../system/include/cmsis/stm32f4xx.h"
 
-#if 0 // MOTOR_CODE_DISABLED
 static void initUSART2()
 {
     RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
-    USART2->CR1 = 0; // Сбрасываем все биты
-    USART2->CR2 = 0; // 1 стоп-бит
+    USART2->CR1 = 0;
+    USART2->CR2 = 0;
     USART2->CR3 = 0;
 
-    // USART2 - связь с драйверами моторов
     USART2->BRR = 0x8B;  // 115200
     USART2->CR1 |= (USART_CR1_TE | USART_CR1_RE);
-    USART2->CR3 |= (USART_CR3_DMAT);
     USART2->CR1 |= USART_CR1_UE;
 }
-#endif // MOTOR_CODE_DISABLED
 
 static void initUART4()
 {
@@ -35,9 +31,7 @@ static void initUART4()
 
 void initSerial()
 {
-#if 0 // MOTOR_CODE_DISABLED
     initUSART2();
-#endif // MOTOR_CODE_DISABLED
     initUART4();
 }
 

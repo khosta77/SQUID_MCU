@@ -59,6 +59,12 @@ namespace Result {
 // Максимальное количество моторов
 constexpr uint8_t MAX_MOTORS = 10;
 
+// Команда для драйвера мотора
+constexpr uint8_t DRIVER_CMD = 0x78;
+
+// Размер пакета для драйвера (1 cmd + 4 accel + 4 speed + 4 steps + 1 xor)
+constexpr uint8_t DRIVER_PACKET_SIZE = 14;
+
 // Внешние переменные из main.cpp
 extern uint8_t usart4_rx_array[256];
 extern uint8_t usart2_mrk;

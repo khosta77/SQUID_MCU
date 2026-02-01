@@ -7,11 +7,13 @@ SQUID_MCU/
 ├── src/                          # Исходный код прошивки
 │   ├── main.cpp                  # Точка входа, инициализация, ISR
 │   ├── motor_controller.cpp/hpp  # Обработка команд
-│   ├── motor_simulator.cpp/hpp   # Симуляция моторов (SysTick)
+│   ├── motor_driver.cpp/hpp      # FSM управления драйверами
+│   ├── key_controller.cpp/hpp    # Управление KEY пинами (PB0-PB9)
+│   ├── usart2_driver.cpp/hpp     # TX/RX через USART2
 │   ├── motor_settings.cpp/hpp    # Класс MotorSettings
 │   ├── protocol.cpp/hpp          # Парсер пакетов
 │   ├── constants.cpp/hpp         # Константы протокола
-│   ├── serial.cpp/hpp            # UART инициализация
+│   ├── serial.cpp/hpp            # UART4 инициализация (PC)
 │   ├── gpio.cpp/hpp              # GPIO инициализация
 │   └── subdir.mk                 # Правила сборки
 │
@@ -35,7 +37,9 @@ SQUID_MCU/
 │   └── test_integration.py       # Интеграционные тесты
 │
 ├── docs/                         # Документация
-│   ├── COMMAND.md                # Описание команд протокола
+│   ├── COMMAND.md                # Описание команд протокола PC-MCU
+│   ├── DRIVER_PROTOCOL.md        # Протокол MCU-Driver
+│   ├── MOTOR_DRIVER.md           # Описание MotorDriver FSM
 │   ├── ARCHITECTURE.md           # Архитектура системы
 │   └── FILETREE.md               # Этот файл
 │
@@ -79,16 +83,36 @@ SQUID_MCU/
 | `handleSyncMoveCommand()` | Обработка SYNC_MOVE |
 | `handleAsyncMoveCommand()` | Обработка ASYNC_MOVE |
 
-### motor_simulator.cpp
+### motor_driver.cpp
 
 | Метод | Описание |
 |-------|----------|
-| `reset()` | Сброс состояния |
-| `startMotor()` | Запуск одного мотора |
-| `startMotors()` | Запуск нескольких моторов |
-| `tick()` | Обновление состояния (из SysTick ISR) |
-| `stopAll()` | Остановка всех моторов |
-| `allComplete()` | Проверка завершения |
+| `reset()` | Сброс FSM в состояние IDLE |
+| `startMotors()` | Запуск движения моторов |
+| `tick()` | Обновление FSM (из SysTick ISR, каждую 1 мс) |
+| `stopAll()` | Немедленная остановка всех моторов |
+| `allComplete()` | Проверка завершения всех моторов |
+| `isRunning()` | Проверка активности FSM |
+| `getActiveMotors()` | Битовая маска активных моторов |
+| `getCompletedMotors()` | Битовая маска завершённых моторов |
+
+### key_controller.cpp
+
+| Метод | Описание |
+|-------|----------|
+| `setKey()` | Установить состояние KEY пина для мотора |
+| `clearAll()` | Сбросить все KEY пины |
+| `isKeySet()` | Проверить состояние KEY пина |
+
+### usart2_driver.cpp
+
+| Метод | Описание |
+|-------|----------|
+| `send()` | Отправить массив байт через USART2 |
+| `sendByte()` | Отправить один байт |
+| `hasData()` | Проверить наличие данных в RX буфере |
+| `readByte()` | Прочитать байт из RX буфера |
+| `waitTransmitComplete()` | Дождаться завершения передачи |
 
 ### protocol.cpp
 

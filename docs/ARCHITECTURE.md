@@ -21,8 +21,8 @@
 │                  (Центральный MCU)                              │
 │                                                                  │
 │  +-- DMA1_Stream2 (RX) --+    +-- SysTick (1ms) --+            │
-│  |   Прием пакетов       |    |  Симуляция моторов|            │
-│  +-- PacketParser -------+    +-- MotorSimulator --+            │
+│  |   Прием пакетов       |    |  FSM драйверов    |            │
+│  +-- PacketParser -------+    +-- MotorDriver ----+            │
 │                                                                  │
 │  Управляет 10 подчиненными контроллерами через:                 │
 │  - USART2 (данные) + CD4066BM (мультиплексирование)             │
@@ -47,7 +47,7 @@ sequenceDiagram
     participant PC
     participant FTDI
     participant MCU
-    participant Simulator
+    participant Driver as Motor Drivers
 
     PC->>FTDI: USB Packet
     FTDI->>MCU: UART4 bytes
@@ -57,14 +57,15 @@ sequenceDiagram
     alt VERSION command
         MCU->>PC: Response with version
     else SYNC_MOVE command
-        MCU->>Simulator: startMotors()
-        loop Every 1ms (SysTick)
-            Simulator->>Simulator: tick()
+        MCU->>MCU: MotorDriver.startMotors()
+        loop For each motor
+            MCU->>Driver: KEY HIGH + USART2 TX (14 bytes)
+            Driver-->>MCU: (timeout 3s in debug mode)
+            MCU->>MCU: KEY LOW
         end
-        Simulator->>MCU: allComplete()
         MCU->>PC: MOVE Response (SUCCESS)
     else ASYNC_MOVE command
-        MCU->>Simulator: startMotors()
+        MCU->>MCU: MotorDriver.startMotors()
         MCU->>PC: MOVE Response (SUCCESS)
         Note over PC: Poll STATUS to check completion
     end
@@ -152,44 +153,49 @@ processPacketCommand()
         │   └── sendStatusResponse(active, completed)
         │
         ├── STOP (0x03)
-        │   ├── g_motorSimulator.stopAll()
+        │   ├── g_motorDriver.stopAll()
         │   └── sendStopResponse(SUCCESS)
         │
         ├── SYNC_MOVE (0x10)
         │   ├── Validate data length
-        │   ├── g_motorSimulator.startMotors()
+        │   ├── g_motorDriver.startMotors()
         │   ├── while (!allComplete()) __WFI()
         │   └── sendMoveResponse(SUCCESS)
         │
         ├── ASYNC_MOVE (0x11)
         │   ├── Validate data length
-        │   ├── g_motorSimulator.startMotors()
+        │   ├── g_motorDriver.startMotors()
         │   └── sendMoveResponse(SUCCESS)
         │
         └── default
             └── sendErrorPacket(INVALID_COMMAND)
 ```
 
-## Симуляция моторов (MotorSimulator)
+## Управление драйверами (MotorDriver)
 
 ```
 Tick interval: 1 ms (SysTick)
-Steps per tick: 1000
-
-Example: 5000 steps = 5 ticks = 5 ms (реально ~5 секунд с текущей логикой)
+Debug timeout: 3000 ms (таймаут вместо реального ответа)
 
                         SysTick_Handler
                               │
                               ▼
-                    g_motorSimulator.tick()
+                    g_motorDriver.tick()
                               │
               ┌───────────────┴───────────────┐
-              │ for each active motor         │
-              │   if (ticks[i] > 0)           │
-              │     ticks[i]--                │
-              │   if (ticks[i] == 0)          │
-              │     completedMotors |= (1<<i) │
+              │ FSM States:                   │
+              │   IDLE → CHECKING_RX          │
+              │   CHECKING_RX → SENDING       │
+              │   SENDING → WAITING_TIMEOUT   │
+              │   WAITING_TIMEOUT → COMPLETE  │
+              │   COMPLETE → next motor / IDLE│
               └───────────────────────────────┘
+
+Для каждого мотора:
+1. KEY_x = HIGH (активация драйвера)
+2. USART2 TX: отправка 14-байтного пакета
+3. Ожидание ответа / таймаут 3 сек
+4. KEY_x = LOW (деактивация драйвера)
 ```
 
 ## Приоритеты прерываний

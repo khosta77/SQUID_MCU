@@ -3,8 +3,9 @@
 #include "constants.hpp"
 #include "gpio.hpp"
 #include "protocol.hpp"
-#include "motor_simulator.hpp"
+#include "motor_driver.hpp"
 #include "uart_dma.hpp"
+#include "serial.hpp"
 
 PacketParser g_packetParser;
 volatile bool g_packetReady = false;
@@ -48,6 +49,7 @@ int main(void) {
     SystemClock_HSI_Config();
     clear_usart4_rx_array();
     initGPIO();
+    initSerial();
     SysTick_Init();
 
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
@@ -56,6 +58,13 @@ int main(void) {
 
     g_uartDma.init();
     g_uartDma.startRx();
+
+    for (uint8_t k = 0; k < 3; ++k) {
+        GPIOB->ODR |= (1UL << 0) | (1UL << 1) | (1UL << 2);
+        for (volatile uint32_t i = 0; i < 100000; ++i);
+        GPIOB->ODR &= ~((1UL << 0) | (1UL << 1) | (1UL << 2));
+        for (volatile uint32_t i = 0; i < 100000; ++i);
+    }
 
     while (1) {
         if (g_uartDma.hasPendingRxData()) {
@@ -86,5 +95,5 @@ extern "C" void __attribute__((interrupt, used)) UART4_IRQHandler(void) {
 }
 
 extern "C" void __attribute__((interrupt, used)) SysTick_Handler(void) {
-    g_motorSimulator.tick();
+    g_motorDriver.tick();
 }

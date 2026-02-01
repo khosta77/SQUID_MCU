@@ -1,7 +1,7 @@
 #include "motor_controller.hpp"
-#include "motor_simulator.hpp"
+#include "motor_driver.hpp"
 #include "../system/include/cmsis/stm32f4xx.h"
-#include <string.h>
+#include <cstring>
 
 static void handleVersionCommand();
 static void handleStatusCommand();
@@ -46,11 +46,11 @@ static void handleVersionCommand() {
 }
 
 static void handleStatusCommand() {
-    sendStatusResponse(g_motorSimulator.getActiveMotors(), g_motorSimulator.getCompletedMotors());
+    sendStatusResponse(g_motorDriver.getActiveMotors(), g_motorDriver.getCompletedMotors());
 }
 
 static void handleStopCommand() {
-    g_motorSimulator.stopAll();
+    g_motorDriver.stopAll();
     sendStopResponse(Result::SUCCESS);
 }
 
@@ -66,8 +66,8 @@ static void handleSyncMoveCommand(const uint8_t* data, uint16_t dataLen) {
         return;
     }
 
-    g_motorSimulator.startMotors(data, motorCount);
-    while (!g_motorSimulator.allComplete()) {
+    g_motorDriver.startMotors(data, motorCount);
+    while (!g_motorDriver.allComplete()) {
         __WFI();
     }
 
@@ -86,6 +86,6 @@ static void handleAsyncMoveCommand(const uint8_t* data, uint16_t dataLen) {
         return;
     }
 
-    g_motorSimulator.startMotors(data, motorCount);
+    g_motorDriver.startMotors(data, motorCount);
     sendMoveResponse(Result::SUCCESS);
 }
