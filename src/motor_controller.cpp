@@ -46,7 +46,8 @@ static void handleVersionCommand() {
 }
 
 static void handleStatusCommand() {
-    sendStatusResponse(g_motorDriver.getActiveMotors(), g_motorDriver.getCompletedMotors());
+    uint16_t statusPins = GPIOE->IDR & 0x03FF;
+    sendStatusResponse(g_motorDriver.getActiveMotors(), g_motorDriver.getCompletedMotors(), statusPins);
 }
 
 static void handleStopCommand() {

@@ -72,11 +72,15 @@ void sendVersionResponse() {
     sendPacket(Response::VERSION, &version, 1);
 }
 
-void sendStatusResponse(uint16_t activeMotors, uint16_t completedMotors) {
-    uint8_t data[2];
+void sendStatusResponse(uint16_t activeMotors, uint16_t completedMotors, uint16_t statusPins) {
+    uint8_t data[6];
     data[0] = static_cast<uint8_t>(activeMotors & 0xFF);
-    data[1] = static_cast<uint8_t>(completedMotors & 0xFF);
-    sendPacket(Response::STATUS, data, 2);
+    data[1] = static_cast<uint8_t>((activeMotors >> 8) & 0xFF);
+    data[2] = static_cast<uint8_t>(completedMotors & 0xFF);
+    data[3] = static_cast<uint8_t>((completedMotors >> 8) & 0xFF);
+    data[4] = static_cast<uint8_t>(statusPins & 0xFF);
+    data[5] = static_cast<uint8_t>((statusPins >> 8) & 0xFF);
+    sendPacket(Response::STATUS, data, 6);
 }
 
 void sendStopResponse(uint8_t result) {

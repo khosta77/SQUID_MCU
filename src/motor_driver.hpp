@@ -8,7 +8,7 @@ enum class DriverState : uint8_t {
     IDLE,
     CHECKING_RX,
     SENDING,
-    WAITING_TIMEOUT,
+    WAITING_STATUS,
     COMPLETE
 };
 
@@ -31,10 +31,12 @@ public:
 
 private:
     static constexpr uint8_t TX_BUFFER_SIZE = 14;
-    static constexpr uint32_t DEBUG_TIMEOUT_MS = 3000;
+    static constexpr uint32_t SAFETY_TIMEOUT_MS = 30000;
+    static constexpr uint8_t DEBOUNCE_MS = 3;
 
     MotorSettings _settings[MAX_MOTORS];
     uint8_t _txBuffer[TX_BUFFER_SIZE];
+    uint8_t _debounceCounters[MAX_MOTORS];
 
     volatile DriverState _state;
     volatile uint16_t _activeMotors;

@@ -59,11 +59,17 @@ class SquidClient:
             return f"{major}.{minor}"
         return "unknown"
 
-    async def get_status(self) -> tuple[int, int]:
+    async def get_status(self) -> tuple[int, int, int]:
         response = await self._send_and_receive(Command.STATUS)
-        active = response.data[0] if len(response.data) > 0 else 0
-        completed = response.data[1] if len(response.data) > 1 else 0
-        return active, completed
+        if len(response.data) >= 6:
+            active = response.data[0] | (response.data[1] << 8)
+            completed = response.data[2] | (response.data[3] << 8)
+            status_pins = response.data[4] | (response.data[5] << 8)
+        else:
+            active = response.data[0] if len(response.data) > 0 else 0
+            completed = response.data[1] if len(response.data) > 1 else 0
+            status_pins = 0
+        return active, completed, status_pins
 
     async def stop(self) -> bool:
         response = await self._send_and_receive(Command.STOP)

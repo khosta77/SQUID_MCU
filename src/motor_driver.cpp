@@ -19,6 +19,9 @@ void MotorDriver::reset() {
     _currentSendIndex = 0;
     _timeoutCounter = 0;
     _running = false;
+    for (uint8_t i = 0; i < MAX_MOTORS; ++i) {
+        _debounceCounters[i] = 0;
+    }
     KeyController::clearAll();
 }
 
@@ -84,7 +87,7 @@ void MotorDriver::processNextMotor() {
     }
 
     if (_currentSendIndex >= _motorCount) {
-        _state = DriverState::WAITING_TIMEOUT;
+        _state = DriverState::WAITING_STATUS;
         _timeoutCounter = 0;
     }
 }
@@ -119,15 +122,33 @@ void MotorDriver::tick() {
             processNextMotor();
             break;
 
-        case DriverState::WAITING_TIMEOUT:
+        case DriverState::WAITING_STATUS: {
             _timeoutCounter++;
-            if (_timeoutCounter >= DEBUG_TIMEOUT_MS) {
+            uint16_t statusBits = GPIOE->IDR & 0x03FF;
+            for (uint8_t i = 0; i < MAX_MOTORS; ++i) {
+                if (_pendingMotors & (1U << i)) {
+                    if (!(statusBits & (1U << i))) {
+                        _debounceCounters[i]++;
+                        if (_debounceCounters[i] >= DEBOUNCE_MS) {
+                            _completedMotors |= (1U << i);
+                            _pendingMotors &= ~(1U << i);
+                        }
+                    } else {
+                        _debounceCounters[i] = 0;
+                    }
+                }
+            }
+            if (_pendingMotors == 0) {
+                _state = DriverState::COMPLETE;
+                GPIOD->ODR |= GPIO_ODR_OD15;
+            } else if (_timeoutCounter >= SAFETY_TIMEOUT_MS) {
                 _completedMotors = _activeMotors;
                 _pendingMotors = 0;
                 _state = DriverState::COMPLETE;
                 GPIOD->ODR |= GPIO_ODR_OD15;
             }
             break;
+        }
 
         case DriverState::COMPLETE:
             _running = false;

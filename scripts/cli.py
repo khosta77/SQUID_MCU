@@ -2,6 +2,7 @@
 import asyncio
 import glob
 import sys
+import time
 from pathlib import Path
 from typing import Optional
 
@@ -72,9 +73,10 @@ def version(ctx):
 def status(ctx):
     async def _status():
         async with SquidClient(ctx.obj["port"], ctx.obj["baudrate"]) as client:
-            active, completed = await client.get_status()
-            click.echo(f"Active motors: 0x{active:02X}")
-            click.echo(f"Completed motors: 0x{completed:02X}")
+            active, completed, status_pins = await client.get_status()
+            click.echo(f"Active motors:    0x{active:04X} (bin: {active:010b})")
+            click.echo(f"Completed motors: 0x{completed:04X} (bin: {completed:010b})")
+            click.echo(f"STATUS pins:      0x{status_pins:04X} (bin: {status_pins:010b})")
 
     try:
         run_async(_status())
@@ -113,15 +115,17 @@ def move(ctx, motor: int, steps: int, speed: int, accel: int, async_mode: bool, 
     async def _move():
         async with SquidClient(ctx.obj["port"], ctx.obj["baudrate"]) as client:
             params = MotorParams(number=motor, acceleration=accel, max_speed=speed, steps=steps)
+            t0 = time.perf_counter()
             if async_mode:
                 result = await client.async_move([params], timeout=timeout)
             else:
                 result = await client.sync_move([params], timeout=timeout)
+            elapsed = time.perf_counter() - t0
 
             if result:
-                click.echo(f"Move completed: motor {motor}, {steps} steps")
+                click.echo(f"Move completed: motor {motor}, {steps} steps ({elapsed:.3f} s)")
             else:
-                click.echo("Move failed", err=True)
+                click.echo(f"Move failed ({elapsed:.3f} s)", err=True)
 
     try:
         run_async(_move())
@@ -148,15 +152,17 @@ def multi_move(ctx, motors: tuple, async_mode: bool, timeout: float):
             params_list.append(MotorParams(number=motor_num, acceleration=accel, max_speed=speed, steps=steps))
 
         async with SquidClient(ctx.obj["port"], ctx.obj["baudrate"]) as client:
+            t0 = time.perf_counter()
             if async_mode:
                 result = await client.async_move(params_list, timeout=timeout)
             else:
                 result = await client.sync_move(params_list, timeout=timeout)
+            elapsed = time.perf_counter() - t0
 
             if result:
-                click.echo(f"Multi-move completed: {len(params_list)} motors")
+                click.echo(f"Multi-move completed: {len(params_list)} motors ({elapsed:.3f} s)")
             else:
-                click.echo("Multi-move failed", err=True)
+                click.echo(f"Multi-move failed ({elapsed:.3f} s)", err=True)
 
     try:
         run_async(_multi_move())
